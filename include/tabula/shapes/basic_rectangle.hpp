@@ -6,6 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/lakes.hpp>             // basic_lakes
+#include <tabula/transforms.hpp>
 #include <tabula/type_traits.hpp>       // flip_t, flop_t, swap_t
 
 namespace tabula {

@@ -3,6 +3,16 @@
 [![License](https://img.shields.io/badge/license-Boost-blue.svg)](https://opensource.org/licenses/BSL-1.0) 
 [![](https://tokei.rs/b1/github/rhalbersma/tabula)](https://github.com/rhalbersma/tabula)
 
+Requirements
+============
+
+This header-only library depends on the C++ Standard Library and Boost.Hana, and is continuously being tested with the following conforming [C++17](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/n4659.pdf) compilers:
+
+| Platform | Compiler | Versions | Build |
+| :------- | :------- | :------- | :---- |
+| Linux    | Clang <br> GCC | 6.0, 7, 8, 9-SVN<br> 7.4, 8.3, 9-SVN | [![codecov](https://codecov.io/gh/rhalbersma/tabula/branch/master/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula) <br> [![Build Status](https://travis-ci.org/rhalbersma/tabula.svg)](https://travis-ci.org/rhalbersma/tabula) |
+| Windows  | Visual Studio  |                               15.9.6 | [![Build status](https://ci.appveyor.com/api/projects/status/86oy76904uc4newg?svg=true)](https://ci.appveyor.com/project/rhalbersma/tabula) |
+
 License
 -------
 

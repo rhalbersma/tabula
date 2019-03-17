@@ -17,6 +17,6 @@ target_include_directories(tabula INTERFACE
 
 target_compile_features(tabula INTERFACE cxx_std_17)
 
-add_subdirectory(example)
-#include(CTest)
-#add_subdirectory(test)
+#add_subdirectory(example)
+include(CTest)
+add_subdirectory(test)
