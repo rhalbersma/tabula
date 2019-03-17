@@ -22,6 +22,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ReverseDirections, T, shape_types)
         constexpr auto compass = basic_compass<T>{};
         for (auto p : compass.points) {
                 auto const r = p.reverse();
+                BOOST_CHECK(p != r);
                 BOOST_CHECK_EQUAL(p.stride()  , -r.stride()  );
                 BOOST_CHECK_EQUAL(p.is_up()   ,  r.is_down() );
                 BOOST_CHECK_EQUAL(p.is_down() ,  r.is_up()   );

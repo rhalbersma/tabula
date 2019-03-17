@@ -108,8 +108,9 @@ public:
         }
 
         constexpr auto reverse() const noexcept
+                -> basic_direction
         {
-                return flip().flop();
+                return { -delta_file(), -delta_rank() };
         }
 };
 
