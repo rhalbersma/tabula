@@ -1,0 +1,85 @@
+set(cxx_compile_definitions
+    BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
+    BOOST_ALL_NO_LIB
+    BOOST_TEST_MAIN
+    $<$<CXX_COMPILER_ID:MSVC>:
+        _SCL_SECURE_NO_WARNINGS
+    >
+)
+
+set(cxx_compile_options_warnings
+    $<$<CXX_COMPILER_ID:MSVC>:
+        /W4
+        /WX
+    >
+    $<$<CXX_COMPILER_ID:Clang>:
+        -Weverything
+        -Wno-unknown-warning-option
+        -Wno-c++98-compat
+        -Wno-c++98-compat-pedantic
+        -Wno-ctad-maybe-unsupported
+        -Wno-disabled-macro-expansion
+        -Wno-global-constructors
+        -Wno-range-loop-analysis
+    >
+    $<$<CXX_COMPILER_ID:GNU>:
+        -Wall
+        -Wextra
+        -Wpedantic
+        -Wconversion
+        -Wshadow
+        -Wsign-compare
+        -Wsign-conversion
+        -Wsign-promo
+    >
+    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+        -Werror
+        -pedantic-errors
+        -Wno-padded
+    >
+)
+
+set(cxx_compile_options_debugsym
+    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+        -g
+    >
+)
+
+set(cxx_compile_options_optimize
+    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+        -O3
+        -march=native
+        -mtune=native
+    >
+)
+
+set(example_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(example_source_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
+file(GLOB_RECURSE targets RELATIVE ${example_source_dir} *.cpp)
+
+foreach(t ${targets})
+    get_filename_component(target_path ${t} PATH)
+    get_filename_component(target_name_we ${t} NAME_WE)
+    string(REPLACE "/" "." target_id ${target_path}/${target_name_we})
+    string(REGEX REPLACE "^[.]" "" target_id ${target_id})
+
+    add_executable(${target_id} src/${t})
+
+    target_link_libraries(${target_id} PRIVATE
+        tabula
+    )
+
+    target_include_directories(${target_id} PRIVATE
+        ${example_include_dir}
+    )
+
+    target_compile_definitions(${target_id} PRIVATE
+        ${cxx_compile_definitions}
+    )
+
+    target_compile_options(${target_id} PRIVATE
+        ${cxx_compile_options_warnings}
+        ${cxx_compile_options_debugsym}
+        ${cxx_compile_options_optimize}
+    )
+endforeach()
