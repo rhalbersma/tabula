@@ -8,19 +8,18 @@
 #include <tabula/direction.hpp>         // basic_direction
 #include <tabula/type_traits.hpp>       // is_chequered
 #include <array>                        // array
-#include <cstddef>                      // size_t
 
 namespace tabula {
 
 template<class Shape>
 class basic_compass
 {
-        // unit increment for the cardinal directions
+        // unit increment for the cardinal directions (N, E, S, W)
         constexpr static auto c = is_chequered<Shape> ? 2 : 1;
 
         using direction_type = basic_direction<Shape>;
 public:
-        enum : std::size_t { N, NE, E, SE, S, SW, W, NW };
+        enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
         constexpr static auto points = std::array
         {

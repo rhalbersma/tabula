@@ -3,6 +3,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
+#define BOOST_MPL_LIMIT_VECTOR_SIZE 50
+
 #include <tabula/compass.hpp>                   // basic_compass
 #include <tabula/shapes.hpp>                    // basic_rectangle
 #include <boost/mpl/vector.hpp>                 // vector
@@ -22,7 +25,38 @@ using shape_types = boost::mpl::vector<
         basic_rectangle<3, 3>,
         basic_rectangle<3, 5>,
         basic_rectangle<5, 3>,
-        chequered_rectangle<2, 2>
+        chequered_rectangle<4, 4>,
+        chequered_rectangle<4, 6>,
+        chequered_rectangle<6, 4>,
+        chequered_rectangle<4, 3>,
+        chequered_rectangle<3, 4>,
+        chequered_rectangle<3, 3>,
+        chequered_rectangle<3, 5>,
+        chequered_rectangle<5, 3>,
+        chequered_rectangle<4, 4, 0>,
+        chequered_rectangle<6, 4, 0>,
+        chequered_rectangle<4, 6, 0>,
+        chequered_rectangle<4, 3, 0>,
+        chequered_rectangle<3, 4, 0>,
+        chequered_rectangle<3, 3, 0>,
+        chequered_rectangle<3, 5, 0>,
+        chequered_rectangle<5, 3, 0>,
+        chequered_rectangle<4, 4, 1, 1>,
+        chequered_rectangle<6, 4, 1, 1>,
+        chequered_rectangle<4, 6, 1, 1>,
+        chequered_rectangle<4, 3, 1, 1>,
+        chequered_rectangle<3, 4, 1, 1>,
+        chequered_rectangle<3, 3, 1, 1>,
+        chequered_rectangle<3, 5, 1, 1>,
+        chequered_rectangle<5, 3, 1, 1>,
+        chequered_rectangle<4, 4, 0, 1>,
+        chequered_rectangle<6, 4, 0, 1>,
+        chequered_rectangle<4, 6, 0, 1>,
+        chequered_rectangle<4, 3, 0, 1>,
+        chequered_rectangle<3, 4, 0, 1>,
+        chequered_rectangle<3, 3, 0, 1>,
+        chequered_rectangle<3, 5, 0, 1>,
+        chequered_rectangle<5, 3, 0, 1>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(Reverse, T, shape_types)
