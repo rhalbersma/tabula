@@ -16,47 +16,47 @@ using namespace tabula;
 
 BOOST_AUTO_TEST_SUITE(Compass)
 
-using shape_types = boost::mpl::vector<
-        basic_rectangle<2, 2>,
-        basic_rectangle<2, 4>,
-        basic_rectangle<4, 2>,
-        basic_rectangle<2, 3>,
-        basic_rectangle<3, 2>,
-        basic_rectangle<3, 3>,
-        basic_rectangle<3, 5>,
-        basic_rectangle<5, 3>,
-        chequered_rectangle<4, 4>,
-        chequered_rectangle<4, 6>,
-        chequered_rectangle<6, 4>,
-        chequered_rectangle<4, 3>,
-        chequered_rectangle<3, 4>,
-        chequered_rectangle<3, 3>,
-        chequered_rectangle<3, 5>,
-        chequered_rectangle<5, 3>,
-        chequered_rectangle<4, 4, 0>,
-        chequered_rectangle<6, 4, 0>,
-        chequered_rectangle<4, 6, 0>,
-        chequered_rectangle<4, 3, 0>,
-        chequered_rectangle<3, 4, 0>,
-        chequered_rectangle<3, 3, 0>,
-        chequered_rectangle<3, 5, 0>,
-        chequered_rectangle<5, 3, 0>,
-        chequered_rectangle<4, 4, 1, 1>,
-        chequered_rectangle<6, 4, 1, 1>,
-        chequered_rectangle<4, 6, 1, 1>,
-        chequered_rectangle<4, 3, 1, 1>,
-        chequered_rectangle<3, 4, 1, 1>,
-        chequered_rectangle<3, 3, 1, 1>,
-        chequered_rectangle<3, 5, 1, 1>,
-        chequered_rectangle<5, 3, 1, 1>,
-        chequered_rectangle<4, 4, 0, 1>,
-        chequered_rectangle<6, 4, 0, 1>,
-        chequered_rectangle<4, 6, 0, 1>,
-        chequered_rectangle<4, 3, 0, 1>,
-        chequered_rectangle<3, 4, 0, 1>,
-        chequered_rectangle<3, 3, 0, 1>,
-        chequered_rectangle<3, 5, 0, 1>,
-        chequered_rectangle<5, 3, 0, 1>
+using shape_types = boost::mpl::vector
+<       basic_rectangle<2, 2>
+,       basic_rectangle<2, 4>
+,       basic_rectangle<4, 2>
+,       basic_rectangle<2, 3>
+,       basic_rectangle<3, 2>
+,       basic_rectangle<3, 3>
+,       basic_rectangle<3, 5>
+,       basic_rectangle<5, 3>
+,       chequered_rectangle<4, 4>
+,       chequered_rectangle<4, 6>
+,       chequered_rectangle<6, 4>
+,       chequered_rectangle<4, 3>
+,       chequered_rectangle<3, 4>
+,       chequered_rectangle<3, 3>
+,       chequered_rectangle<3, 5>
+,       chequered_rectangle<5, 3>
+,       chequered_rectangle<4, 4, 0>
+,       chequered_rectangle<6, 4, 0>
+,       chequered_rectangle<4, 6, 0>
+,       chequered_rectangle<4, 3, 0>
+,       chequered_rectangle<3, 4, 0>
+,       chequered_rectangle<3, 3, 0>
+,       chequered_rectangle<3, 5, 0>
+,       chequered_rectangle<5, 3, 0>
+,       chequered_rectangle<4, 4, 1, 1>
+,       chequered_rectangle<6, 4, 1, 1>
+,       chequered_rectangle<4, 6, 1, 1>
+,       chequered_rectangle<4, 3, 1, 1>
+,       chequered_rectangle<3, 4, 1, 1>
+,       chequered_rectangle<3, 3, 1, 1>
+,       chequered_rectangle<3, 5, 1, 1>
+,       chequered_rectangle<5, 3, 1, 1>
+,       chequered_rectangle<4, 4, 0, 1>
+,       chequered_rectangle<6, 4, 0, 1>
+,       chequered_rectangle<4, 6, 0, 1>
+,       chequered_rectangle<4, 3, 0, 1>
+,       chequered_rectangle<3, 4, 0, 1>
+,       chequered_rectangle<3, 3, 0, 1>
+,       chequered_rectangle<3, 5, 0, 1>
+,       chequered_rectangle<5, 3, 0, 1>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(Reverse, T, shape_types)
