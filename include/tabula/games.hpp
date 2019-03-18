@@ -5,6 +5,6 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/games/draughts.hpp>    // basic_rectangle
+#include <tabula/games/draughts.hpp>    //
 #include <tabula/games/stratego.hpp>    // l_attaque, classic, quick_arena
 

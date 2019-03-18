@@ -23,8 +23,7 @@ public:
                 m_file{f},
                 m_rank{r}
         {
-                assert(0 <= f && f < Shape::width);
-                assert(0 <= r && r < Shape::height);
+                assert(is_bounded());
         }
 
         template<class Embedded, std::enable_if_t<
@@ -47,6 +46,14 @@ public:
         constexpr auto rank() const noexcept
         {
                 return m_rank;
+        }
+
+        constexpr auto is_bounded() const noexcept
+        {
+                return
+                        0 <= file() && file() < Shape::width &&
+                        0 <= rank() && rank() < Shape::height
+                ;
         }
 
         constexpr auto is_colored() const noexcept

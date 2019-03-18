@@ -6,7 +6,6 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/type_traits.hpp>       // is_chequered, is_equal_coloring, lake_t, flip_t, flop_t, swap_t
-#include <cassert>                      // assert
 #include <type_traits>                  // enable_if_t, is_same_v
 #include <utility>                      // pair
 
@@ -22,10 +21,7 @@ public:
         :
                 m_delta_file{df},
                 m_delta_rank{dr}
-        {
-                assert(-Shape::width  < df && df < Shape::width);
-                assert(-Shape::height < dr && dr < Shape::height);
-        }
+        {}
 
         template<class Embedded, std::enable_if_t<
                 Embedded::width  <  Shape::width &&
@@ -53,6 +49,14 @@ public:
         {
                 constexpr auto d = is_chequered<Shape> ? 2 : 1;
                 return (delta_file() + delta_rank() * Shape::width) / d;
+        }
+
+        constexpr auto is_bounded() const noexcept
+        {
+                return
+                        -Shape::width  < delta_file() && delta_file() < Shape::width &&
+                        -Shape::height < delta_rank() && delta_rank() < Shape::height
+                ;
         }
 
         constexpr auto is_cardinal() const noexcept

@@ -25,21 +25,21 @@ using shape_types = boost::mpl::vector<
         chequered_rectangle<2, 2>
 >;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(ReverseDirections, T, shape_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(Reverse, T, shape_types)
 {
         constexpr auto compass = basic_compass<T>{};
         for (auto p : compass.points) {
                 auto const r = p.reverse();
                 BOOST_CHECK(p != r);
                 BOOST_CHECK_EQUAL(p.stride()  , -r.stride()  );
-                BOOST_CHECK_EQUAL(p.is_up()   ,  r.is_down() );
-                BOOST_CHECK_EQUAL(p.is_down() ,  r.is_up()   );
                 BOOST_CHECK_EQUAL(p.is_left() ,  r.is_right());
                 BOOST_CHECK_EQUAL(p.is_right(),  r.is_left() );
+                BOOST_CHECK_EQUAL(p.is_up()   ,  r.is_down() );
+                BOOST_CHECK_EQUAL(p.is_down() ,  r.is_up()   );
         }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, T, shape_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(Cardinal, T, shape_types)
 {
         constexpr auto compass = basic_compass<T>{};
         for (auto p : { compass.N, compass.E, compass.S, compass.W }) {
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, T, shape_types)
         }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreOrdinal, T, shape_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(Ordinal, T, shape_types)
 {
         constexpr auto compass = basic_compass<T>{};
         for (auto p : { compass.NE, compass.SE, compass.SW, compass.NW }) {
