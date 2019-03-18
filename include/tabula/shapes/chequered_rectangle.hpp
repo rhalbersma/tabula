@@ -5,8 +5,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <tabula/functional.hpp>        // flip_, flop_, swap_
 #include <tabula/lakes.hpp>             // basic_lakes
-#include <tabula/type_traits.hpp>       // flip_t, flop_t, swap_t
 
 namespace tabula {
 

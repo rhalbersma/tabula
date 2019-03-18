@@ -8,18 +8,33 @@
 #include <tabula/compass.hpp>                   // basic_compass
 #include <tabula/direction.hpp>                 // basic_direction
 #include <tabula/embedding.hpp>                 // basic_embedding
+#include <tabula/functional.hpp>                // flip_fn, flop_fn, swap_fn
 #include <tabula/lakes.hpp>                     // basic_lakes
 #include <tabula/square.hpp>                    // basic_square
-#include <tabula/transforms.hpp>                // transforms
 #include <tabula/type_traits.hpp>               // is_chequered, square_t, direction_t, flip_t
+#include <boost/hana/functional/compose.hpp>    // compose
+#include <boost/hana/functional/id.hpp>         // id
 #include <boost/hana/integral_constant.hpp>     // int_c
 #include <boost/hana/minimum.hpp>               // minimum.by
 #include <boost/hana/ordering.hpp>              // ordering
+#include <boost/hana/reverse.hpp>               // reverse
+#include <boost/hana/tuple.hpp>                 // make_tuple
 #include <array>                                // array
 #include <cstddef>                              // size_t
 #include <optional>                             // optional
 
 namespace tabula {
+
+inline constexpr auto transforms = boost::hana::reverse(boost::hana::make_tuple(
+        boost::hana::id,                                // origin at lower-left, left-to-right, bottom-to-top
+        swap_fn,                                        // origin at lower-left, bottom-to-top, left-to-right
+        flip_fn,                                        // origin at upper-left, left-to-right, top-to-bottom
+        boost::hana::compose(swap_fn, flip_fn),         // origin at upper-left, top-to-bottom, left-to-right
+        flop_fn,                                        // origin at lower-right, right-to-left, bottom-to-top
+        boost::hana::compose(swap_fn, flop_fn),         // origin at lower-right, bottom-to-top, right-to-left
+        boost::hana::compose(flop_fn, flip_fn),         // origin at upper-right, right-to-left, top-to-bottom
+        boost::hana::compose(swap_fn, flop_fn, flip_fn) // origin at upper-right, top-to-bottom, right-to-left
+));
 
 template<class Shape>
 class basic_board

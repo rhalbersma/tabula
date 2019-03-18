@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/shapes.hpp>                    // basic_rectangle
 #include <tabula/compass.hpp>                   // basic_compass
+#include <tabula/shapes.hpp>                    // basic_rectangle
 #include <boost/mpl/vector.hpp>                 // vector
 #include <boost/test/test_case_template.hpp>    // BOOST_AUTO_TEST_CASE_TEMPLATE
 #include <boost/test/unit_test.hpp>             // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END
@@ -14,7 +14,15 @@ using namespace tabula;
 BOOST_AUTO_TEST_SUITE(Compass)
 
 using shape_types = boost::mpl::vector<
-        basic_rectangle< 2, 2>
+        basic_rectangle<2, 2>,
+        basic_rectangle<2, 4>,
+        basic_rectangle<4, 2>,
+        basic_rectangle<2, 3>,
+        basic_rectangle<3, 2>,
+        basic_rectangle<3, 3>,
+        basic_rectangle<3, 5>,
+        basic_rectangle<5, 3>,
+        chequered_rectangle<2, 2>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(ReverseDirections, T, shape_types)
