@@ -35,4 +35,3 @@ struct basic_rectangle
 };
 
 }       // namespace tabula
-

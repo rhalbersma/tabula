@@ -118,4 +118,3 @@ auto& operator<<(std::basic_ostream<CharT, Traits>& ostr, basic_board<Shape> con
 }
 
 }       // tabula
-

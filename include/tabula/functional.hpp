@@ -10,8 +10,6 @@ namespace tabula {
 template<class UnaryFunction>
 struct flip_
 {
-        constexpr static auto size = UnaryFunction::size;
-
         template<class Arg>
         constexpr auto operator()(Arg const& arg) const noexcept
         {
@@ -22,8 +20,6 @@ struct flip_
 template<class UnaryFunction>
 struct flop_
 {
-        constexpr static auto size = UnaryFunction::size;
-
         template<class Arg>
         constexpr auto operator()(Arg const& arg) const noexcept
         {
@@ -34,8 +30,6 @@ struct flop_
 template<class UnaryFunction>
 struct swap_
 {
-        constexpr static auto size = UnaryFunction::size;
-
         template<class Arg>
         constexpr auto operator()(Arg const& arg) const noexcept
         {
@@ -48,4 +42,3 @@ inline constexpr auto flop_fn = [](auto const& arg) { return arg.flop(); };
 inline constexpr auto swap_fn = [](auto const& arg) { return arg.swap(); };
 
 }       // namespace tabula
-

@@ -132,4 +132,3 @@ constexpr auto operator!=(basic_direction<Shape> const& lhs, basic_direction<Sha
 }
 
 }       // namespace tabula
-

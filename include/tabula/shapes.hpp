@@ -7,4 +7,3 @@
 
 #include <tabula/shapes/basic_rectangle.hpp>            // basic_rectangle
 #include <tabula/shapes/chequered_rectangle.hpp>        // chequered_rectangle
-

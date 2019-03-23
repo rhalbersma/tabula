@@ -42,4 +42,3 @@ template<class T> using flop_t = typename T::flop_type;
 template<class T> using swap_t = typename T::swap_type;
 
 }       // namespace tabula
-

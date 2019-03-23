@@ -7,4 +7,3 @@
 
 #include <tabula/games/draughts.hpp>    //
 #include <tabula/games/stratego.hpp>    // l_attaque, classic, quick_arena
-

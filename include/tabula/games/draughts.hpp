@@ -47,4 +47,3 @@ using turkish           = basic_rectangle< 8, 8>;
 using dameo             = turkish;
 
 }       // namespace tabula::draughts
-

@@ -32,4 +32,3 @@ using quick_arena = basic_rectangle<8, 8, basic_lakes<
 >>;
 
 }       // namespace tabula::stratego
-

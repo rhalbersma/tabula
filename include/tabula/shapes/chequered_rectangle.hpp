@@ -39,4 +39,3 @@ struct chequered_rectangle
 };
 
 }       // namespace tabula
-

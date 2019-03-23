@@ -72,7 +72,7 @@ public:
 
         constexpr auto is_valid() const noexcept
         {
-                return is_colored() && !is_lake();
+                return is_bounded() && is_colored() && !is_lake();
         }
 
         constexpr auto index() const noexcept
@@ -118,4 +118,3 @@ constexpr auto operator!=(basic_square<Shape> const& lhs, basic_square<Shape> co
 }
 
 }       // namespace tabula
-

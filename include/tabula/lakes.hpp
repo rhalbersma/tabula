@@ -16,8 +16,6 @@ struct cut;
 template<char... Fs, int... Rs>
 struct basic_lakes<cut<Fs, Rs>...>
 {
-        constexpr static auto size = sizeof...(Fs);
-
         template<class Square>
         constexpr auto operator()(Square const& sq) const noexcept
         {
@@ -26,4 +24,3 @@ struct basic_lakes<cut<Fs, Rs>...>
 };
 
 }       // namespace tabula
-
