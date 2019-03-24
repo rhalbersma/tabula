@@ -121,7 +121,7 @@ public:
 template<class Shape>
 constexpr auto operator==(basic_direction<Shape> const& lhs, basic_direction<Shape> const& rhs) noexcept
 {
-        constexpr auto as_pair = [](auto const& sq) { return std::pair{sq.delta_file(), sq.delta_rank()}; };
+        constexpr auto as_pair = [](auto const& sq) { return std::pair{ sq.delta_file(), sq.delta_rank() }; };
         return as_pair(lhs) == as_pair(rhs);
 }
 

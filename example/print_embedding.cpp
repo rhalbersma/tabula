@@ -45,7 +45,7 @@ int main()
         );
 
         boost::hana::for_each(boards, [](auto b) {
-                std::cout << format_square::embedding << b << '\n';
+                std::cout << format_square::algebraic << b << '\n';
                 std::cout << "W = " << b.width << ", H = " << b.height;
                 using shape_type = shape_t<decltype(b)>;
                 if constexpr (is_chequered<shape_type>) {

@@ -52,28 +52,16 @@ class basic_board
         using   numeric_square_type = flip_t<algebraic_square_type>;
         using embedding_square_type = square_t<decltype(embedding_image_v)>;
 
-        constexpr static auto numeric_square(algebraic_square_type const& sq) // Throws: Nothing.
+        constexpr static auto numeric_square(algebraic_square_type const& sq) noexcept
         {
                 return sq.flip();
         }
 
-        constexpr static auto embedding_square(algebraic_square_type const& sq) // Throws: Nothing.
+        constexpr static auto embedding_square(algebraic_square_type const& sq) noexcept
                 -> embedding_square_type
         {
                 return transform_v(sq);
         }
-
-        inline const static auto algebraic_table = []() {
-                std::array<std::optional<algebraic_square_type>, embedding_image_v.size> table{};
-                for (auto r = 0; r < Shape::height; ++r) {
-                        for (auto f = 0; f < Shape::width; ++f) {
-                                if (auto const sq = algebraic_square_type{f, r}; sq.is_valid()) {
-                                        table[static_cast<std::size_t>(embedding_square(sq).index())] = sq;
-                                }
-                        }
-                }
-                return table;
-        }();
 
         constexpr static auto numeric_table = []() {
                 std::array<std::optional<int>, embedding_image_v.size> table{};
@@ -112,20 +100,6 @@ public:
                 -> square_type
         {
                 return { f, r };
-        }
-
-        static auto algebraic(int i) // Throws: Nothing.
-        {
-                assert(0 <= i && i < embedding_size);
-                auto const t = algebraic_table[static_cast<std::size_t>(i)];
-                assert(t);
-                return *t;
-        }
-
-        static auto algebraic(square_type const& sq) // Throws: Nothing.
-        {
-                assert(sq.is_valid());
-                return algebraic(embedding_square(sq).index());
         }
 
         constexpr static auto numeric0(int i) // Throws: Nothing.

@@ -107,7 +107,7 @@ public:
 template<class Shape>
 constexpr auto operator==(basic_square<Shape> const& lhs, basic_square<Shape> const& rhs) noexcept
 {
-        constexpr auto as_pair = [](auto const& sq) { return std::pair{sq.file(), sq.rank()}; };
+        constexpr auto as_pair = [](auto const& sq) { return std::pair{ sq.file(), sq.rank() }; };
         return as_pair(lhs) == as_pair(rhs);
 }
 
