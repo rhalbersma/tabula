@@ -29,7 +29,7 @@ public:
                 is_equal_coloring<Embedded, Shape> &&
                 std::is_same_v<lake_t<Embedded>, lake_t<Shape>>
         >...>
-        /* explicit(false) */ constexpr basic_direction(basic_direction<Embedded> const& dir) noexcept
+        constexpr /* explicit(false) */ basic_direction(basic_direction<Embedded> const& dir) noexcept
         :
                 m_delta_file{dir.delta_file()},
                 m_delta_rank{dir.delta_rank()}
@@ -121,7 +121,7 @@ public:
 template<class Shape>
 constexpr auto operator==(basic_direction<Shape> const& lhs, basic_direction<Shape> const& rhs) noexcept
 {
-        constexpr auto as_pair = [](auto const& sq) { return std::pair{ sq.delta_file(), sq.delta_rank() }; };
+        constexpr auto as_pair = [](auto const& sq) { return std::pair{sq.delta_file(), sq.delta_rank()}; };
         return as_pair(lhs) == as_pair(rhs);
 }
 

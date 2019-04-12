@@ -32,7 +32,7 @@ public:
                 is_equal_coloring<Embedded, Shape> &&
                 std::is_same_v<lake_t<Embedded>, lake_t<Shape>>
         >...>
-        /* explicit(false) */ constexpr basic_square(basic_square<Embedded> const& sq) noexcept
+        constexpr /* explicit(false) */ basic_square(basic_square<Embedded> const& sq) noexcept
         :
                 m_file{sq.file()},
                 m_rank{sq.rank()}
@@ -107,7 +107,7 @@ public:
 template<class Shape>
 constexpr auto operator==(basic_square<Shape> const& lhs, basic_square<Shape> const& rhs) noexcept
 {
-        constexpr auto as_pair = [](auto const& sq) { return std::pair{ sq.file(), sq.rank() }; };
+        constexpr auto as_pair = [](auto const& sq) { return std::pair{sq.file(), sq.rank()}; };
         return as_pair(lhs) == as_pair(rhs);
 }
 
