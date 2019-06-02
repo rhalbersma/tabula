@@ -36,124 +36,128 @@ inline constexpr auto transforms = boost::hana::reverse(boost::hana::make_tuple(
         boost::hana::compose(swap_fn, flop_fn, flip_fn) // origin at upper-right, top-to-bottom, right-to-left
 ));
 
-template<class Shape>
-class basic_board
+template<class Shape, class Padding>
+struct basic_board
 {
-        constexpr static auto embedding_v = basic_embedding<Shape>{};
-        constexpr static auto transform_v = boost::hana::minimum.by(boost::hana::ordering([](auto fun) {
-                return boost::hana::int_c<fun(embedding_v).size>;
+        static constexpr auto embedding_v = basic_embedding<Shape, Padding>{};
+        static constexpr auto transform_v = boost::hana::minimum.by(boost::hana::ordering([](auto fun) {
+                return boost::hana::int_c<fun(embedding_v).valid_padded_size>;
         }), transforms);
-        constexpr static auto embedding_image_v = transform_v(embedding_v);
+        static constexpr auto image_v = transform_v(embedding_v);
 
+        using square_type = basic_square<Shape>;
         using direction_type = basic_direction<Shape>;
-        using embedding_direction_type = direction_t<decltype(embedding_image_v)>;
+        using padded_square_type = typename decltype(image_v)::padded_square_type;
+        using padded_direction_type = typename decltype(image_v)::padded_direction_type;
 
-        using algebraic_square_type = basic_square<Shape>;
-        using   numeric_square_type = flip_t<algebraic_square_type>;
-        using embedding_square_type = square_t<decltype(embedding_image_v)>;
-
-        constexpr static auto numeric_square(algebraic_square_type const& sq) noexcept
+        static constexpr auto to_sequential(square_type const& sq) noexcept
         {
                 return sq.flip();
         }
 
-        constexpr static auto embedding_square(algebraic_square_type const& sq) noexcept
-                -> embedding_square_type
+        static constexpr auto to_padded(square_type const& sq) noexcept
         {
-                return transform_v(sq);
+                return image_v.to_padded(transform_v(sq));
         }
 
-        constexpr static auto numeric_table = []() {
-                std::array<std::optional<int>, embedding_image_v.size> table{};
+        static constexpr auto to_padded(direction_type const& dir) noexcept
+                -> padded_direction_type
+        {
+                auto const t = transform_v(dir);
+                return { t.delta_file(), t.delta_rank() };
+        }
+
+        static constexpr auto padded2sequential_table = []() {
+                std::array<std::optional<int>, image_v.padded_size> table{};
                 for (auto r = 0; r < Shape::height; ++r) {
                         for (auto f = 0; f < Shape::width; ++f) {
-                                if (auto const sq = algebraic_square_type{f, r}; sq.is_valid()) {
-                                        table[static_cast<std::size_t>(embedding_square(sq).index())] = numeric_square(sq).index();
+                                if (auto const sq = square_type{f, r}; sq.is_valid()) {
+                                        table[static_cast<std::size_t>(to_padded(sq).index())] = to_sequential(sq).index();
                                 }
                         }
                 }
                 return table;
         }();
 
-        constexpr static auto embedding_table = []() {
-                std::array<std::optional<int>, embedding_image_v.embedded_size> table{};
+        static constexpr auto sequential2padded_table = []() {
+                std::array<std::optional<int>, image_v.size> table{};
                 for (auto r = 0; r < Shape::height; ++r) {
                         for (auto f = 0; f < Shape::width; ++f) {
-                                if (auto const sq = algebraic_square_type{f, r}; sq.is_valid()) {
-                                        table[static_cast<std::size_t>(numeric_square(sq).index())] = embedding_square(sq).index();
+                                if (auto const sq = square_type{f, r}; sq.is_valid()) {
+                                        table[static_cast<std::size_t>(to_sequential(sq).index())] = to_padded(sq).index();
                                 }
                         }
                 }
                 return table;
         }();
 public:
-        constexpr static auto width = Shape::width;
-        constexpr static auto height = Shape::height;
+        static constexpr auto width = Shape::width;
+        static constexpr auto height = Shape::height;
         using shape_type = Shape;
+        using padding_type = Padding;
 
-        constexpr static auto size = embedding_image_v.embedded_size;
-        constexpr static auto embedding_size = embedding_image_v.size;
+        static constexpr auto size = image_v.size;
+        static constexpr auto padded_size = image_v.padded_size;
+        static constexpr auto valid_padded_size = image_v.valid_padded_size;
 
-        using square_type = algebraic_square_type;
-
-        constexpr static auto square(int f, int r) // Throws: Nothing.
+        static constexpr auto square(int f, int r) // Throws: Nothing.
                 -> square_type
         {
                 return { f, r };
         }
 
-        constexpr static auto numeric0(int i) // Throws: Nothing.
+        static constexpr auto sequential0(int i) // Throws: Nothing.
         {
-                assert(0 <= i && i < embedding_size);
-                auto const t = numeric_table[static_cast<std::size_t>(i)];
+                assert(0 <= i && i < padded_size);
+                auto const t = padded2sequential_table[static_cast<std::size_t>(i)];
                 assert(t);
                 return *t;
         }
 
-        constexpr static auto numeric1(int i) // Throws: Nothing.
+        static constexpr auto sequential1(int i) // Throws: Nothing.
         {
-                assert(0 <= i && i < embedding_size);
-                return numeric0(i) + 1;
+                assert(0 <= i && i < padded_size);
+                return sequential0(i) + 1;
         }
 
-        constexpr static auto numeric0(square_type const& sq) // Throws: Nothing.
-        {
-                assert(sq.is_valid());
-                return numeric0(embedding_square(sq).index());
-        }
-
-        constexpr static auto numeric1(square_type const& sq) // Throws: Nothing.
+        static constexpr auto sequential0(square_type const& sq) // Throws: Nothing.
         {
                 assert(sq.is_valid());
-                return numeric1(embedding_square(sq).index());
+                return sequential0(to_padded(sq).index());
         }
 
-        constexpr static auto embedding0(int n0) // Throws: Nothing.
+        static constexpr auto sequential1(square_type const& sq) // Throws: Nothing.
+        {
+                assert(sq.is_valid());
+                return sequential1(to_padded(sq).index());
+        }
+
+        static constexpr auto padded0(int n0) // Throws: Nothing.
         {
                 assert(0 <= n0 && n0 < size);
-                auto const t = embedding_table[static_cast<std::size_t>(n0)];
+                auto const t = sequential2padded_table[static_cast<std::size_t>(n0)];
                 assert(t);
                 return *t;
         }
 
-        constexpr static auto embedding1(int n1) // Throws: Nothing.
+        static constexpr auto padded1(int n1) // Throws: Nothing.
         {
                 assert(1 <= n1 && n1 <= size);
-                return embedding0(n1 - 1);
+                return padded0(n1 - 1);
         }
 
-        constexpr static auto embedding(square_type const& sq) // Throws: Nothing.
+        static constexpr auto padded(square_type const& sq) // Throws: Nothing.
         {
                 assert(sq.is_valid());
-                return embedding0(numeric_square(sq).index());
+                return padded0(to_sequential(sq).index());
         }
 
-        constexpr static auto strides = []() {
+        static constexpr auto strides = []() {
                 constexpr auto points = basic_compass<Shape>{}.points;
                 std::array<int, points.size()> table{};
                 auto i = std::size_t{0};
                 for (auto p : points) {
-                        table[i++] = embedding_direction_type{transform_v(p)}.stride();
+                        table[i++] = to_padded(p).stride();
                 }
                 return table;
         }();

@@ -5,8 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/type_traits.hpp>       // is_chequered, is_equal_coloring, lake_t, flip_t, flop_t, swap_t
-#include <type_traits>                  // enable_if_t, is_same_v
+#include <tabula/type_traits.hpp>       // is_chequered, lake_t, flip_t, flop_t, swap_t
 #include <utility>                      // pair
 
 namespace tabula {
@@ -23,18 +22,6 @@ public:
                 m_delta_rank{dr}
         {}
 
-        template<class Embedded, std::enable_if_t<
-                Embedded::width  <  Shape::width &&
-                Embedded::height == Shape::height &&
-                is_equal_coloring<Embedded, Shape> &&
-                std::is_same_v<lake_t<Embedded>, lake_t<Shape>>
-        >...>
-        constexpr /* explicit(false) */ basic_direction(basic_direction<Embedded> const& dir) noexcept
-        :
-                m_delta_file{dir.delta_file()},
-                m_delta_rank{dir.delta_rank()}
-        {}
-
         constexpr auto delta_file() const noexcept
         {
                 return m_delta_file;
@@ -43,12 +30,6 @@ public:
         constexpr auto delta_rank() const noexcept
         {
                 return m_delta_rank;
-        }
-
-        constexpr auto stride() const noexcept
-        {
-                constexpr auto d = is_chequered<Shape> ? 2 : 1;
-                return (delta_file() + delta_rank() * Shape::width) / d;
         }
 
         constexpr auto is_bounded() const noexcept
@@ -87,6 +68,12 @@ public:
         constexpr auto is_down() const noexcept
         {
                 return delta_rank() < 0;
+        }
+
+        constexpr auto stride() const noexcept
+        {
+                constexpr auto d = is_chequered<Shape> ? 2 : 1;
+                return (delta_file() + delta_rank() * Shape::width) / d;
         }
 
         using flip_type = basic_direction<flip_t<Shape>>;

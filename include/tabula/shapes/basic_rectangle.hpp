@@ -10,30 +10,27 @@
 
 namespace tabula {
 
-template
-<
-        int Width,
-        int Height,
-        class Lakes = basic_lakes<>,
-        int Separation = 1
->
+template<int Width, int Height, class Lakes = basic_lakes<>>
 struct basic_rectangle
 {
         static_assert(0 < Width);
         static_assert(0 < Height);
-        static_assert(0 < Separation);
 
-        constexpr static auto width = Width;
-        constexpr static auto height = Height;
+        static constexpr auto width = Width;
+        static constexpr auto height = Height;
+        static constexpr auto size = Width * Height;
+
         using lake_type = Lakes;
-        constexpr static auto separation = Separation;
+        using flip_type = basic_rectangle<Width, Height, flip_<Lakes>>;
+        using flop_type = basic_rectangle<Width, Height, flop_<Lakes>>;
+        using swap_type = basic_rectangle<Height, Width, swap_<Lakes>>;
 
-        constexpr static auto size = Width * Height;
-
-        using wrap_type = basic_rectangle<Width + Separation, Height,       Lakes >;
-        using flip_type = basic_rectangle<Width             , Height, flip_<Lakes>>;
-        using flop_type = basic_rectangle<Width             , Height, flop_<Lakes>>;
-        using swap_type = basic_rectangle<Height            , Width , swap_<Lakes>>;
+        template<class Padding>
+        using padded_type = basic_rectangle<
+                Width + Padding::left + Padding::right,
+                Height + Padding::top + Padding::bottom,
+                Lakes
+        >;
 };
 
 }       // namespace tabula

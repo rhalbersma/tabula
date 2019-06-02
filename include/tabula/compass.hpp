@@ -11,17 +11,17 @@
 
 namespace tabula {
 
-template<class Shape>
+template<class Rectangle>
 class basic_compass
 {
         // unit increment for the cardinal directions (N, E, S, W)
-        constexpr static auto c = is_chequered<Shape> ? 2 : 1;
+        static constexpr auto c = is_chequered<Rectangle> ? 2 : 1;
 
-        using direction_type = basic_direction<Shape>;
+        using direction_type = basic_direction<Rectangle>;
 public:
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
-        constexpr static auto points = std::array
+        static constexpr auto points = std::array
         {
                 direction_type{ 0, c},  // N
                 direction_type{ 1, 1},  // NE

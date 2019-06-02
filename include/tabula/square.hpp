@@ -5,9 +5,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/type_traits.hpp>       // is_chequered, is_equal_coloring, lake_t, flip_t, flop_t, swap_t
+#include <tabula/type_traits.hpp>       // is_chequered, lake_t, flip_t, flop_t, swap_t
 #include <cassert>                      // assert
-#include <type_traits>                  // enable_if_t, is_same_v
 #include <utility>                      // pair
 
 namespace tabula {
@@ -25,18 +24,6 @@ public:
         {
                 assert(is_bounded());
         }
-
-        template<class Embedded, std::enable_if_t<
-                Embedded::width    <  Shape::width &&
-                Embedded::height   == Shape::height &&
-                is_equal_coloring<Embedded, Shape> &&
-                std::is_same_v<lake_t<Embedded>, lake_t<Shape>>
-        >...>
-        constexpr /* explicit(false) */ basic_square(basic_square<Embedded> const& sq) noexcept
-        :
-                m_file{sq.file()},
-                m_rank{sq.rank()}
-        {}
 
         constexpr auto file() const noexcept
         {

@@ -10,34 +10,29 @@
 
 namespace tabula {
 
-template
-<
-        int Width,
-        int Height,
-        bool Coloring = true,
-        bool IsOrthogonalJumps = false,
-        class Lakes = basic_lakes<>,
-        int Separation = (Width % 2) ? 2 : (IsOrthogonalJumps ? 3 : 1)
->
+template<int Width, int Height, bool Coloring = true, class Lakes = basic_lakes<>>
 struct chequered_rectangle
 {
         static_assert(0 < Width);
         static_assert(0 < Height);
-        static_assert(0 < Separation);
 
-        constexpr static auto width = Width;
-        constexpr static auto height = Height;
-        constexpr static auto coloring = Coloring;
-        constexpr static auto is_orthogonal_jumps = IsOrthogonalJumps;
+        static constexpr auto width = Width;
+        static constexpr auto height = Height;
+        static constexpr auto coloring = Coloring;
+        static constexpr auto size = (Width * Height + Coloring) / 2;
+
         using lake_type = Lakes;
-        constexpr static auto separation = Separation;
+        using flip_type = chequered_rectangle<Width, Height, Coloring ^ !(Height % 2), flip_<Lakes>>;
+        using flop_type = chequered_rectangle<Width, Height, Coloring ^ !(Width  % 2), flop_<Lakes>>;
+        using swap_type = chequered_rectangle<Height, Width, Coloring,                 swap_<Lakes>>;
 
-        constexpr static auto size = (Width * Height + Coloring) / 2;
-
-        using wrap_type = chequered_rectangle<Width + Separation, Height, Coloring                , IsOrthogonalJumps,       Lakes >;
-        using flip_type = chequered_rectangle<Width             , Height, Coloring ^ !(Height % 2), IsOrthogonalJumps, flip_<Lakes>>;
-        using flop_type = chequered_rectangle<Width             , Height, Coloring ^ !(Width  % 2), IsOrthogonalJumps, flop_<Lakes>>;
-        using swap_type = chequered_rectangle<Height            , Width , Coloring                , IsOrthogonalJumps, swap_<Lakes>>;
+        template<class Padding>
+        using padded_type = chequered_rectangle<
+                Width + Padding::left + Padding::right,
+                Height + Padding::top + Padding::bottom,
+                Coloring ^ (Padding::bottom % 2) ^ (Padding::left % 2),
+                Lakes
+        >;
 };
 
 }       // namespace tabula

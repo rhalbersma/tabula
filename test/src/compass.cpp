@@ -7,6 +7,7 @@
 #define BOOST_MPL_LIMIT_VECTOR_SIZE 50
 
 #include <tabula/compass.hpp>                   // basic_compass
+#include <tabula/games.hpp>                     // draughts, stratego
 #include <tabula/shapes.hpp>                    // basic_rectangle, chequered_rectangle
 #include <boost/mpl/vector.hpp>                 // vector
 #include <boost/test/test_case_template.hpp>    // BOOST_AUTO_TEST_CASE_TEMPLATE
@@ -41,39 +42,9 @@ using shape_types = boost::mpl::vector
 ,       chequered_rectangle<3, 3, 0>
 ,       chequered_rectangle<3, 5, 0>
 ,       chequered_rectangle<5, 3, 0>
-,       chequered_rectangle<4, 4, 1, 1>
-,       chequered_rectangle<6, 4, 1, 1>
-,       chequered_rectangle<4, 6, 1, 1>
-,       chequered_rectangle<4, 3, 1, 1>
-,       chequered_rectangle<3, 4, 1, 1>
-,       chequered_rectangle<3, 3, 1, 1>
-,       chequered_rectangle<3, 5, 1, 1>
-,       chequered_rectangle<5, 3, 1, 1>
-,       chequered_rectangle<4, 4, 0, 1>
-,       chequered_rectangle<6, 4, 0, 1>
-,       chequered_rectangle<4, 6, 0, 1>
-,       chequered_rectangle<4, 3, 0, 1>
-,       chequered_rectangle<3, 4, 0, 1>
-,       chequered_rectangle<3, 3, 0, 1>
-,       chequered_rectangle<3, 5, 0, 1>
-,       chequered_rectangle<5, 3, 0, 1>
 >;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(Reverse, T, shape_types)
-{
-        constexpr auto compass = basic_compass<T>{};
-        for (auto p : compass.points) {
-                auto const r = p.reverse();
-                BOOST_CHECK(p != r);
-                BOOST_CHECK_EQUAL(p.stride()  , -r.stride()  );
-                BOOST_CHECK_EQUAL(p.is_left() ,  r.is_right());
-                BOOST_CHECK_EQUAL(p.is_right(),  r.is_left() );
-                BOOST_CHECK_EQUAL(p.is_up()   ,  r.is_down() );
-                BOOST_CHECK_EQUAL(p.is_down() ,  r.is_up()   );
-        }
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(Cardinal, T, shape_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(IsCardinal, T, shape_types)
 {
         constexpr auto compass = basic_compass<T>{};
         for (auto p : { compass.N, compass.E, compass.S, compass.W }) {
@@ -81,11 +52,24 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(Cardinal, T, shape_types)
         }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(Ordinal, T, shape_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(IsOrdinal, T, shape_types)
 {
         constexpr auto compass = basic_compass<T>{};
         for (auto p : { compass.NE, compass.SE, compass.SW, compass.NW }) {
                 BOOST_CHECK(compass.points[p].is_ordinal());
+        }
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, T, shape_types)
+{
+        constexpr auto compass = basic_compass<T>{};
+        for (auto p : compass.points) {
+                auto const r = p.reverse();
+                BOOST_CHECK(p != r);
+                BOOST_CHECK_EQUAL(p.is_left() ,  r.is_right());
+                BOOST_CHECK_EQUAL(p.is_right(),  r.is_left() );
+                BOOST_CHECK_EQUAL(p.is_up()   ,  r.is_down() );
+                BOOST_CHECK_EQUAL(p.is_down() ,  r.is_up()   );
         }
 }
 

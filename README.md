@@ -10,8 +10,8 @@ This header-only library depends on the C++ Standard Library and Boost.Hana, and
 
 | Platform | Compiler | Versions | Build |
 | :------- | :------- | :------- | :---- |
-| Linux    | Clang <br> GCC | 6.0, 7, 8, 9-SVN<br> 7.4, 8.3, 9-SVN | [![codecov](https://codecov.io/gh/rhalbersma/tabula/branch/master/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula) <br> [![Build Status](https://travis-ci.org/rhalbersma/tabula.svg)](https://travis-ci.org/rhalbersma/tabula) |
-| Windows  | Visual Studio  |                               15.9.6 | [![Build status](https://ci.appveyor.com/api/projects/status/86oy76904uc4newg?svg=true)](https://ci.appveyor.com/project/rhalbersma/tabula) |
+| Linux    | Clang <br> GCC | 6.0, 7, 8, 9-SVN<br> 8.3, 9.1 | [![codecov](https://codecov.io/gh/rhalbersma/tabula/branch/master/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula) <br> [![Build Status](https://travis-ci.org/rhalbersma/tabula.svg)](https://travis-ci.org/rhalbersma/tabula) |
+| Windows  | Visual Studio  |                        15.9.6 | [![Build status](https://ci.appveyor.com/api/projects/status/86oy76904uc4newg?svg=true)](https://ci.appveyor.com/project/rhalbersma/tabula) |
 
 License
 -------

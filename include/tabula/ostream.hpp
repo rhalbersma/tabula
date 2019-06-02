@@ -5,14 +5,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "board.hpp"            // basic_board
-#include "type_traits.hpp"      // square_t
-#include <cassert>              // assert
-#include <functional>           // function
-#include <iomanip>              // setw
-#include <iosfwd>               // basic_ostream, ios_base
-#include <sstream>              // stringstream
-#include <string>               // string, to_string
+#include <tabula/board.hpp>             // basic_board
+#include <tabula/type_traits.hpp>       // square_t
+#include <cassert>                      // assert
+#include <functional>                   // function
+#include <iomanip>                      // setw
+#include <iosfwd>                       // basic_ostream, ios_base
+#include <sstream>                      // stringstream
+#include <string>                       // string, to_string
 
 namespace tabula {
 
@@ -53,7 +53,7 @@ public:
 
 class format_square
 {
-        enum : long { algebraic_, numeric0_, numeric1_, embedding_ };
+        enum : long { algebraic_, sequential0_, sequential1_, padded_ };
 
         inline const static auto index = std::ios_base::xalloc();
 public:
@@ -63,27 +63,27 @@ public:
                 return str;
         }
 
-        static auto& numeric0(std::ios_base& str)
+        static auto& sequential0(std::ios_base& str)
         {
-                str.iword(index) = numeric0_;
+                str.iword(index) = sequential0_;
                 return str;
         }
 
-        static auto& numeric1(std::ios_base& str)
+        static auto& sequential1(std::ios_base& str)
         {
-                str.iword(index) = numeric1_;
+                str.iword(index) = sequential1_;
                 return str;
         }
 
-        static auto& embedding(std::ios_base& str)
+        static auto& padded(std::ios_base& str)
         {
-                str.iword(index) = embedding_;
+                str.iword(index) = padded_;
                 return str;
         }
 
-        template<class Shape>
-        static auto board(std::ios_base& str, basic_board<Shape> const& b)
-                -> std::function<std::string(square_t<basic_board<Shape>> const&)>
+        template<class Shape, class Padding>
+        static auto board(std::ios_base& str, basic_board<Shape, Padding> const& b)
+                -> std::function<std::string(square_t<basic_board<Shape, Padding>> const&)>
         {
                 switch (str.iword(index)) {
                 case algebraic_: return [] (auto const& sq) {
@@ -93,16 +93,16 @@ public:
                         sstr << format_axis::numeric   << format(sq.rank());
                         return sstr.str();
                 };
-                case numeric0_ : return [&b](auto const& sq) { return std::to_string(b.numeric0(sq));  };
-                case numeric1_ : return [&b](auto const& sq) { return std::to_string(b.numeric1(sq));  };
-                case embedding_: return [&b](auto const& sq) { return std::to_string(b.embedding(sq)); };
+                case sequential0_ : return [&b](auto const& sq) { return std::to_string(b.sequential0(sq));  };
+                case sequential1_ : return [&b](auto const& sq) { return std::to_string(b.sequential1(sq));  };
+                case padded_      : return [&b](auto const& sq) { return std::to_string(b.padded(sq)); };
                 default: throw;         // calls std::terminate
                 }
         }
 };
 
-template<class CharT, class Traits, class Shape>
-auto& operator<<(std::basic_ostream<CharT, Traits>& ostr, basic_board<Shape> const& b)
+template<class CharT, class Traits, class Shape, class Padding>
+auto& operator<<(std::basic_ostream<CharT, Traits>& ostr, basic_board<Shape, Padding> const& b)
 {
         auto const format = format_square::board(ostr, b);
         for (auto r = b.height - 1; r >= 0; --r) {
