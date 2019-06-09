@@ -9,7 +9,6 @@
 #include <tabula/lakes.hpp>             // basic_lakes, cut
 #include <tabula/padding.hpp>           // basic_padding, right_padding
 #include <tabula/shapes.hpp>            // basic_rectangle, chequered_rectangle
-#include <tabula/type_traits.hpp>       // is_chequered
 
 namespace tabula::draughts {
 
@@ -53,7 +52,7 @@ using ktar              = board<Width, Height, 0>;
 using mertens_cut_j10   = board<10, 10, 1, 0, cut<'j',10>>;
 using mertens_add_k9    = board<11, 10, 1, 0, cut<'k',7>, cut<'k',5>, cut<'k',3>, cut<'k',1>>;
 
-using turkish           = basic_board<basic_rectangle< 8,  8>, right_padding<2>>;
+using turkish           = basic_board<basic_rectangle<8, 8>, right_padding<2>>;
 using dameo             = turkish;
 
 }       // namespace tabula::draughts
