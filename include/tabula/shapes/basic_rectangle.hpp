@@ -18,7 +18,7 @@ struct basic_rectangle
 
         static constexpr auto width = Width;
         static constexpr auto height = Height;
-        static constexpr auto size = Width * Height;
+        static constexpr auto area = Width * Height;
 
         using lake_type = Lakes;
         using flip_type = basic_rectangle<Width, Height, flip_<Lakes>>;

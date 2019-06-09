@@ -13,11 +13,12 @@
 
 namespace tabula::draughts {
 
-template<int Width, bool IsOrthogonalJumps>
-using chequered_right_padding = right_padding<(Width % 2) ? 2 : (IsOrthogonalJumps ? 3 : 1)>;
-
-template<int Width, int Height, bool Coloring = true, class Lakes = basic_lakes<>, bool IsOrthogonalJumps = false>
-using board = basic_board<chequered_rectangle<Width, Height, Coloring, Lakes>, chequered_right_padding<Width, IsOrthogonalJumps>>;
+template<int Width, int Height, bool Coloring = true, bool IsOrthogonalJumps = false, class... Cuts>
+using board = basic_board
+<
+        chequered_rectangle<Width, Height, Coloring, basic_lakes<Cuts...>>,
+        right_padding<(Width % 2) ? 2 : (IsOrthogonalJumps ? 3 : 1)>
+>;
 
 using checkers          = board< 8,  8>;
 using american          = checkers;
@@ -32,7 +33,7 @@ using italian           = latin;
 using spanish           = latin;
 
 using international     = board<10, 10>;
-using frisian           = basic_board<chequered_rectangle<10, 10>, right_padding<3>>;
+using frisian           = board<10, 10, 1, 1>;
 using canadian          = board<12, 12>;
 using sri_lankan        = board<12, 12, 0>;
 using dumm              = board<14, 14>;
@@ -49,8 +50,8 @@ using ktar              = board<Width, Height, 0>;
 
 // Removing square j10 or adding square k9 to the 10x10 board
 // yields a winning endgame of 3 kings vs 1 king
-using mertens_cut_j10   = board<10, 10, 1, basic_lakes<cut<'j',10>>>;
-using mertens_add_k9    = board<11, 10, 1, basic_lakes<cut<'k',7>, cut<'k',5>, cut<'k',3>, cut<'k',1>>>;
+using mertens_cut_j10   = board<10, 10, 1, 0, cut<'j',10>>;
+using mertens_add_k9    = board<11, 10, 1, 0, cut<'k',7>, cut<'k',5>, cut<'k',3>, cut<'k',1>>;
 
 using turkish           = basic_board<basic_rectangle< 8,  8>, right_padding<2>>;
 using dameo             = turkish;

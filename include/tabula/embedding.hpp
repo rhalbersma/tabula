@@ -47,8 +47,8 @@ struct basic_embedding
         }();
         static_assert(last_valid && last_valid->is_valid());
 
-        static constexpr auto size = Shape::size;
-        static constexpr auto padded_size = padded_type::size;
+        static constexpr auto size = Shape::area;
+        static constexpr auto padded_size = padded_type::area;
 
         static constexpr auto to_padded(square_type const& sq)
                 -> padded_square_type

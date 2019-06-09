@@ -19,7 +19,7 @@ struct chequered_rectangle
         static constexpr auto width = Width;
         static constexpr auto height = Height;
         static constexpr auto coloring = Coloring;
-        static constexpr auto size = (Width * Height + Coloring) / 2;
+        static constexpr auto area = (Width * Height + Coloring) / 2;
 
         using lake_type = Lakes;
         using flip_type = chequered_rectangle<Width, Height, Coloring ^ !(Height % 2), flip_<Lakes>>;
@@ -30,7 +30,7 @@ struct chequered_rectangle
         using padded_type = chequered_rectangle<
                 Width + Padding::left + Padding::right,
                 Height + Padding::top + Padding::bottom,
-                Coloring ^ (Padding::bottom % 2) ^ (Padding::left % 2),
+                Coloring ^ (Padding::left % 2) ^ (Padding::bottom % 2),
                 Lakes
         >;
 };
