@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.15)
 project(tabula CXX)
 
 set(project_include_dir
@@ -8,7 +8,7 @@ set(project_include_dir
 
 set(Boost_USE_STATIC_LIBS ON)
 
-find_package(Boost 1.69.0 REQUIRED)
+find_package(Boost 1.71.0 REQUIRED)
 
 add_library(tabula INTERFACE)
 target_include_directories(tabula INTERFACE
