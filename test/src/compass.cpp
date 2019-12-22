@@ -6,12 +6,11 @@
 #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #define BOOST_MPL_LIMIT_VECTOR_SIZE 50
 
-#include <tabula/compass.hpp>                   // basic_compass
-#include <tabula/games.hpp>                     // draughts, stratego
-#include <tabula/shapes.hpp>                    // basic_rectangle, chequered_rectangle
-#include <boost/mpl/vector.hpp>                 // vector
-#include <boost/test/test_case_template.hpp>    // BOOST_AUTO_TEST_CASE_TEMPLATE
-#include <boost/test/unit_test.hpp>             // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_CHECK, BOOST_CHECK_EQUAL
+#include <tabula/compass.hpp>           // basic_compass
+#include <tabula/games.hpp>             // draughts, stratego
+#include <tabula/shapes.hpp>            // basic_rectangle, chequered_rectangle
+#include <boost/mpl/vector.hpp>         // vector
+#include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
 
 using namespace tabula;
 

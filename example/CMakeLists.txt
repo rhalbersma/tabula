@@ -1,7 +1,4 @@
 set(cxx_compile_definitions
-    BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
-    BOOST_ALL_NO_LIB
-    BOOST_TEST_MAIN
     $<$<CXX_COMPILER_ID:MSVC>:
         _SCL_SECURE_NO_WARNINGS
     >
@@ -10,6 +7,7 @@ set(cxx_compile_definitions
 set(cxx_compile_options_warnings
     $<$<CXX_COMPILER_ID:MSVC>:
         /W4
+        /permissive-
         /WX
     >
     $<$<CXX_COMPILER_ID:Clang>:
@@ -17,10 +15,10 @@ set(cxx_compile_options_warnings
         -Wno-unknown-warning-option
         -Wno-c++98-compat
         -Wno-c++98-compat-pedantic
-        -Wno-ctad-maybe-unsupported
         -Wno-disabled-macro-expansion
+        #-Wno-exit-time-destructors
         -Wno-global-constructors
-        -Wno-range-loop-analysis
+        -Wno-used-but-marked-unused
     >
     $<$<CXX_COMPILER_ID:GNU>:
         -Wall
@@ -35,7 +33,7 @@ set(cxx_compile_options_warnings
     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
         -Werror
         -pedantic-errors
-        -Wno-padded
+        #-Wno-padded
     >
 )
 
@@ -45,17 +43,15 @@ set(cxx_compile_options_debugsym
     >
 )
 
-set(cxx_compile_options_optimize
-    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
-        -O3
-        -march=native
-        -mtune=native
+set(cxx_compile_options_mbig_obj
+    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<PLATFORM_ID:Windows>>:
+	    -Wa,-mbig-obj
     >
 )
 
-set(example_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set(example_source_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
-file(GLOB_RECURSE targets RELATIVE ${example_source_dir} *.cpp)
+set(current_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(current_source_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
+file(GLOB_RECURSE targets RELATIVE ${current_source_dir} *.cpp)
 
 foreach(t ${targets})
     get_filename_component(target_path ${t} PATH)
@@ -66,11 +62,11 @@ foreach(t ${targets})
     add_executable(${target_id} src/${t})
 
     target_link_libraries(${target_id} PRIVATE
-        tabula
+        ${CMAKE_PROJECT_NAME}
     )
 
     target_include_directories(${target_id} PRIVATE
-        ${example_include_dir}
+        ${current_include_dir}
     )
 
     target_compile_definitions(${target_id} PRIVATE
@@ -80,6 +76,6 @@ foreach(t ${targets})
     target_compile_options(${target_id} PRIVATE
         ${cxx_compile_options_warnings}
         ${cxx_compile_options_debugsym}
-        ${cxx_compile_options_optimize}
+        ${cxx_compile_options_mbig_obj}
     )
 endforeach()

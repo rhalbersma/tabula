@@ -1,6 +1,6 @@
 language: cpp
 os: linux
-dist: xenial
+dist: bionic
 
 matrix:
   include:
@@ -12,10 +12,10 @@ matrix:
             - g++-9
           sources:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
-            - sourceline: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main'
+            - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-6.0 main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
 
-    - env: CXX_COMPILER=clang++-7 CXX=g++-9
+    - env: CXX_COMPILER=clang++-7 CXX_STDLIB=g++-9
       addons:
         apt:
           packages:
@@ -23,10 +23,10 @@ matrix:
             - g++-9
           sources:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
-            - sourceline: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main'
+            - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-7 main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
 
-    - env: CXX_COMPILER=clang++-8 CXX=g++-9
+    - env: CXX_COMPILER=clang++-8 CXX_STDLIB=g++-9
       addons:
         apt:
           packages:
@@ -34,10 +34,10 @@ matrix:
             - g++-9
           sources:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
-            - sourceline: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main'
+            - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-8 main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
 
-    - env: CXX_COMPILER=clang++-9 CXX=g++-9
+    - env: CXX_COMPILER=clang++-9 CXX_STDLIB=g++-9
       addons:
         apt:
           packages:
@@ -45,21 +45,40 @@ matrix:
             - g++-9
           sources:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
-            - sourceline: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial main'
+            - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
 
-    - env: CXX_COMPILER=clang++-9 STDLIB=libc++
+    - env: CXX_COMPILER=clang++-10 CXX_STDLIB=g++-9
       addons:
         apt:
           packages:
-            - clang-9
-            - libc++-9-dev
-            - libc++abi-9-dev
+            - clang-10
+            - g++-9
           sources:
-            - sourceline: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial main'
+            - sourceline: 'ppa:ubuntu-toolchain-r/test'
+            - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
 
-    - env: CXX_COMPILER=g++-8 CXX=g++-8
+    - env: CXX_COMPILER=clang++-10 CXX_STDLIB=libc++
+      addons:
+        apt:
+          packages:
+            - clang-10
+            - libc++-10-dev
+            - libc++abi-10-dev
+          sources:
+            - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main'
+              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+
+    - env: CXX_COMPILER=g++-7 CXX_STDLIB=g++-7 CODE_COVERAGE=true
+      addons:
+        apt:
+          packages:
+            - g++-7
+          sources:
+            - sourceline: 'ppa:ubuntu-toolchain-r/test'
+
+    - env: CXX_COMPILER=g++-8 CXX_STDLIB=g++-8
       addons:
         apt:
           packages:
@@ -67,7 +86,7 @@ matrix:
           sources:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
 
-    - env: CXX_COMPILER=g++-9 CXX=g++-9
+    - env: CXX_COMPILER=g++-9 CXX_STDLIB=g++-9
       addons:
         apt:
           packages:
@@ -75,7 +94,7 @@ matrix:
           sources:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
 
-    - env: CXX_COMPILER=g++-10 CXX=g++-10
+    - env: CXX_COMPILER=g++-10 CXX_STDLIB=g++-10
 
 install:
 
@@ -97,12 +116,28 @@ install:
     sudo dpkg -i gcc-latest.deb
     sudo ln -s /opt/gcc-latest/bin/gcc /usr/bin/gcc-10
     sudo ln -s /opt/gcc-latest/bin/g++ /usr/bin/g++-10
-    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 --slave /usr/bin/g++ g++ /usr/bin/g++-10
     sudo ldconfig /opt/gcc-latest/lib64
   fi
 
 ################################################################################
-# Install the latest Boost and build Boost.Test (compiled with g++-9)
+# Set gcc to latest version that is installed
+################################################################################
+
+- |
+  if [[ "${CXX_STDLIB}" == "g++-7" ]]; then
+    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 70 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+  elif [[ "${CXX_STDLIB}" == "g++-8" ]]; then
+    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 80 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+  elif [[ "${CXX_STDLIB}" == "g++-9" ]]; then
+    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 --slave /usr/bin/g++ g++ /usr/bin/g++-9
+  elif [[ "${CXX_STDLIB}" == "g++-10" ]]; then
+    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 --slave /usr/bin/g++ g++ /usr/bin/g++-10
+  fi
+  gcc --version
+  g++ --version
+
+################################################################################
+# Install the latest Boost and build Boost.Test (compiled with the latest gcc)
 ################################################################################
 - |
   BOOST_VERSION=1.72.0
@@ -112,12 +147,11 @@ install:
   BOOST_BUILD_TYPE="link=static variant=release"
   mkdir -p ${BOOST_DIR} && travis_retry wget --quiet -O - ${BOOST_URL} | tar --strip-components=1 -xj -C ${BOOST_DIR}
   cd ${BOOST_DIR}
-  if [[ "${STDLIB}" == "libc++" ]]; then
-    sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 90 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-9
+  if [[ "${CXX_STDLIB}" == "libc++" ]]; then
+    sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-10 100 --slave /usr/bin/clang++ clang++ /usr/bin/clang++-10
     ./bootstrap.sh --with-toolset=clang --with-libraries=${BOOST_LIBS}
     sudo ./b2 -d0 -j10 install toolset=clang ${BOOST_BUILD_TYPE} cxxflags="-stdlib=libc++"
   else
-    sudo update-alternatives --install /usr/bin/gcc   gcc   /usr/bin/gcc-9   90 --slave /usr/bin/g++     g++     /usr/bin/g++-9
     ./bootstrap.sh --with-toolset=gcc   --with-libraries=${BOOST_LIBS}
     sudo ./b2 -d0 -j10 install toolset=gcc   ${BOOST_BUILD_TYPE}
   fi
@@ -131,12 +165,13 @@ install:
   CMAKE_URL="http://www.cmake.org/files/v${CMAKE_VERSION%.[0-9]}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz"
   mkdir -p ${CMAKE_DIR} && travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C ${CMAKE_DIR}
   export PATH=${CMAKE_DIR}/bin:${PATH}
+  cmake --version
 
 before_script:
 - |
   cd ${TRAVIS_BUILD_DIR}
   mkdir build && cd build
-  if [[ "${STDLIB}" == "libc++" ]]; then
+  if [[ "${CXX_STDLIB}" == "libc++" ]]; then
     cmake .. \
       -DCMAKE_CXX_COMPILER=${CXX_COMPILER} \
       -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
