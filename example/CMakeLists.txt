@@ -15,7 +15,6 @@ set(cxx_compile_options_warnings
         -Wno-unknown-warning-option     # forward compatibility for new Clang warnings
         -Wno-c++98-compat
         -Wno-c++98-compat-pedantic
-        -Wno-ctad-maybe-unsupported     # triggered by std::experimental::ostream_joiner
         -Wno-global-constructors        # triggered by std::ios_base::xalloc()
     >
     $<$<CXX_COMPILER_ID:GNU>:
