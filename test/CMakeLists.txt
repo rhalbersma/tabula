@@ -1,6 +1,7 @@
 set(Boost_USE_STATIC_LIBS ON)
 
-find_package(Boost 1.71.0 REQUIRED COMPONENTS
+find_package(
+    Boost REQUIRED COMPONENTS
     unit_test_framework
 )
 
@@ -21,13 +22,12 @@ set(cxx_compile_options_warnings
     >
     $<$<CXX_COMPILER_ID:Clang>:
         -Weverything
-        -Wno-unknown-warning-option
+        -Wno-unknown-warning-option     # forward compatibility for new Clang warnings
         -Wno-c++98-compat
         -Wno-c++98-compat-pedantic
-        -Wno-disabled-macro-expansion
-        #-Wno-exit-time-destructors
-        -Wno-global-constructors
-        -Wno-used-but-marked-unused
+        -Wno-disabled-macro-expansion   # triggered by Boost.Test
+        -Wno-global-constructors        # triggered by Boost.Test
+        -Wno-used-but-marked-unused     # triggered by Boost.Test
     >
     $<$<CXX_COMPILER_ID:GNU>:
         -Wall
@@ -42,7 +42,6 @@ set(cxx_compile_options_warnings
     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
         -Werror
         -pedantic-errors
-        #-Wno-padded
     >
 )
 
@@ -70,20 +69,24 @@ foreach(t ${targets})
 
     add_executable(${target_id} src/${t})
 
-    target_link_libraries(${target_id} PRIVATE
+    target_link_libraries(
+        ${target_id} PRIVATE
         ${CMAKE_PROJECT_NAME}
         Boost::unit_test_framework
     )
 
-    target_include_directories(${target_id} PRIVATE
+    target_include_directories(
+        ${target_id} PRIVATE
         ${current_include_dir}
     )
 
-    target_compile_definitions(${target_id} PRIVATE
+    target_compile_definitions(
+        ${target_id} PRIVATE
         ${cxx_compile_definitions}
     )
 
-    target_compile_options(${target_id} PRIVATE
+    target_compile_options(
+        ${target_id} PRIVATE
         ${cxx_compile_options_warnings}
         ${cxx_compile_options_debugsym}
         ${cxx_compile_options_mbig_obj}

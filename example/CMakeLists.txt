@@ -12,13 +12,11 @@ set(cxx_compile_options_warnings
     >
     $<$<CXX_COMPILER_ID:Clang>:
         -Weverything
-        -Wno-unknown-warning-option
+        -Wno-unknown-warning-option     # forward compatibility for new Clang warnings
         -Wno-c++98-compat
         -Wno-c++98-compat-pedantic
-        -Wno-disabled-macro-expansion
-        #-Wno-exit-time-destructors
-        -Wno-global-constructors
-        -Wno-used-but-marked-unused
+        -Wno-ctad-maybe-unsupported     # triggered by std::experimental::ostream_joiner
+        -Wno-global-constructors        # triggered by std::ios_base::xalloc()
     >
     $<$<CXX_COMPILER_ID:GNU>:
         -Wall
@@ -33,7 +31,6 @@ set(cxx_compile_options_warnings
     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
         -Werror
         -pedantic-errors
-        #-Wno-padded
     >
 )
 
@@ -61,19 +58,23 @@ foreach(t ${targets})
 
     add_executable(${target_id} src/${t})
 
-    target_link_libraries(${target_id} PRIVATE
+    target_link_libraries(
+        ${target_id} PRIVATE
         ${CMAKE_PROJECT_NAME}
     )
 
-    target_include_directories(${target_id} PRIVATE
+    target_include_directories(
+        ${target_id} PRIVATE
         ${current_include_dir}
     )
 
-    target_compile_definitions(${target_id} PRIVATE
+    target_compile_definitions(
+        ${target_id} PRIVATE
         ${cxx_compile_definitions}
     )
 
-    target_compile_options(${target_id} PRIVATE
+    target_compile_options(
+        ${target_id} PRIVATE
         ${cxx_compile_options_warnings}
         ${cxx_compile_options_debugsym}
         ${cxx_compile_options_mbig_obj}
