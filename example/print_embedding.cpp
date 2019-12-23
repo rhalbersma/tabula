@@ -11,7 +11,7 @@
 #include <boost/hana/tuple.hpp>         // make_tuple
 #include <algorithm>                    // copy
 #include <iostream>                     // cout
-#include <experimental/iterator>        // ostream_joiner
+#include <iterator>                     // ostream_iterator
 
 int main()
 {
@@ -67,7 +67,7 @@ int main()
                 std::cout << b.size << " external squares padded to " << b.padded_size << " internal squares, " << b.valid_padded_size << " of which are valid" << '\n';
                 std::cout << "directional strides: ";
                 constexpr auto strides = b.strides;
-                std::copy(strides.begin(), strides.end(), std::experimental::ostream_joiner(std::cout, ','));
+                std::copy(strides.begin(), strides.end(), std::ostream_iterator<int>(std::cout, ","));
                 std::cout << '\n';
                 std::cout << "-----------------------------------------------------------\n";
         });
