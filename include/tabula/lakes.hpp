@@ -33,14 +33,15 @@ struct basic_lakes<cut<Fs, Rs>...>
         }
 };
 
-template<int... Fs, int... Rs>
-struct basic_lakes<cut<Fs, Rs>...>
-{
-        template<class Square>
-        constexpr auto operator()(Square const& sq) const noexcept
-        {
-                return ((sq == Square{Fs - 1, Rs - 1}) || ...);
-        }
-};
+// https://developercommunity.visualstudio.com/content/problem/865810/vs-2019-164-ambiguous-partial-specialization-of-au.html
+// template<int... Fs, int... Rs>
+// struct basic_lakes<cut<Fs, Rs>...>
+// {
+//         template<class Square>
+//         constexpr auto operator()(Square const& sq) const noexcept
+//         {
+//                 return ((sq == Square{Fs - 1, Rs - 1}) || ...);
+//         }
+// };
 
 }       // namespace tabula
