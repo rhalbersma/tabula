@@ -16,6 +16,6 @@ This header-only library depends on the C++ Standard Library and [Boost.Hana](ht
 License
 -------
 
-Copyright Rein Halbersma 2019.  
+Copyright Rein Halbersma 2019-2020.  
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/users/license.html).  
 (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
