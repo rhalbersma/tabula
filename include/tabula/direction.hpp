@@ -6,7 +6,6 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/type_traits.hpp>       // is_chequered, lake_t, flip_t, flop_t, swap_t
-#include <utility>                      // pair
 
 namespace tabula {
 
@@ -22,13 +21,7 @@ public:
                 m_delta_rank{dr}
         {}
 
-        constexpr bool operator==(basic_direction const& other) const noexcept
-        {
-                constexpr auto as_pair = [](auto const& d) {
-                        return std::pair{d.m_delta_file, d.m_delta_rank};
-                };
-                return as_pair(*this) == as_pair(other);
-        }
+        bool operator==(basic_direction const&) const = default;
 
         constexpr auto delta_file() const noexcept
         {

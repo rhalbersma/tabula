@@ -7,7 +7,6 @@
 
 #include <tabula/type_traits.hpp>       // is_chequered, lake_t, flip_t, flop_t, swap_t
 #include <cassert>                      // assert
-#include <utility>                      // pair
 
 namespace tabula {
 
