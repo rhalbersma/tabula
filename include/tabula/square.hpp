@@ -25,6 +25,8 @@ public:
                 assert(is_bounded());
         }
 
+        bool operator==(basic_square const&) const = default;
+
         constexpr auto file() const noexcept
         {
                 return m_file;
@@ -90,18 +92,5 @@ public:
                 return { rank(), file() };
         }
 };
-
-template<class Shape>
-constexpr auto operator==(basic_square<Shape> const& lhs, basic_square<Shape> const& rhs) noexcept
-{
-        constexpr auto as_pair = [](auto const& sq) { return std::pair{sq.file(), sq.rank()}; };
-        return as_pair(lhs) == as_pair(rhs);
-}
-
-template<class Shape>
-constexpr auto operator!=(basic_square<Shape> const& lhs, basic_square<Shape> const& rhs) noexcept
-{
-        return !(lhs == rhs);
-}
 
 }       // namespace tabula

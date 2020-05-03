@@ -22,6 +22,8 @@ public:
                 m_delta_rank{dr}
         {}
 
+        bool operator==(basic_direction const&) const = default;
+
         constexpr auto delta_file() const noexcept
         {
                 return m_delta_file;
@@ -104,18 +106,5 @@ public:
                 return { -delta_file(), -delta_rank() };
         }
 };
-
-template<class Shape>
-constexpr auto operator==(basic_direction<Shape> const& lhs, basic_direction<Shape> const& rhs) noexcept
-{
-        constexpr auto as_pair = [](auto const& sq) { return std::pair{sq.delta_file(), sq.delta_rank()}; };
-        return as_pair(lhs) == as_pair(rhs);
-}
-
-template<class Shape>
-constexpr auto operator!=(basic_direction<Shape> const& lhs, basic_direction<Shape> const& rhs) noexcept
-{
-        return !(lhs == rhs);
-}
 
 }       // namespace tabula
