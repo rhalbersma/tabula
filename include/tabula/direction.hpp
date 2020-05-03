@@ -22,7 +22,13 @@ public:
                 m_delta_rank{dr}
         {}
 
-        bool operator==(basic_direction const&) const = default;
+        constexpr bool operator==(basic_direction const& other) const noexcept
+        {
+                constexpr auto as_pair = [](auto const& d) {
+                        return std::pair{d.m_delta_file, d.m_delta_rank};
+                };
+                return as_pair(*this) == as_pair(other);
+        }
 
         constexpr auto delta_file() const noexcept
         {
