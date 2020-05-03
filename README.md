@@ -1,12 +1,13 @@
 # Board game utilities
 
-[![Language](https://img.shields.io/badge/language-C++-blue.svg)](https://isocpp.org/) 
-[![Standard](https://img.shields.io/badge/c%2B%2B-17-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
-[![License](https://img.shields.io/badge/license-Boost-blue.svg)](https://opensource.org/licenses/BSL-1.0) 
+[![Language](https://img.shields.io/badge/language-C++-blue.svg)](https://isocpp.org/)
+[![Standard](https://img.shields.io/badge/c%2B%2B-20-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
+[![License](https://img.shields.io/badge/license-Boost-blue.svg)](https://opensource.org/licenses/BSL-1.0)
+[![Lines of Code](https://tokei.rs/b1/github/rhalbersma/tabula?category=code)](https://github.com/rhalbersma/tabula)
 
 ## Requirements
 
-This header-only library depends on the C++ Standard Library and [Boost.Hana](http://boostorg.github.io/hana/), and is continuously being tested with the following conforming [C++17](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/n4659.pdf) compilers:
+This header-only library depends on the C++ Standard Library and [Boost.Hana](http://boostorg.github.io/hana/), and is continuously being tested with the following conforming [C++20](http://www.open-std.org/jtc1/sc22/wg21/prot/14882fdis/n4860.pdf) compilers:
 
 | Platform | Compiler | Versions | Build |
 | :------- | :------- | :------- | :---- |
