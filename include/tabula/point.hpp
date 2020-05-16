@@ -10,21 +10,21 @@
 
 namespace tabula {
 
-template<class Shape>
-class basic_square
+template<class Grid>
+class basic_point
 {
         int m_file;
         int m_rank;
 public:
-        constexpr basic_square(int f, int r) // Throws: Nothing.
+        constexpr basic_point(int f, int r) // Throws: Nothing.
         :
-                m_file{f},
-                m_rank{r}
+                m_file(f),
+                m_rank(r)
         {
                 assert(is_bounded());
         }
 
-        bool operator==(basic_square const&) const = default;
+        bool operator==(basic_point const&) const = default;
 
         constexpr auto file() const noexcept
         {
@@ -39,15 +39,15 @@ public:
         constexpr auto is_bounded() const noexcept
         {
                 return
-                        0 <= file() && file() < Shape::width &&
-                        0 <= rank() && rank() < Shape::height
+                        0 <= file() && file() < Grid::width &&
+                        0 <= rank() && rank() < Grid::height
                 ;
         }
 
         constexpr auto is_colored() const noexcept
         {
-                if constexpr (is_chequered<Shape>) {
-                        return (file() ^ rank() ^ Shape::coloring) % 2;
+                if constexpr (is_chequered<Grid>) {
+                        return (file() ^ rank() ^ Grid::coloring) % 2;
                 } else {
                         return true;
                 }
@@ -55,7 +55,7 @@ public:
 
         constexpr auto is_lake() const noexcept
         {
-                return lake_t<Shape>{}(*this);
+                return lake_t<Grid>{}(*this);
         }
 
         constexpr auto is_valid() const noexcept
@@ -65,24 +65,24 @@ public:
 
         constexpr auto index() const noexcept
         {
-                constexpr auto d = is_chequered<Shape> ? 2 : 1;
-                return (file() + rank() * Shape::width) / d;
+                constexpr auto d = is_chequered<Grid> ? 2 : 1;
+                return (file() + rank() * Grid::width) / d;
         }
 
-        using flip_type = basic_square<flip_t<Shape>>;
-        using flop_type = basic_square<flop_t<Shape>>;
-        using swap_type = basic_square<swap_t<Shape>>;
+        using flip_type = basic_point<flip_t<Grid>>;
+        using flop_type = basic_point<flop_t<Grid>>;
+        using swap_type = basic_point<swap_t<Grid>>;
 
         constexpr auto flip() const noexcept
                 -> flip_type
         {
-                return { file(), Shape::height - 1 - rank() };
+                return { file(), Grid::height - 1 - rank() };
         }
 
         constexpr auto flop() const noexcept
                 -> flop_type
         {
-                return { Shape::width - 1 - file(), rank() };
+                return { Grid::width - 1 - file(), rank() };
         }
 
         constexpr auto swap() const noexcept

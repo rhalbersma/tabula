@@ -29,7 +29,6 @@ cache:
 
 install:
   - vcpkg install --triplet %platform%-windows
-    boost-hana
     boost-test
 
 before_build:

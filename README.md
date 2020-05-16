@@ -7,12 +7,12 @@
 
 ## Requirements
 
-This header-only library depends on the C++ Standard Library and [Boost.Hana](http://boostorg.github.io/hana/), and is continuously being tested with the following conforming [C++20](http://www.open-std.org/jtc1/sc22/wg21/prot/14882fdis/n4860.pdf) compilers:
+This header-only library only depends on the C++ Standard Library, and is continuously being tested with the following conforming [C++20](http://www.open-std.org/jtc1/sc22/wg21/prot/14882fdis/n4860.pdf) compilers:
 
 | Platform | Compiler | Versions | Build |
 | :------- | :------- | :------- | :---- |
-| Linux    | Clang <br> GCC | 9, 10, 11-SVN<br> 9, 10, 11-SVN | [![codecov](https://codecov.io/gh/rhalbersma/tabula/branch/master/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula) <br> [![Build Status](https://travis-ci.org/rhalbersma/tabula.svg)](https://travis-ci.org/rhalbersma/tabula) |
-| Windows  | Visual Studio  | 2019                            | [![Build status](https://ci.appveyor.com/api/projects/status/86oy76904uc4newg?svg=true)](https://ci.appveyor.com/project/rhalbersma/tabula) |
+| Linux    | Clang <br> GCC | 10, 11-SVN<br> 10, 11-SVN | [![codecov](https://codecov.io/gh/rhalbersma/tabula/branch/master/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula) <br> [![Build Status](https://travis-ci.org/rhalbersma/tabula.svg)](https://travis-ci.org/rhalbersma/tabula) |
+| Windows  | Visual Studio  | 2019                      | [![Build status](https://ci.appveyor.com/api/projects/status/86oy76904uc4newg?svg=true)](https://ci.appveyor.com/project/rhalbersma/tabula) |
 
 ## License
 

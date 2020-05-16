@@ -6,7 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/direction.hpp>         // basic_direction
-#include <tabula/square.hpp>            // basic_square
+#include <tabula/point.hpp>             // basic_point
 #include <tabula/type_traits.hpp>       // flip_t, flop_t, swap_t, padded_t
 #include <optional>                     // optional
 
@@ -19,8 +19,8 @@ struct basic_embedding
         using padding_type = Padding;
         using padded_type = padded_t<Shape, Padding>;
 
-        using square_type = basic_square<Shape>;
-        using padded_square_type = basic_square<padded_type>;
+        using square_type = basic_point<Shape>;
+        using padded_square_type = basic_point<padded_type>;
         using padded_direction_type = basic_direction<padded_type>;
 
         static constexpr auto first_valid = []() -> std::optional<square_type> {

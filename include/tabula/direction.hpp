@@ -9,7 +9,7 @@
 
 namespace tabula {
 
-template<class Shape>
+template<class Grid>
 class basic_direction
 {
         int m_delta_file;
@@ -17,8 +17,8 @@ class basic_direction
 public:
         constexpr basic_direction(int df, int dr) // Throws: Nothing.
         :
-                m_delta_file{df},
-                m_delta_rank{dr}
+                m_delta_file(df),
+                m_delta_rank(dr)
         {}
 
         bool operator==(basic_direction const&) const = default;
@@ -36,8 +36,8 @@ public:
         constexpr auto is_bounded() const noexcept
         {
                 return
-                        -Shape::width  < delta_file() && delta_file() < Shape::width &&
-                        -Shape::height < delta_rank() && delta_rank() < Shape::height
+                        -Grid::width  < delta_file() && delta_file() < Grid::width &&
+                        -Grid::height < delta_rank() && delta_rank() < Grid::height
                 ;
         }
 
@@ -73,13 +73,13 @@ public:
 
         constexpr auto stride() const noexcept
         {
-                constexpr auto d = is_chequered<Shape> ? 2 : 1;
-                return (delta_file() + delta_rank() * Shape::width) / d;
+                constexpr auto d = is_chequered<Grid> ? 2 : 1;
+                return (delta_file() + delta_rank() * Grid::width) / d;
         }
 
-        using flip_type = basic_direction<flip_t<Shape>>;
-        using flop_type = basic_direction<flop_t<Shape>>;
-        using swap_type = basic_direction<swap_t<Shape>>;
+        using flip_type = basic_direction<flip_t<Grid>>;
+        using flop_type = basic_direction<flop_t<Grid>>;
+        using swap_type = basic_direction<swap_t<Grid>>;
 
         constexpr auto flip() const noexcept
                 -> flip_type

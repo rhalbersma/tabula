@@ -5,47 +5,42 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/compass.hpp>                   // basic_compass
-#include <tabula/direction.hpp>                 // basic_direction
-#include <tabula/embedding.hpp>                 // basic_embedding
-#include <tabula/functional.hpp>                // flip_fn, flop_fn, swap_fn
-#include <tabula/lakes.hpp>                     // basic_lakes
-#include <tabula/square.hpp>                    // basic_square
-#include <tabula/type_traits.hpp>               // is_chequered, square_t, direction_t, flip_t
-#include <boost/hana/functional/compose.hpp>    // compose
-#include <boost/hana/functional/id.hpp>         // id
-#include <boost/hana/integral_constant.hpp>     // int_c
-#include <boost/hana/minimum.hpp>               // minimum.by
-#include <boost/hana/ordering.hpp>              // ordering
-#include <boost/hana/reverse.hpp>               // reverse
-#include <boost/hana/tuple.hpp>                 // make_tuple
-#include <array>                                // array
-#include <cstddef>                              // size_t
-#include <optional>                             // optional
+#include <tabula/compass.hpp>           // basic_compass
+#include <tabula/direction.hpp>         // basic_direction
+#include <tabula/embedding.hpp>         // basic_embedding
+#include <tabula/functional.hpp>        // flip_fn, flop_fn, swap_fn
+#include <tabula/lakes.hpp>             // basic_lakes
+#include <tabula/point.hpp>             // basic_point
+#include <tabula/type_traits.hpp>       // is_chequered, square_t, direction_t, flip_t
+#include <array>                        // array
+#include <cstddef>                      // size_t
+#include <optional>                     // optional
+#include <tuple>                        // get, make_tuple
 
 namespace tabula {
 
-inline constexpr auto transforms = boost::hana::reverse(boost::hana::make_tuple(
-        boost::hana::id,                                // origin at lower-left, left-to-right, bottom-to-top
-        swap_fn,                                        // origin at lower-left, bottom-to-top, left-to-right
-        flip_fn,                                        // origin at upper-left, left-to-right, top-to-bottom
-        boost::hana::compose(swap_fn, flip_fn),         // origin at upper-left, top-to-bottom, left-to-right
-        flop_fn,                                        // origin at lower-right, right-to-left, bottom-to-top
-        boost::hana::compose(swap_fn, flop_fn),         // origin at lower-right, bottom-to-top, right-to-left
-        boost::hana::compose(flop_fn, flip_fn),         // origin at upper-right, right-to-left, top-to-bottom
-        boost::hana::compose(swap_fn, flop_fn, flip_fn) // origin at upper-right, top-to-bottom, right-to-left
-));
+inline constexpr auto transforms = std::make_tuple(
+        keep_arg,                               // origin at lower-left, left-to-right, bottom-to-top
+        swap_arg,                               // origin at lower-left, bottom-to-top, left-to-right
+        flip_arg,                               // origin at upper-left, left-to-right, top-to-bottom
+        compose(swap_arg, flip_arg),            // origin at upper-left, top-to-bottom, left-to-right
+        flop_arg,                               // origin at lower-right, right-to-left, bottom-to-top
+        compose(swap_arg, flop_arg),            // origin at lower-right, bottom-to-top, right-to-left
+        compose(flop_arg, flip_arg),            // origin at upper-right, right-to-left, top-to-bottom
+        compose(swap_arg, flop_arg, flip_arg)   // origin at upper-right, top-to-bottom, right-to-left
+);
 
 template<class Shape, class Padding>
 struct basic_board
 {
         static constexpr auto embedding_v = basic_embedding<Shape, Padding>{};
-        static constexpr auto transform_v = boost::hana::minimum.by(boost::hana::ordering([](auto fun) {
-                return boost::hana::int_c<fun(embedding_v).valid_padded_size>;
-        }), transforms);
+        static constexpr auto idx = min_element_by(transforms, [](auto fun) {
+                return fun(embedding_v).valid_padded_size;
+        });
+        static constexpr auto transform_v = std::get<idx>(transforms);
         static constexpr auto image_v = transform_v(embedding_v);
 
-        using square_type = basic_square<Shape>;
+        using square_type = basic_point<Shape>;
         using direction_type = basic_direction<Shape>;
         using padded_square_type = typename decltype(image_v)::padded_square_type;
         using padded_direction_type = typename decltype(image_v)::padded_direction_type;
