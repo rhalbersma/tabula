@@ -6,8 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <limits>       // max
-#include <tuple>        // apply
-#include <type_traits>  // invoke_result_t
+#include <tuple>        // apply, get, tuple_size
 
 namespace tabula {
 
@@ -56,24 +55,24 @@ inline constexpr auto compose = [](auto... funs) { return (funs >> ... >> keep_a
 template<class Tuple, class UnaryFunction>
 constexpr auto min_element_by(Tuple const& tup, UnaryFunction fun)
 {
-        auto i = 0;
-        auto idx = i;
-        using R = std::invoke_result_t<
-                UnaryFunction,
-                decltype(std::get<0>(tup))
-        >;
-        auto min = std::numeric_limits<R>::max();
-        std::apply([&](auto... elems){
-                ([&](auto elem) {
-                        auto const r = fun(elem);
-                        if (r < min) {
-                                idx = i;
-                                min = r;
-                        }
-                        ++i;
-                }(elems), ...);
-        }, tup);
-        return idx;
+        if constexpr (std::tuple_size_v<Tuple> == 0) {
+                return 0;
+        } else {
+                auto i = 0;
+                auto idx = i;
+                auto min = std::numeric_limits<decltype(fun(std::get<0>(tup)))>::max();
+                std::apply([&](auto... elems){
+                        ([&](auto elem) {
+                                auto const r = fun(elem);
+                                if (r < min) {
+                                        idx = i;
+                                        min = r;
+                                }
+                                ++i;
+                        }(elems), ...);
+                }, tup);
+                return idx;
+        }
 }
 
 }       // namespace tabula
