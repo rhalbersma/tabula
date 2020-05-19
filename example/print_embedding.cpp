@@ -7,8 +7,6 @@
 #include <tabula/games.hpp>             // draughts, stratego
 #include <tabula/ostream.hpp>           // operator<<, format_square
 #include <tabula/type_traits.hpp>       // is_chequered
-#include <boost/hana/for_each.hpp>      // for_each
-#include <boost/hana/tuple.hpp>         // make_tuple
 #include <algorithm>                    // copy
 #include <iostream>                     // cout
 #include <iterator>                     // ostream_iterator
@@ -16,7 +14,7 @@
 int main()
 {
         using namespace tabula;
-        constexpr auto boards = boost::hana::make_tuple(
+        constexpr auto boards = std::make_tuple(
                 // draughts variants played on chequered boards
                 draughts::board<2, 5, 1>{},
                 draughts::board<2, 5, 0>{},
@@ -56,7 +54,7 @@ int main()
                 chess::vector_16x16{}
         );
 
-        boost::hana::for_each(boards, [](auto b) {
+        for_each(boards, [](auto b) {
                 std::cout << format_square::padded << b << '\n';
                 std::cout << "W = " << b.width << ", H = " << b.height;
                 using shape_type = shape_t<decltype(b)>;
@@ -64,7 +62,15 @@ int main()
                         std::cout << ", C = " << shape_type::coloring;
                 }
                 std::cout << '\n';
-                std::cout << b.size << " external squares padded to " << b.padded_size << " internal squares, " << b.valid_padded_size << " of which are valid" << '\n';
+                std::cout << std::get<0>(transforms)(b.embedding_v).valid_padded_size << '\n';
+                std::cout << std::get<1>(transforms)(b.embedding_v).valid_padded_size << '\n';
+                std::cout << std::get<2>(transforms)(b.embedding_v).valid_padded_size << '\n';
+                std::cout << std::get<3>(transforms)(b.embedding_v).valid_padded_size << '\n';
+                std::cout << std::get<4>(transforms)(b.embedding_v).valid_padded_size << '\n';
+                std::cout << std::get<5>(transforms)(b.embedding_v).valid_padded_size << '\n';
+                std::cout << std::get<6>(transforms)(b.embedding_v).valid_padded_size << '\n';
+                std::cout << std::get<7>(transforms)(b.embedding_v).valid_padded_size << '\n';
+                std::cout << "index = " << b.idx << " " << b.size << " external squares padded to " << b.padded_size << " internal squares, " << b.valid_padded_size << " of which are valid" << '\n';
                 std::cout << "directional strides: ";
                 constexpr auto strides = b.strides;
                 std::copy(strides.begin(), strides.end(), std::ostream_iterator<int>(std::cout, ","));

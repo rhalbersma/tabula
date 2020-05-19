@@ -34,7 +34,7 @@ template<class Shape, class Padding>
 struct basic_board
 {
         static constexpr auto embedding_v = basic_embedding<Shape, Padding>{};
-        static constexpr auto idx = min_element_by(transforms, [](auto fun) {
+        static constexpr auto idx = min_index_by(transforms, [](auto fun) {
                 return fun(embedding_v).valid_padded_size;
         });
         static constexpr auto transform_v = std::get<idx>(transforms);

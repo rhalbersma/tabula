@@ -5,8 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <limits>       // max
-#include <tuple>        // apply, get, tuple_size
+#include <tuple>        // apply, tuple_size
 
 namespace tabula {
 
@@ -53,26 +52,31 @@ constexpr auto operator>>(auto f, auto g)
 inline constexpr auto compose = [](auto... funs) { return (funs >> ... >> keep_arg); };
 
 template<class Tuple, class UnaryFunction>
-constexpr auto min_element_by(Tuple const& tup, UnaryFunction fun)
+        requires (std::tuple_size_v<Tuple> > 0)
+constexpr auto min_index_by(Tuple const& tup, UnaryFunction fun)
 {
-        if constexpr (std::tuple_size_v<Tuple> == 0) {
-                return 0;
-        } else {
-                auto i = 0;
-                auto idx = i;
-                auto min = std::numeric_limits<decltype(fun(std::get<0>(tup)))>::max();
-                std::apply([&](auto... elems){
-                        ([&](auto elem) {
-                                auto const r = fun(elem);
-                                if (r < min) {
-                                        idx = i;
-                                        min = r;
-                                }
-                                ++i;
-                        }(elems), ...);
-                }, tup);
-                return idx;
-        }
+        return std::apply([=](auto head, auto... tail){
+                auto min = fun(head);
+                auto index = 0;
+                auto i = 1;
+                ([&](auto elem) {
+                        if (auto const result = fun(elem); result < min) {
+                                min = result;
+                                index = i;
+                        }
+                        ++i;
+                }(tail), ...);
+                assert(index < static_cast<int>(std::tuple_size_v<Tuple>));
+                return index;
+        }, tup);
+}
+
+template<class Tuple, class UnaryFunction>
+constexpr auto for_each(Tuple const& tup, UnaryFunction fun)
+{
+        return std::apply([=](auto... elems){
+                return (fun(elems), ...);
+        }, tup);
 }
 
 }       // namespace tabula
