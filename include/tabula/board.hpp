@@ -11,6 +11,7 @@
 #include <tabula/functional.hpp>        // flip_fn, flop_fn, swap_fn
 #include <tabula/lakes.hpp>             // basic_lakes
 #include <tabula/point.hpp>             // basic_point
+#include <tabula/tuple.hpp>             // min_index, transform
 #include <tabula/type_traits.hpp>       // is_chequered, square_t, direction_t, flip_t
 #include <array>                        // array
 #include <cstddef>                      // size_t
@@ -34,9 +35,9 @@ template<class Shape, class Padding>
 struct basic_board
 {
         static constexpr auto embedding_v = basic_embedding<Shape, Padding>{};
-        static constexpr auto idx = min_index_by(transforms, [](auto fun) {
+        static constexpr auto idx = min_index(transform(transforms, [](auto fun) {
                 return fun(embedding_v).valid_padded_size;
-        });
+        }));
         static constexpr auto transform_v = std::get<idx>(transforms);
         static constexpr auto image_v = transform_v(embedding_v);
 

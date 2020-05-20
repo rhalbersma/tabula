@@ -6,6 +6,7 @@
 #include <tabula/board.hpp>             // basic_board
 #include <tabula/games.hpp>             // draughts, stratego
 #include <tabula/ostream.hpp>           // operator<<, format_square
+#include <tabula/tuple.hpp>             // for_each
 #include <tabula/type_traits.hpp>       // is_chequered
 #include <algorithm>                    // copy
 #include <iostream>                     // cout

@@ -51,32 +51,4 @@ constexpr auto operator>>(auto f, auto g)
 
 inline constexpr auto compose = [](auto... funs) { return (funs >> ... >> keep_arg); };
 
-template<class Tuple, class UnaryFunction>
-        requires (std::tuple_size_v<Tuple> > 0)
-constexpr auto min_index_by(Tuple const& tup, UnaryFunction fun)
-{
-        return std::apply([=](auto head, auto... tail){
-                auto min = fun(head);
-                auto index = 0;
-                auto i = 1;
-                ([&](auto elem) {
-                        if (auto const result = fun(elem); result < min) {
-                                min = result;
-                                index = i;
-                        }
-                        ++i;
-                }(tail), ...);
-                assert(index < static_cast<int>(std::tuple_size_v<Tuple>));
-                return index;
-        }, tup);
-}
-
-template<class Tuple, class UnaryFunction>
-constexpr auto for_each(Tuple const& tup, UnaryFunction fun)
-{
-        return std::apply([=](auto... elems){
-                return (fun(elems), ...);
-        }, tup);
-}
-
 }       // namespace tabula
