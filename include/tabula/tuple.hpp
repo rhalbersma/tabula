@@ -10,11 +10,32 @@
 
 namespace tabula {
 
+template<bool B>
+using bool_ = std::bool_constant<B>;
+
+template<bool B>
+inline constexpr auto bool_c = bool_<B>();
+
 template<int N>
-using int_c = std::integral_constant<int, N>;
+using int_ = std::integral_constant<int, N>;
+
+template<int N>
+inline constexpr auto int_c = int_<N>();
+
+template<int M, int N>
+constexpr auto operator==(int_<M>, int_<N>) noexcept
+{
+        return M == N;
+}
+
+template<int M, int N>
+constexpr auto operator!=(int_<M>, int_<N>) noexcept
+{
+        return M != N;
+}
 
 template<class T, T... Ns>
-using tuple_c = std::tuple<std::integral_constant<T, Ns>...>;
+inline constexpr auto tuple_c = std::tuple(std::integral_constant<T, Ns>()...);
 
 constexpr auto for_each(auto tup, auto fun)
 {
