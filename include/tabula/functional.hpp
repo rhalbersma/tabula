@@ -5,37 +5,32 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tuple>        // apply, tuple_size
-
 namespace tabula {
 
 template<class UnaryFunction>
 struct flip_
 {
-        template<class Arg>
-        constexpr auto operator()(Arg const& arg) const noexcept
+        constexpr auto operator()(auto arg) const noexcept
         {
-                return UnaryFunction{}(arg.flip());
+                return UnaryFunction()(arg.flip());
         }
 };
 
 template<class UnaryFunction>
 struct flop_
 {
-        template<class Arg>
-        constexpr auto operator()(Arg const& arg) const noexcept
+        constexpr auto operator()(auto arg) const noexcept
         {
-                return UnaryFunction{}(arg.flop());
+                return UnaryFunction()(arg.flop());
         }
 };
 
 template<class UnaryFunction>
 struct swap_
 {
-        template<class Arg>
-        constexpr auto operator()(Arg const& arg) const noexcept
+        constexpr auto operator()(auto arg) const noexcept
         {
-                return UnaryFunction{}(arg.swap());
+                return UnaryFunction()(arg.swap());
         }
 };
 
@@ -44,11 +39,20 @@ inline constexpr auto flip_arg = [](auto arg) { return arg.flip(); };
 inline constexpr auto flop_arg = [](auto arg) { return arg.flop(); };
 inline constexpr auto swap_arg = [](auto arg) { return arg.swap(); };
 
-constexpr auto operator>>(auto f, auto g)
+template<class F>
+struct composable
 {
-        return [=](auto arg) { return f(g(arg)); };
+        F call;
+};
+
+template<class F, class G>
+constexpr auto operator>>(composable<F> f, composable<G> g)
+{
+        return composable([=](auto arg) { return f.call(g.call(arg)); });
 }
 
-inline constexpr auto compose = [](auto... funs) { return (funs >> ... >> keep_arg); };
+inline constexpr auto compose = [](auto... funs) {
+        return (composable(funs) >> ... >> composable(keep_arg)).call;
+};
 
 }       // namespace tabula

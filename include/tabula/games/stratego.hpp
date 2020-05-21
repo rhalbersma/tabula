@@ -20,25 +20,26 @@ using board = basic_board<basic_rectangle<Width, Height, basic_lakes<Cuts...>>, 
 using l_attaque = board
 <
         9, 10,
-        cut<'c',6>,     cut<'e',6>,     cut<'g',6>,
-        cut<'c',5>,     cut<'e',5>,     cut<'g',5>
+        cut<'c',6>, cut<'e',6>, cut<'g',6>,
+        cut<'c',5>, cut<'e',5>, cut<'g',5>
 >;
 
 // Classic Stratego is played on a 10x10 board
-// with two 2x2 lakes on the 5th and 6th rows of the c/d and g/h files.
+// with two 2x2 lakes on the 5th and 6th rows of the c, d, g and h files.
 using classic = board
 <
         10, 10,
-        cut<'c',6>,cut<'d',6>,  cut<'g',6>,cut<'h',6>,
-        cut<'c',5>,cut<'d',5>,  cut<'g',5>,cut<'h',5>
+        cut<'c',6>, cut<'d',6>, cut<'g',6>, cut<'h',6>,
+        cut<'c',5>, cut<'d',5>, cut<'g',5>, cut<'h',5>
 >;
 
 // Quick Arena is a variation from stratego.com and is played on an 8x8 board
 // with two 1x2 lakes on the 4th and 5th rows of the c and f files.
 using quick_arena = board
-<       8, 8,
-        cut<'c',5>,     cut<'f',5>,
-        cut<'c',4>,     cut<'f',4>
+<
+        8, 8,
+        cut<'c',5>, cut<'f',5>,
+        cut<'c',4>, cut<'f',4>
 >;
 
 }       // namespace tabula::stratego

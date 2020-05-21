@@ -16,11 +16,11 @@
 #include <array>                        // array
 #include <cstddef>                      // size_t
 #include <optional>                     // optional
-#include <tuple>                        // get, make_tuple
+#include <tuple>                        // get, tuple
 
 namespace tabula {
 
-inline constexpr auto transforms = std::make_tuple(
+inline constexpr auto transforms = std::tuple(
         keep_arg,                               // origin at lower-left, left-to-right, bottom-to-top
         swap_arg,                               // origin at lower-left, bottom-to-top, left-to-right
         flip_arg,                               // origin at upper-left, left-to-right, top-to-bottom

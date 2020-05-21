@@ -13,8 +13,7 @@ struct basic_lakes;
 template<>
 struct basic_lakes<>
 {
-        template<class Square>
-        constexpr auto operator()(Square const&) const noexcept
+        constexpr auto operator()(auto) const noexcept
         {
                 return false;
         }

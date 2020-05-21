@@ -5,7 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tuple>        // apply, make_tuple, tuple, tuple_cat, tuple_size_v
+#include <tuple>        // apply, tuple, tuple_cat, tuple_size_v
 #include <type_traits>  // conditional_t, integral_constant
 
 namespace tabula {
@@ -23,63 +23,66 @@ constexpr auto for_each(auto tup, auto fun)
         }, tup);
 }
 
-constexpr auto fold_plus(auto tup)
+constexpr auto transform(auto tup, auto fun)
 {
         return std::apply([=](auto... args){
+                return std::tuple(fun(args)...);
+        }, tup);
+}
+
+constexpr auto accumulate(auto tup)
+{
+        return std::apply([](auto... args){
                 return (... + args);
         }, tup);
 }
 
-constexpr auto fold_logical_or(auto tup)
+constexpr auto any_of(auto tup, auto pred)
 {
         return std::apply([=](auto... args){
-                return (... || args);
+                return (... || pred(args));
         }, tup);
 }
 
-constexpr auto fold_bit_or(auto tup)
+constexpr auto any_of_all(auto tup, auto pred)
 {
         return std::apply([=](auto... args){
-                return (... | args);
+                return (... | pred(args));
         }, tup);
 }
 
-constexpr auto transform(auto tup, auto fun)
-{
-        return std::apply([=](auto... args){
-                return std::make_tuple(fun(args)...);
-        }, tup);
-}
-
-constexpr auto filter(auto tup, auto pred)
+constexpr auto remove_if(auto tup, auto pred)
 {
         return std::apply([=](auto... args) {
                 return std::tuple_cat(
                         std::conditional_t<
-                                pred(decltype(args)::value), 
-                                std::tuple<decltype(args)>, 
-                                std::tuple<>
+                                pred(args),
+                                std::tuple<>,
+                                std::tuple<decltype(args)>
                         >()...
                 );
         }, tup);
 }
 
 constexpr auto min_index(auto tup)
-        requires (std::tuple_size_v<decltype(tup)> > 0)
 {
-        return std::apply([=](auto head, auto... tail){
-                auto min = head;
-                auto index = 0;
-                auto i = 1;
-                ([&](auto arg) {
-                        if (arg < min) {
-                                min = arg;
-                                index = i;
-                        }
-                        ++i;
-                }(tail), ...);
-                return index;
-        }, tup);
+        if constexpr (std::tuple_size_v<decltype(tup)> == 0) {
+                return 0;
+        } else {
+                return std::apply([](auto head, auto... tail){
+                        auto min = head;
+                        auto index = 0;
+                        auto i = 1;
+                        ([&](auto arg) {
+                                if (arg < min) {
+                                        min = arg;
+                                        index = i;
+                                }
+                                ++i;
+                        }(tail), ...);
+                        return index;
+                }, tup);
+        }
 }
 
 }       // namespace tabula
