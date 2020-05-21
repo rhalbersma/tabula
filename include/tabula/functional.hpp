@@ -48,7 +48,9 @@ struct composable
 template<class F, class G>
 constexpr auto operator>>(composable<F> f, composable<G> g)
 {
-        return composable([=](auto arg) { return f.call(g.call(arg)); });
+        return composable([=](auto arg) {
+                return f.call(g.call(arg));
+        });
 }
 
 inline constexpr auto compose = [](auto... funs) {
