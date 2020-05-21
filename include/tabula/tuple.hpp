@@ -6,36 +6,18 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tuple>        // apply, tuple, tuple_cat, tuple_size_v
-#include <type_traits>  // conditional_t, integral_constant
+#include <type_traits>  // bool_constant, conditional_t, integral_constant
 
 namespace tabula {
 
 template<bool B>
-using bool_ = std::bool_constant<B>;
-
-template<bool B>
-inline constexpr auto bool_c = bool_<B>();
+constexpr auto bool_c = std::bool_constant<B>();
 
 template<int N>
-using int_ = std::integral_constant<int, N>;
-
-template<int N>
-inline constexpr auto int_c = int_<N>();
-
-template<int M, int N>
-constexpr auto operator==(int_<M>, int_<N>) noexcept
-{
-        return M == N;
-}
-
-template<int M, int N>
-constexpr auto operator!=(int_<M>, int_<N>) noexcept
-{
-        return M != N;
-}
+constexpr auto int_c = std::integral_constant<int, N>();
 
 template<class T, T... Ns>
-inline constexpr auto tuple_c = std::tuple(std::integral_constant<T, Ns>()...);
+constexpr auto tuple_c = std::tuple(std::integral_constant<T, Ns>()...);
 
 constexpr auto for_each(auto tup, auto fun)
 {
@@ -74,7 +56,7 @@ constexpr auto any_of_all(auto tup, auto pred)
 
 constexpr auto remove_if(auto tup, auto pred)
 {
-        return std::apply([=](auto... args) {
+        return std::apply([=](auto... args){
                 return std::tuple_cat(
                         std::conditional_t<
                                 pred(args),
