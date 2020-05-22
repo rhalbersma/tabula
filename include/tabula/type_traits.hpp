@@ -24,7 +24,7 @@ template<class T> using flopped_t = typename T::flopped_type;
 template<class T> using swapped_t = typename T::swapped_type;
 
 template<class T> using    grid_t = typename T::   grid_type;
-template<class T> using   point_t = typename T::  point_type;
+template<class T> using  square_t = typename T:: square_type;
 template<class T> using  vector_t = typename T:: vector_type;
 
 template<class Grid, class Padding>

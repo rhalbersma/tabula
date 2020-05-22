@@ -5,7 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/point.hpp>             // basic_point
+#include <tabula/square.hpp>            // basic_square
 #include <tabula/type_traits.hpp>       // flip_t, flop_t, swap_t, padded_t
 #include <tabula/vector.hpp>            // basic_vector
 #include <optional>                     // optional
@@ -19,14 +19,14 @@ struct basic_embedding
         using padding_type = Padding;
         using padded_type  = padded_t<Grid, Padding>;
 
-        using point         = basic_point<Grid>;
-        using padded_point  = basic_point<padded_type>;
+        using        square = basic_square<Grid>;
+        using padded_square = basic_square<padded_type>;
         using padded_vector = basic_vector<padded_type>;
 
-        static constexpr auto first_valid = []() -> std::optional<point> {
+        static constexpr auto first_valid = []() -> std::optional<square> {
                 for (auto r = 0; r < Grid::height; ++r) {
                         for (auto f = 0; f < Grid::width; ++f) {
-                                if (auto const sq = point(f, r); sq.is_valid()) {
+                                if (auto const sq = square(f, r); sq.is_valid()) {
                                         return sq;
                                 }
                         }
@@ -35,10 +35,10 @@ struct basic_embedding
         }();
         static_assert(first_valid && first_valid->is_valid());
 
-        static constexpr auto last_valid = []() -> std::optional<point> {
+        static constexpr auto last_valid = []() -> std::optional<square> {
                 for (auto r = Grid::height - 1; r >= 0; --r) {
                         for (auto f = Grid::width - 1; f >= 0; --f) {
-                                if (auto const sq = point(f, r); sq.is_valid()) {
+                                if (auto const sq = square(f, r); sq.is_valid()) {
                                         return sq;
                                 }
                         }
@@ -50,8 +50,8 @@ struct basic_embedding
         static constexpr auto size = Grid::area;
         static constexpr auto padded_size = padded_type::area;
 
-        static constexpr auto to_padded(point const& sq)
-                -> padded_point
+        static constexpr auto to_padded(square const& sq)
+                -> padded_square
         {
                 return { sq.file + Padding::left, sq.rank + Padding::bottom };
         }

@@ -26,6 +26,13 @@ constexpr auto for_each(auto tup, auto fun) noexcept
         }, tup);
 }
 
+constexpr auto enumerate(auto tup, auto fun) noexcept
+{
+        return std::apply([=, i = 0](auto... args) mutable {
+                return (fun(i++, args), ...);
+        }, tup);
+}
+
 constexpr auto transform(auto tup, auto fun) noexcept
 {
         return std::apply([=](auto... args) {

@@ -63,14 +63,9 @@ int main()
                         std::cout << ", C = " << grid_type::coloring;
                 }
                 std::cout << '\n';
-                std::cout << std::get<0>(transforms)(b.embedding_v).valid_padded_size << '\n';
-                std::cout << std::get<1>(transforms)(b.embedding_v).valid_padded_size << '\n';
-                std::cout << std::get<2>(transforms)(b.embedding_v).valid_padded_size << '\n';
-                std::cout << std::get<3>(transforms)(b.embedding_v).valid_padded_size << '\n';
-                std::cout << std::get<4>(transforms)(b.embedding_v).valid_padded_size << '\n';
-                std::cout << std::get<5>(transforms)(b.embedding_v).valid_padded_size << '\n';
-                std::cout << std::get<6>(transforms)(b.embedding_v).valid_padded_size << '\n';
-                std::cout << std::get<7>(transforms)(b.embedding_v).valid_padded_size << '\n';
+                enumerate(mappings, [&](auto i, auto map)  {
+                        std::cout << i << ": " << map(b.embedding_v).valid_padded_size << '\n';
+                });
                 std::cout << "index = " << b.idx << " " << b.size << " external squares padded to " << b.padded_size << " internal squares, " << b.valid_padded_size << " of which are valid" << '\n';
                 std::cout << "directional strides: ";
                 constexpr auto strides = b.strides;

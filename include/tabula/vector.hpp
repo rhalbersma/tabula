@@ -17,6 +17,27 @@ struct basic_vector
 
         bool operator==(basic_vector const&) const = default;
 
+        constexpr auto& operator+=(basic_vector const& rhs) noexcept
+        {
+                d_file += rhs.d_file;
+                d_rank += rhs.d_rank;
+                return *this;
+        }
+
+        constexpr auto& operator-=(basic_vector const& rhs) noexcept
+        {
+                d_file -= rhs.d_file;
+                d_rank -= rhs.d_rank;
+                return *this;
+        }
+
+        constexpr auto& operator*=(int scalar) noexcept
+        {
+                d_file *= scalar;
+                d_rank *= scalar;
+                return *this;
+        }
+
         constexpr auto is_cardinal() const noexcept
         {
                 return !d_file ^ !d_rank;
@@ -81,5 +102,29 @@ struct basic_vector
                 return { -d_file, -d_rank };
         }
 };
+
+template<class Grid>
+constexpr auto operator+(basic_vector<Grid> const& lhs, basic_vector<Grid> const& rhs) noexcept
+{
+        auto nrv = lhs; nrv += rhs; return nrv;
+}
+
+template<class Grid>
+constexpr auto operator-(basic_vector<Grid> const& lhs, basic_vector<Grid> const& rhs) noexcept
+{
+        auto nrv = lhs; nrv -= rhs; return nrv;
+}
+
+template<class Grid>
+constexpr auto operator*(basic_vector<Grid> const& lhs, int rhs) noexcept
+{
+        auto nrv = lhs; nrv *= rhs; return nrv;
+}
+
+template<class Grid>
+constexpr auto operator*(int lhs, basic_vector<Grid> const& rhs) noexcept
+{
+        auto nrv = rhs; nrv *= lhs; return nrv;
+}
 
 }       // namespace tabula

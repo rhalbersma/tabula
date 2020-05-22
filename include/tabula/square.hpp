@@ -5,17 +5,32 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/type_traits.hpp>       // is_chequered, lake_t, flip_t, flop_t, swap_t
+#include <tabula/vector.hpp>            // vector
+#include <tabula/type_traits.hpp>       // is_chequered, flip_t, flop_t, swap_t
 
 namespace tabula {
 
 template<class Grid>
-struct basic_point
+struct basic_square
 {
         int file;
         int rank;
 
-        bool operator==(basic_point const&) const = default;
+        bool operator==(basic_square const&) const = default;
+
+        constexpr auto& operator+=(basic_vector<Grid> const& rhs) noexcept
+        {
+                file += rhs.d_file;
+                rank += rhs.d_rank;
+                return *this;
+        }
+
+        constexpr auto& operator-=(basic_vector<Grid> const& rhs) noexcept
+        {
+                file -= rhs.d_file;
+                rank -= rhs.d_rank;
+                return *this;
+        }
 
         constexpr auto is_within() const noexcept
         {
@@ -50,9 +65,9 @@ struct basic_point
                 return (file + rank * Grid::width) / d;
         }
 
-        using flipped_type = basic_point<flipped_t<Grid>>;
-        using flopped_type = basic_point<flopped_t<Grid>>;
-        using swapped_type = basic_point<swapped_t<Grid>>;
+        using flipped_type = basic_square<flipped_t<Grid>>;
+        using flopped_type = basic_square<flopped_t<Grid>>;
+        using swapped_type = basic_square<swapped_t<Grid>>;
 
         constexpr auto flip() const noexcept
                 -> flipped_type
@@ -72,5 +87,24 @@ struct basic_point
                 return { rank, file };
         }
 };
+
+template<class Grid>
+constexpr auto operator+(basic_square<Grid> const& s, basic_vector<Grid> const& v) noexcept
+{
+        auto nrv = s; nrv += v; return nrv;
+}
+
+template<class Grid>
+constexpr auto operator-(basic_square<Grid> const& s, basic_vector<Grid> const& v) noexcept
+{
+        auto nrv = s; nrv -= v; return nrv;
+}
+
+template<class Grid>
+constexpr auto operator-(basic_square<Grid> const& lhs, basic_square<Grid> const& rhs) noexcept
+        -> basic_vector<Grid>
+{
+        return { lhs.file - rhs.file, lhs.rank - rhs.rank };
+}
 
 }       // namespace tabula

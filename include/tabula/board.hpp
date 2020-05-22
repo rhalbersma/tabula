@@ -7,9 +7,9 @@
 
 #include <tabula/compass.hpp>           // basic_compass
 #include <tabula/embedding.hpp>         // basic_embedding
-#include <tabula/functional.hpp>        // flip_fn, flop_fn, swap_fn
+#include <tabula/functional.hpp>        // compose, identity, flip, flop, swap
 #include <tabula/lakes.hpp>             // basic_lakes
-#include <tabula/point.hpp>             // basic_point
+#include <tabula/square.hpp>            // basic_square
 #include <tabula/tuple.hpp>             // min_index, transform
 #include <tabula/type_traits.hpp>       // is_chequered, flip_t
 #include <tabula/vector.hpp>            // basic_vector
@@ -21,7 +21,7 @@
 
 namespace tabula {
 
-inline constexpr auto transforms = std::tuple(
+inline constexpr auto mappings = std::tuple(
         identity,                       // origin at lower-left, left-to-right, bottom-to-top
         swap,                           // origin at lower-left, bottom-to-top, left-to-right
         flip,                           // origin at upper-left, left-to-right, top-to-bottom
@@ -35,32 +35,34 @@ inline constexpr auto transforms = std::tuple(
 template<class Grid, class Padding>
 struct basic_board
 {
-        static constexpr auto embedding_v = basic_embedding<Grid, Padding>{};
-        static constexpr auto idx = min_index(transform(transforms, [](auto fun) {
-                return fun(embedding_v).valid_padded_size;
-        }));
-        static constexpr auto transform_v = std::get<idx>(transforms);
-        static constexpr auto image_v = transform_v(embedding_v);
+        static constexpr auto embedding_v = basic_embedding<Grid, Padding>();
+        static constexpr auto idx = min_index(
+                transform(mappings, [](auto map) {
+                        return map(embedding_v).valid_padded_size;
+                })
+        );
+        static constexpr auto mapping_v = std::get<idx>(mappings);
+        static constexpr auto image_v = mapping_v(embedding_v);
 
-        using point_type = basic_point<Grid>;
-        using vector_type = basic_vector<Grid>;
-        using padded_point_type = typename decltype(image_v)::padded_point;
+        using        square_type = basic_square<Grid>;
+        using        vector_type = basic_vector<Grid>;
+        using padded_square_type = typename decltype(image_v)::padded_square;
         using padded_vector_type = typename decltype(image_v)::padded_vector;
 
-        static constexpr auto to_sequential(point_type const& sq) noexcept
+        static constexpr auto to_sequential(square_type const& sq) noexcept
         {
                 return sq.flip();
         }
 
-        static constexpr auto to_padded(point_type const& sq) noexcept
+        static constexpr auto to_padded(square_type const& sq) noexcept
         {
-                return image_v.to_padded(transform_v(sq));
+                return image_v.to_padded(mapping_v(sq));
         }
 
         static constexpr auto to_padded(vector_type const& dir) noexcept
                 -> padded_vector_type
         {
-                auto const t = transform_v(dir);
+                auto const t = mapping_v(dir);
                 return { t.d_file, t.d_rank };
         }
 
@@ -68,7 +70,7 @@ struct basic_board
                 std::array<std::optional<int>, image_v.padded_size> table{};
                 for (auto r = 0; r < Grid::height; ++r) {
                         for (auto f = 0; f < Grid::width; ++f) {
-                                if (auto const sq = point_type(f, r); sq.is_valid()) {
+                                if (auto const sq = square_type(f, r); sq.is_valid()) {
                                         table[static_cast<std::size_t>(to_padded(sq).index())] = to_sequential(sq).index();
                                 }
                         }
@@ -80,7 +82,7 @@ struct basic_board
                 std::array<std::optional<int>, image_v.size> table{};
                 for (auto r = 0; r < Grid::height; ++r) {
                         for (auto f = 0; f < Grid::width; ++f) {
-                                if (auto const sq = point_type(f, r); sq.is_valid()) {
+                                if (auto const sq = square_type(f, r); sq.is_valid()) {
                                         table[static_cast<std::size_t>(to_sequential(sq).index())] = to_padded(sq).index();
                                 }
                         }
@@ -94,12 +96,12 @@ public:
         using grid_type    = Grid;
         using padding_type = Padding;
 
-        static constexpr auto size              = image_v.size;
-        static constexpr auto padded_size       = image_v.padded_size;
+        static constexpr auto              size = image_v.             size;
+        static constexpr auto       padded_size = image_v.      padded_size;
         static constexpr auto valid_padded_size = image_v.valid_padded_size;
 
         static constexpr auto square(int f, int r) // Throws: Nothing.
-                -> point_type
+                -> square_type
         {
                 return { f, r };
         }
@@ -118,13 +120,13 @@ public:
                 return sequential0(i) + 1;
         }
 
-        static constexpr auto sequential0(point_type const& sq) // Throws: Nothing.
+        static constexpr auto sequential0(square_type const& sq) // Throws: Nothing.
         {
                 assert(sq.is_valid());
                 return sequential0(to_padded(sq).index());
         }
 
-        static constexpr auto sequential1(point_type const& sq) // Throws: Nothing.
+        static constexpr auto sequential1(square_type const& sq) // Throws: Nothing.
         {
                 assert(sq.is_valid());
                 return sequential1(to_padded(sq).index());
@@ -144,7 +146,7 @@ public:
                 return padded0(n1 - 1);
         }
 
-        static constexpr auto padded(point_type const& sq) // Throws: Nothing.
+        static constexpr auto padded(square_type const& sq) // Throws: Nothing.
         {
                 assert(sq.is_valid());
                 return padded0(to_sequential(sq).index());
