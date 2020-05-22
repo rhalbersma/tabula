@@ -5,9 +5,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/board.hpp>                     // basic_board
-#include <tabula/padding.hpp>                   // basic_padding, right_padding
-#include <tabula/shapes/basic_rectangle.hpp>    // basic_rectangle
+#include <tabula/board.hpp>     // basic_board
+#include <tabula/grids.hpp>     // basic_rectangle
+#include <tabula/padding.hpp>   // basic_padding, right_padding
 
 namespace tabula::chess {
 
@@ -18,11 +18,11 @@ using board = basic_board<basic_rectangle<Width, Height>, Padding>;
 using mailbox_10x12 = board<8, 8, basic_padding<2, 1>>;
 
 // https://www.chessprogramming.org/0x88
-using board_0x88 = board<8, 8, right_padding<8>>;
+using board_0x88    = board<8, 8, right_padding<8>>;
 
 // https://www.chessprogramming.org/Vector_Attacks
-using vector_15x12 = board<8, 8, basic_padding<2, 4, 2, 3>>;
-using vector_16x12 = board<8, 8, basic_padding<2, 4>>;
-using vector_16x16 = board<8, 8, basic_padding<4>>;
+using vector_15x12  = board<8, 8, basic_padding<2, 4, 2, 3>>;
+using vector_16x12  = board<8, 8, basic_padding<2, 4>>;
+using vector_16x16  = board<8, 8, basic_padding<4>>;
 
 }       // namespace tabula::chess

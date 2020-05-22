@@ -5,26 +5,32 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/functional.hpp>        // flip_, flop_, swap_
+#include <tabula/functional.hpp>        // _compose, _flip, _flop, _swap
 #include <tabula/lakes.hpp>             // basic_lakes
 
 namespace tabula {
 
-template<int Width, int Height, bool Coloring = true, class Lakes = basic_lakes<>>
+template<
+        int Width,
+        int Height,
+        bool Coloring = true,
+        class Lakes = basic_lakes<>
+>
 struct chequered_rectangle
 {
         static_assert(0 < Width);
         static_assert(0 < Height);
 
-        static constexpr auto width = Width;
-        static constexpr auto height = Height;
+        static constexpr auto width    = Width;
+        static constexpr auto height   = Height;
         static constexpr auto coloring = Coloring;
-        static constexpr auto area = (Width * Height + Coloring) / 2;
+        static constexpr auto area     = (Width * Height + Coloring) / 2;
 
         using lake_type = Lakes;
-        using flip_type = chequered_rectangle<Width, Height, Coloring ^ !(Height % 2), flip_<Lakes>>;
-        using flop_type = chequered_rectangle<Width, Height, Coloring ^ !(Width  % 2), flop_<Lakes>>;
-        using swap_type = chequered_rectangle<Height, Width, Coloring,                 swap_<Lakes>>;
+
+        using flipped_type = chequered_rectangle<Width, Height, Coloring ^ !(Height % 2), _compose<Lakes, _flip>>;
+        using flopped_type = chequered_rectangle<Width, Height, Coloring ^ !(Width  % 2), _compose<Lakes, _flop>>;
+        using swapped_type = chequered_rectangle<Height, Width, Coloring,                 _compose<Lakes, _swap>>;
 
         template<class Padding>
         using padded_type = chequered_rectangle<

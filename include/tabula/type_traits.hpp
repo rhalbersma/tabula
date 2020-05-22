@@ -9,23 +9,25 @@
 
 namespace tabula {
 
-template<class Shape, class = void>
+template<class Grid, class = void>
 inline constexpr auto is_chequered = false;
 
-template<class Shape>
-inline constexpr auto is_chequered<Shape, std::void_t<decltype(
-        Shape::coloring
+template<class Grid>
+inline constexpr auto is_chequered<Grid, std::void_t<decltype(
+        Grid::coloring
 )>> = true;
 
-template<class T> using     shape_t = typename T::    shape_type;
-template<class T> using    square_t = typename T::   square_type;
-template<class T> using direction_t = typename T::direction_type;
+template<class T> using    lake_t = typename T::   lake_type;
 
-template<class T> using lake_t = typename T::lake_type;
-template<class T> using flip_t = typename T::flip_type;
-template<class T> using flop_t = typename T::flop_type;
-template<class T> using swap_t = typename T::swap_type;
+template<class T> using flipped_t = typename T::flipped_type;
+template<class T> using flopped_t = typename T::flopped_type;
+template<class T> using swapped_t = typename T::swapped_type;
 
-template<class Shape, class Padding> using padded_t = typename Shape::template padded_type<Padding>;
+template<class T> using    grid_t = typename T::   grid_type;
+template<class T> using   point_t = typename T::  point_type;
+template<class T> using  vector_t = typename T:: vector_type;
+
+template<class Grid, class Padding>
+using padded_t = typename Grid::template padded_type<Padding>;
 
 }       // namespace tabula

@@ -5,28 +5,28 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/direction.hpp>         // basic_direction
 #include <tabula/point.hpp>             // basic_point
 #include <tabula/type_traits.hpp>       // flip_t, flop_t, swap_t, padded_t
+#include <tabula/vector.hpp>            // basic_vector
 #include <optional>                     // optional
 
 namespace tabula {
 
-template<class Shape, class Padding>
+template<class Grid, class Padding>
 struct basic_embedding
 {
-        using shape_type = Shape;
+        using grid_type    = Grid;
         using padding_type = Padding;
-        using padded_type = padded_t<Shape, Padding>;
+        using padded_type  = padded_t<Grid, Padding>;
 
-        using square_type = basic_point<Shape>;
-        using padded_square_type = basic_point<padded_type>;
-        using padded_direction_type = basic_direction<padded_type>;
+        using point         = basic_point<Grid>;
+        using padded_point  = basic_point<padded_type>;
+        using padded_vector = basic_vector<padded_type>;
 
-        static constexpr auto first_valid = []() -> std::optional<square_type> {
-                for (auto r = 0; r < Shape::height; ++r) {
-                        for (auto f = 0; f < Shape::width; ++f) {
-                                if (auto const sq = square_type{f, r}; sq.is_valid()) {
+        static constexpr auto first_valid = []() -> std::optional<point> {
+                for (auto r = 0; r < Grid::height; ++r) {
+                        for (auto f = 0; f < Grid::width; ++f) {
+                                if (auto const sq = point(f, r); sq.is_valid()) {
                                         return sq;
                                 }
                         }
@@ -35,10 +35,10 @@ struct basic_embedding
         }();
         static_assert(first_valid && first_valid->is_valid());
 
-        static constexpr auto last_valid = []() -> std::optional<square_type> {
-                for (auto r = Shape::height - 1; r >= 0; --r) {
-                        for (auto f = Shape::width - 1; f >= 0; --f) {
-                                if (auto const sq = square_type{f, r}; sq.is_valid()) {
+        static constexpr auto last_valid = []() -> std::optional<point> {
+                for (auto r = Grid::height - 1; r >= 0; --r) {
+                        for (auto f = Grid::width - 1; f >= 0; --f) {
+                                if (auto const sq = point(f, r); sq.is_valid()) {
                                         return sq;
                                 }
                         }
@@ -47,23 +47,23 @@ struct basic_embedding
         }();
         static_assert(last_valid && last_valid->is_valid());
 
-        static constexpr auto size = Shape::area;
+        static constexpr auto size = Grid::area;
         static constexpr auto padded_size = padded_type::area;
 
-        static constexpr auto to_padded(square_type const& sq)
-                -> padded_square_type
+        static constexpr auto to_padded(point const& sq)
+                -> padded_point
         {
-                return { sq.file() + Padding::left, sq.rank() + Padding::bottom };
+                return { sq.file + Padding::left, sq.rank + Padding::bottom };
         }
         static constexpr auto valid_padded_size = to_padded(*last_valid).index() - to_padded(*first_valid).index() + 1;
 
-        using flip_type = basic_embedding<flip_t<Shape>, Padding>;
-        using flop_type = basic_embedding<flop_t<Shape>, Padding>;
-        using swap_type = basic_embedding<swap_t<Shape>, Padding>;
+        using flipped_type = basic_embedding<flipped_t<Grid>, Padding>;
+        using flopped_type = basic_embedding<flopped_t<Grid>, Padding>;
+        using swapped_type = basic_embedding<swapped_t<Grid>, Padding>;
 
-        constexpr auto flip() const noexcept -> flip_type { return {}; }
-        constexpr auto flop() const noexcept -> flop_type { return {}; }
-        constexpr auto swap() const noexcept -> swap_type { return {}; }
+        static constexpr auto flip() noexcept -> flipped_type { return {}; }
+        static constexpr auto flop() noexcept -> flopped_type { return {}; }
+        static constexpr auto swap() noexcept -> swapped_type { return {}; }
 };
 
 }   // namespace tabula

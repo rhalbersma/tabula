@@ -7,38 +7,6 @@
 
 namespace tabula {
 
-template<class UnaryFunction>
-struct flip_
-{
-        constexpr auto operator()(auto arg) const noexcept
-        {
-                return UnaryFunction()(arg.flip());
-        }
-};
-
-template<class UnaryFunction>
-struct flop_
-{
-        constexpr auto operator()(auto arg) const noexcept
-        {
-                return UnaryFunction()(arg.flop());
-        }
-};
-
-template<class UnaryFunction>
-struct swap_
-{
-        constexpr auto operator()(auto arg) const noexcept
-        {
-                return UnaryFunction()(arg.swap());
-        }
-};
-
-inline constexpr auto keep_arg = [](auto arg) { return arg;        };
-inline constexpr auto flip_arg = [](auto arg) { return arg.flip(); };
-inline constexpr auto flop_arg = [](auto arg) { return arg.flop(); };
-inline constexpr auto swap_arg = [](auto arg) { return arg.swap(); };
-
 template<class F>
 struct composable
 {
@@ -46,15 +14,54 @@ struct composable
 };
 
 template<class F, class G>
-constexpr auto operator>>(composable<F> f, composable<G> g)
+constexpr auto operator>>(composable<F> f, composable<G> g) noexcept
 {
         return composable([=](auto arg) {
                 return f.call(g.call(arg));
         });
 }
 
+inline constexpr auto identity = [](auto arg) { return arg; };
+
 inline constexpr auto compose = [](auto... funs) {
-        return (composable(funs) >> ... >> composable(keep_arg)).call;
+        return (composable(funs) >> ... >> composable(identity)).call;
 };
+
+template<class... Fs>
+struct _compose
+{
+        constexpr auto operator()(auto arg) const noexcept
+        {
+                return compose(Fs()...)(arg);
+        }
+};
+
+struct _flip
+{
+        constexpr auto operator()(auto arg) const noexcept
+        {
+                return arg.flip();
+        }
+};
+
+struct _flop
+{
+        constexpr auto operator()(auto arg) const noexcept
+        {
+                return arg.flop();
+        }
+};
+
+struct _swap
+{
+        constexpr auto operator()(auto arg) const noexcept
+        {
+                return arg.swap();
+        }
+};
+
+inline constexpr auto flip = _flip();
+inline constexpr auto flop = _flop();
+inline constexpr auto swap = _swap();
 
 }       // namespace tabula

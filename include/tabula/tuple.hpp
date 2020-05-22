@@ -19,42 +19,42 @@ constexpr auto int_c = std::integral_constant<int, N>();
 template<class T, T... Ns>
 constexpr auto tuple_c = std::tuple(std::integral_constant<T, Ns>()...);
 
-constexpr auto for_each(auto tup, auto fun)
+constexpr auto for_each(auto tup, auto fun) noexcept
 {
         return std::apply([=](auto... args) {
                 return (fun(args), ...);
         }, tup);
 }
 
-constexpr auto transform(auto tup, auto fun)
+constexpr auto transform(auto tup, auto fun) noexcept
 {
         return std::apply([=](auto... args) {
                 return std::tuple(fun(args)...);
         }, tup);
 }
 
-constexpr auto accumulate(auto tup)
+constexpr auto accumulate(auto tup) noexcept
 {
         return std::apply([](auto... args) {
                 return (... + args);
         }, tup);
 }
 
-constexpr auto any_of(auto tup, auto pred)
+constexpr auto any_of(auto tup, auto pred) noexcept
 {
         return std::apply([=](auto... args) {
                 return (... || pred(args));
         }, tup);
 }
 
-constexpr auto any_of_all(auto tup, auto pred)
+constexpr auto any_of_all(auto tup, auto pred) noexcept
 {
         return std::apply([=](auto... args) {
                 return (... | pred(args));
         }, tup);
 }
 
-constexpr auto remove_if(auto tup, auto pred)
+constexpr auto remove_if(auto tup, auto pred) noexcept
 {
         return std::apply([=](auto... args) {
                 return std::tuple_cat(
@@ -67,7 +67,7 @@ constexpr auto remove_if(auto tup, auto pred)
         }, tup);
 }
 
-constexpr auto min_index(auto tup)
+constexpr auto min_index(auto tup) noexcept
 {
         if constexpr (std::tuple_size_v<decltype(tup)> == 0) {
                 return 0;

@@ -17,50 +17,50 @@ int main()
         using namespace tabula;
         constexpr auto boards = std::make_tuple(
                 // draughts variants played on chequered boards
-                draughts::board<2, 5, 1>{},
-                draughts::board<2, 5, 0>{},
-                draughts::nano{},
-                draughts::micro{},
-                draughts::checkers{},
-                draughts::latin{},
-                draughts::international{},
-                draughts::frisian{},
-                draughts::canadian{},
-                draughts::sri_lankan{},
-                draughts::dumm{},
-                draughts::spantsiretti{},
-                draughts::ktar<10, 11>{},
-                draughts::ktar<10, 12>{},
+                draughts::board<2, 5, 1>(),
+                draughts::board<2, 5, 0>(),
+                draughts::nano(),
+                draughts::micro(),
+                draughts::checkers(),
+                draughts::latin(),
+                draughts::international(),
+                draughts::frisian(),
+                draughts::canadian(),
+                draughts::sri_lankan(),
+                draughts::dumm(),
+                draughts::spantsiretti(),
+                draughts::ktar<10, 11>(),
+                draughts::ktar<10, 12>(),
 
                 // chequered boards with lakes
-                draughts::mertens_cut_j10{},
-                draughts::mertens_add_k9{},
+                draughts::mertens_cut_j10(),
+                draughts::mertens_add_k9(),
 
                 // draughts variant played on a non-chequered board
-                draughts::turkish{},
+                draughts::turkish(),
 
                 // 10x10 draughts with 11x12 mailbox representation
-                basic_board<chequered_rectangle<10, 10>, basic_padding<1, 1, 1, 0>>{},
+                basic_board<chequered_rectangle<10, 10>, basic_padding<1, 1, 1, 0>>(),
 
                 // stratego variants
-                stratego::l_attaque{},
-                stratego::classic{},
-                stratego::quick_arena{},
+                stratego::l_attaque(),
+                stratego::classic(),
+                stratego::quick_arena(),
 
                 // 8x8 chess board representations
-                chess::mailbox_10x12{},
-                chess::board_0x88{},
-                chess::vector_15x12{},
-                chess::vector_16x12{},
-                chess::vector_16x16{}
+                chess::mailbox_10x12(),
+                chess::board_0x88(),
+                chess::vector_15x12(),
+                chess::vector_16x12(),
+                chess::vector_16x16()
         );
 
         for_each(boards, [](auto b) {
                 std::cout << format_square::padded << b << '\n';
                 std::cout << "W = " << b.width << ", H = " << b.height;
-                using shape_type = shape_t<decltype(b)>;
-                if constexpr (is_chequered<shape_type>) {
-                        std::cout << ", C = " << shape_type::coloring;
+                using grid_type = grid_t<decltype(b)>;
+                if constexpr (is_chequered<grid_type>) {
+                        std::cout << ", C = " << grid_type::coloring;
                 }
                 std::cout << '\n';
                 std::cout << std::get<0>(transforms)(b.embedding_v).valid_padded_size << '\n';

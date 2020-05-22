@@ -8,7 +8,7 @@
 
 #include <tabula/compass.hpp>           // basic_compass
 #include <tabula/games.hpp>             // draughts, stratego
-#include <tabula/shapes.hpp>            // basic_rectangle, chequered_rectangle
+#include <tabula/grids.hpp>             // basic_rectangle, chequered_rectangle
 #include <boost/mpl/vector.hpp>         // vector
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
 
@@ -16,7 +16,7 @@ using namespace tabula;
 
 BOOST_AUTO_TEST_SUITE(Compass)
 
-using shape_types = boost::mpl::vector
+using grid_types = boost::mpl::vector
 <       basic_rectangle<2, 2>
 ,       basic_rectangle<2, 4>
 ,       basic_rectangle<4, 2>
@@ -43,25 +43,25 @@ using shape_types = boost::mpl::vector
 ,       chequered_rectangle<5, 3, 0>
 >;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(IsCardinal, T, shape_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(IsCardinal, T, grid_types)
 {
-        constexpr auto compass = basic_compass<T>{};
+        constexpr auto compass = basic_compass<T>();
         for (auto p : { compass.N, compass.E, compass.S, compass.W }) {
                 BOOST_CHECK(compass.points[p].is_cardinal());
         }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(IsOrdinal, T, shape_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(IsOrdinal, T, grid_types)
 {
-        constexpr auto compass = basic_compass<T>{};
+        constexpr auto compass = basic_compass<T>();
         for (auto p : { compass.NE, compass.SE, compass.SW, compass.NW }) {
                 BOOST_CHECK(compass.points[p].is_ordinal());
         }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, T, shape_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, T, grid_types)
 {
-        constexpr auto compass = basic_compass<T>{};
+        constexpr auto compass = basic_compass<T>();
         for (auto p : compass.points) {
                 auto const r = p.reverse();
                 BOOST_CHECK((p != r));

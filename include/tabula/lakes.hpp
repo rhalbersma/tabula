@@ -25,10 +25,10 @@ struct cut;
 template<char... Fs, int... Rs>
 struct basic_lakes<cut<Fs, Rs>...>
 {
-        template<class Square>
-        constexpr auto operator()(Square const& sq) const noexcept
+        template<class Point>
+        constexpr auto operator()(Point const& p) const noexcept
         {
-                return ((sq == Square{Fs - 'a', Rs - 1}) || ...);
+                return ((p == Point(Fs - 'a', Rs - 1)) || ...);
         }
 };
 

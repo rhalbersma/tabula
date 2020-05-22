@@ -6,7 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/board.hpp>             // basic_board
-#include <tabula/type_traits.hpp>       // square_t
+#include <tabula/type_traits.hpp>       // point_t
 #include <cassert>                      // assert
 #include <functional>                   // function
 #include <iomanip>                      // setw
@@ -83,14 +83,14 @@ public:
 
         template<class Shape, class Padding>
         static auto board(std::ios_base& str, basic_board<Shape, Padding> const& b)
-                -> std::function<std::string(square_t<basic_board<Shape, Padding>> const&)>
+                -> std::function<std::string(point_t<basic_board<Shape, Padding>> const&)>
         {
                 switch (str.iword(index)) {
                 case algebraic_: return [] (auto const& sq) {
                         std::stringstream sstr;
                         auto const format = format_axis::label(sstr);
-                        sstr << format_axis::algebraic << format(sq.file());
-                        sstr << format_axis::numeric   << format(sq.rank());
+                        sstr << format_axis::algebraic << format(sq.file);
+                        sstr << format_axis::numeric   << format(sq.rank);
                         return sstr.str();
                 };
                 case sequential0_ : return [&b](auto const& sq) { return std::to_string(b.sequential0(sq));  };

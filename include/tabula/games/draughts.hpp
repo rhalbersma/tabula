@@ -5,16 +5,21 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/board.hpp>             // basic_board
-#include <tabula/lakes.hpp>             // basic_lakes, cut
-#include <tabula/padding.hpp>           // basic_padding, right_padding
-#include <tabula/shapes.hpp>            // basic_rectangle, chequered_rectangle
+#include <tabula/board.hpp>     // basic_board
+#include <tabula/grids.hpp>     // basic_rectangle, chequered_rectangle
+#include <tabula/lakes.hpp>     // basic_lakes, cut
+#include <tabula/padding.hpp>   // basic_padding, right_padding
 
 namespace tabula::draughts {
 
-template<int Width, int Height, bool Coloring = true, bool IsOrthogonalJumps = false, class... Cuts>
-using board = basic_board
-<
+template<
+        int Width,
+        int Height,
+        bool Coloring = true,
+        bool IsOrthogonalJumps = false,
+        class... Cuts
+>
+using board = basic_board<
         chequered_rectangle<Width, Height, Coloring, basic_lakes<Cuts...>>,
         right_padding<(Width % 2) ? 2 : (IsOrthogonalJumps ? 3 : 1)>
 >;

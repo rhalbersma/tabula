@@ -7,8 +7,7 @@
 
 namespace tabula {
 
-// We follow the conventions of the CSS padding Property.
-// https://www.w3schools.com/cssref/pr_padding.asp
+// CSS padding Property: https://www.w3schools.com/cssref/pr_padding.asp
 
 template<int...>
 struct basic_padding;
@@ -16,7 +15,7 @@ struct basic_padding;
 template<int Top, int Right, int Bottom, int Left>
 struct basic_padding<Top, Right, Bottom, Left>
 {
-        static_assert(Top >= 0 && Right >=0 && Bottom >= 0 && Left >=0);
+        static_assert(0 <= Top && 0 <= Right && 0 <= Bottom && 0 <= Left);
 
         static constexpr auto top       = Top;
         static constexpr auto right     = Right;
@@ -27,7 +26,7 @@ struct basic_padding<Top, Right, Bottom, Left>
 template<int Top, int RightLeft, int Bottom>
 struct basic_padding<Top, RightLeft, Bottom>
 {
-        static_assert(Top >= 0 && RightLeft >=0 && Bottom >= 0);
+        static_assert(0 <= Top && 0 <= RightLeft && 0 <= Bottom);
 
         static constexpr auto top       = Top;
         static constexpr auto right     = RightLeft;
@@ -38,7 +37,7 @@ struct basic_padding<Top, RightLeft, Bottom>
 template<int TopBottom, int RightLeft>
 struct basic_padding<TopBottom, RightLeft>
 {
-        static_assert(TopBottom >= 0 && RightLeft >= 0);
+        static_assert(0 <= TopBottom && 0 <= RightLeft);
 
         static constexpr auto top       = TopBottom;
         static constexpr auto right     = RightLeft;
@@ -49,7 +48,7 @@ struct basic_padding<TopBottom, RightLeft>
 template<int TopRightBottomLeft>
 struct basic_padding<TopRightBottomLeft>
 {
-        static_assert(TopRightBottomLeft >= 0);
+        static_assert(0 <= TopRightBottomLeft);
 
         static constexpr auto top       = TopRightBottomLeft;
         static constexpr auto right     = TopRightBottomLeft;
