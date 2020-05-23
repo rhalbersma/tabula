@@ -80,10 +80,8 @@ constexpr auto min_index(auto tup) noexcept
                 return 0;
         } else {
                 return std::apply([](auto head, auto... tail) {
-                        auto min = head;
                         auto index = 0;
-                        auto i = 1;
-                        ([&](auto arg) {
+                        ([&, min = head, i = 1](auto arg) mutable {
                                 if (arg < min) {
                                         min = arg;
                                         index = i;

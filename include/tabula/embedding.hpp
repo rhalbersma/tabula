@@ -6,7 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/square.hpp>            // basic_square
-#include <tabula/type_traits.hpp>       // flip_t, flop_t, swap_t, padded_t
+#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, padded_t
 #include <tabula/vector.hpp>            // basic_vector
 #include <optional>                     // optional
 

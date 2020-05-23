@@ -45,24 +45,24 @@ using grid_types = boost::mpl::vector
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(IsCardinal, T, grid_types)
 {
-        constexpr auto compass = basic_compass<T>();
-        for (auto p : { compass.N, compass.E, compass.S, compass.W }) {
-                BOOST_CHECK(compass.points[p].is_cardinal());
+        using compass = basic_compass<T>;
+        for (auto p : { compass::N, compass::E, compass::S, compass::W }) {
+                BOOST_CHECK(compass::points[p].is_cardinal());
         }
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(IsOrdinal, T, grid_types)
 {
-        constexpr auto compass = basic_compass<T>();
-        for (auto p : { compass.NE, compass.SE, compass.SW, compass.NW }) {
-                BOOST_CHECK(compass.points[p].is_ordinal());
+        using compass = basic_compass<T>;
+        for (auto p : { compass::NE, compass::SE, compass::SW, compass::NW }) {
+                BOOST_CHECK(compass::points[p].is_ordinal());
         }
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, T, grid_types)
 {
-        constexpr auto compass = basic_compass<T>();
-        for (auto p : compass.points) {
+        using compass = basic_compass<T>;
+        for (auto p : compass::points) {
                 auto const r = p.reverse();
                 BOOST_CHECK((p != r));
                 BOOST_CHECK_EQUAL(p.is_left() ,  r.is_right());

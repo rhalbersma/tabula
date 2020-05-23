@@ -5,73 +5,72 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/type_traits.hpp>       // is_chequered, flip_t, flop_t, swap_t
+#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t
 
 namespace tabula {
 
 template<class Grid>
 struct basic_vector
 {
-        int d_file;
-        int d_rank;
+        int file;
+        int rank;
 
         bool operator==(basic_vector const&) const = default;
 
         constexpr auto& operator+=(basic_vector const& rhs) noexcept
         {
-                d_file += rhs.d_file;
-                d_rank += rhs.d_rank;
+                file += rhs.file;
+                rank += rhs.rank;
                 return *this;
         }
 
         constexpr auto& operator-=(basic_vector const& rhs) noexcept
         {
-                d_file -= rhs.d_file;
-                d_rank -= rhs.d_rank;
+                file -= rhs.file;
+                rank -= rhs.rank;
                 return *this;
         }
 
         constexpr auto& operator*=(int scalar) noexcept
         {
-                d_file *= scalar;
-                d_rank *= scalar;
+                file *= scalar;
+                rank *= scalar;
                 return *this;
         }
 
         constexpr auto is_cardinal() const noexcept
         {
-                return !d_file ^ !d_rank;
+                return !file ^ !rank;
         }
 
         constexpr auto is_ordinal() const noexcept
         {
-                return !(d_file - d_rank) ^ !(d_file + d_rank);
+                return !(file - rank) ^ !(file + rank);
         }
 
         constexpr auto is_left() const noexcept
         {
-                return d_file < 0;
+                return file < 0;
         }
 
         constexpr auto is_right() const noexcept
         {
-                return 0 < d_file;
+                return 0 < file;
         }
 
         constexpr auto is_up() const noexcept
         {
-                return 0 < d_rank;
+                return 0 < rank;
         }
 
         constexpr auto is_down() const noexcept
         {
-                return d_rank < 0;
+                return rank < 0;
         }
 
         constexpr auto stride() const noexcept
         {
-                constexpr auto d = is_chequered<Grid> ? 2 : 1;
-                return (d_file + d_rank * Grid::width) / d;
+                return Grid::stride(*this);
         }
 
         using flipped_type = basic_vector<flipped_t<Grid>>;
@@ -81,25 +80,25 @@ struct basic_vector
         constexpr auto flip() const noexcept
                 -> flipped_type
         {
-                return { d_file, -d_rank };
+                return { file, -rank };
         }
 
         constexpr auto flop() const noexcept
                 -> flopped_type
         {
-                return { -d_file, d_rank };
+                return { -file, rank };
         }
 
         constexpr auto swap() const noexcept
                 -> swapped_type
         {
-                return { d_rank, d_file };
+                return { rank, file };
         }
 
         constexpr auto reverse() const noexcept
                 -> basic_vector
         {
-                return { -d_file, -d_rank };
+                return { -file, -rank };
         }
 };
 

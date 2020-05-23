@@ -11,7 +11,6 @@
 #include <tabula/lakes.hpp>             // basic_lakes
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/tuple.hpp>             // min_index, transform
-#include <tabula/type_traits.hpp>       // is_chequered, flip_t
 #include <tabula/vector.hpp>            // basic_vector
 #include <array>                        // array
 #include <cassert>                      // assert
@@ -48,6 +47,7 @@ struct basic_board
         using        vector_type = basic_vector<Grid>;
         using padded_square_type = typename decltype(image_v)::padded_square;
         using padded_vector_type = typename decltype(image_v)::padded_vector;
+        using       compass_type = basic_compass<Grid>;
 
         static constexpr auto to_sequential(square_type const& sq) noexcept
         {
@@ -63,7 +63,7 @@ struct basic_board
                 -> padded_vector_type
         {
                 auto const t = mapping_v(dir);
-                return { t.d_file, t.d_rank };
+                return { t.file, t.rank };
         }
 
         static constexpr auto padded2sequential_table = []() {
@@ -153,7 +153,7 @@ public:
         }
 
         static constexpr auto strides = []() {
-                constexpr auto points = basic_compass<Grid>().points;
+                constexpr auto points = compass_type::points;
                 std::array<int, points.size()> table{};
                 auto i = std::size_t(0);
                 for (auto p : points) {

@@ -11,13 +11,13 @@
 
 namespace tabula {
 
-template<class Rectangle>
+template<class Grid>
 class basic_compass
 {
         // unit increment for the cardinal directions (N, E, S, W)
-        static constexpr auto c = is_chequered<Rectangle> ? 2 : 1;
+        static constexpr auto c = is_chequered<Grid> ? 2 : 1;
 
-        using vector = basic_vector<Rectangle>;
+        using vector = basic_vector<Grid>;
 public:
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 

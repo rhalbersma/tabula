@@ -5,8 +5,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t
 #include <tabula/vector.hpp>            // vector
-#include <tabula/type_traits.hpp>       // is_chequered, flip_t, flop_t, swap_t
 
 namespace tabula {
 
@@ -20,49 +20,26 @@ struct basic_square
 
         constexpr auto& operator+=(basic_vector<Grid> const& rhs) noexcept
         {
-                file += rhs.d_file;
-                rank += rhs.d_rank;
+                file += rhs.file;
+                rank += rhs.rank;
                 return *this;
         }
 
         constexpr auto& operator-=(basic_vector<Grid> const& rhs) noexcept
         {
-                file -= rhs.d_file;
-                rank -= rhs.d_rank;
+                file -= rhs.file;
+                rank -= rhs.rank;
                 return *this;
-        }
-
-        constexpr auto is_within() const noexcept
-        {
-                return
-                        0 <= file && file < Grid::width &&
-                        0 <= rank && rank < Grid::height
-                ;
-        }
-
-        constexpr auto is_colored() const noexcept
-        {
-                if constexpr (is_chequered<Grid>) {
-                        return (file ^ rank ^ Grid::coloring) % 2;
-                } else {
-                        return true;
-                }
-        }
-
-        constexpr auto is_lake() const noexcept
-        {
-                return lake_t<Grid>()(*this);
         }
 
         constexpr auto is_valid() const noexcept
         {
-                return is_within() && is_colored() && !is_lake();
+                return Grid::is_valid(*this);
         }
 
         constexpr auto index() const noexcept
         {
-                constexpr auto d = is_chequered<Grid> ? 2 : 1;
-                return (file + rank * Grid::width) / d;
+                return Grid::index(*this);
         }
 
         using flipped_type = basic_square<flipped_t<Grid>>;

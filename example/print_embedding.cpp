@@ -17,8 +17,6 @@ int main()
         using namespace tabula;
         constexpr auto boards = std::make_tuple(
                 // draughts variants played on chequered boards
-                draughts::board<2, 5, 1>(),
-                draughts::board<2, 5, 0>(),
                 draughts::nano(),
                 draughts::micro(),
                 draughts::checkers(),
@@ -47,12 +45,15 @@ int main()
                 stratego::classic(),
                 stratego::quick_arena(),
 
-                // 8x8 chess board representations
-                chess::mailbox_10x12(),
-                chess::board_0x88(),
-                chess::vector_15x12(),
-                chess::vector_16x12(),
-                chess::vector_16x16()
+                // chess board representations
+                chess::board_08x08(),
+                chess::board_10x12(),
+                chess::board_16x08(),
+                chess::board_15x12_33(),
+                chess::board_15x12_34(),
+                chess::board_15x15(),
+                chess::board_16x12(),
+                chess::board_16x16()
         );
 
         for_each(boards, [](auto b) {

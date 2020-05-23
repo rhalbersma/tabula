@@ -28,7 +28,7 @@ struct basic_lakes<cut<Fs, Rs>...>
         template<class Square>
         constexpr auto operator()(Square const& sq) const noexcept
         {
-                return ((sq == Square(Fs - 'a', Rs - 1)) || ...);
+                return (... || (sq == Square(Fs - 'a', Rs - 1)));
         }
 };
 
