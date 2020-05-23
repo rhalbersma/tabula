@@ -79,9 +79,9 @@ constexpr auto min_index(auto tup) noexcept
         if constexpr (std::tuple_size_v<decltype(tup)> == 0) {
                 return 0;
         } else {
-                return std::apply([](auto head, auto... tail) {
-                        auto index = 0;
-                        ([&, min = head, i = 1](auto arg) mutable {
+                return std::apply([index = 0, i = 1](auto head, auto... tail) mutable {
+                        auto min = head;
+                        ([&](auto arg) {
                                 if (arg < min) {
                                         min = arg;
                                         index = i;

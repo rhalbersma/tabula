@@ -14,6 +14,10 @@ This header-only library only depends on the C++ Standard Library, and is contin
 | Linux    | Clang <br> GCC | 10, 11-SVN<br> 10, 11-SVN | [![codecov](https://codecov.io/gh/rhalbersma/tabula/branch/master/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula) <br> [![Build Status](https://travis-ci.org/rhalbersma/tabula.svg)](https://travis-ci.org/rhalbersma/tabula) |
 | Windows  | Visual Studio  | 2019                      | [![Build status](https://ci.appveyor.com/api/projects/status/86oy76904uc4newg?svg=true)](https://ci.appveyor.com/project/rhalbersma/tabula) |
 
+## Acknowledgments
+
+Special thanks to Fabien Letouzey for a very fruitful exchange of ideas.
+
 ## License
 
 Copyright Rein Halbersma 2019-2020.  

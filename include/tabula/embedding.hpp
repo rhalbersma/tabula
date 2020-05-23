@@ -48,6 +48,8 @@ struct basic_embedding
         static_assert(last_valid && last_valid->is_valid());
 
         static constexpr auto size = Grid::area;
+        static constexpr auto width = padded_type::width;
+        static constexpr auto height = padded_type::height;
         static constexpr auto padded_size = padded_type::area;
 
         static constexpr auto to_padded(square const& sq)
