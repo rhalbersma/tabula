@@ -6,16 +6,17 @@
 #include <tabula/board.hpp>             // basic_board
 #include <tabula/games.hpp>             // draughts, stratego
 #include <tabula/ostream.hpp>           // operator<<, format_square
-#include <tabula/tuple.hpp>             // for_each
+#include <tabula/tuple.hpp>             // for_each, enumerate
 #include <tabula/type_traits.hpp>       // is_chequered
 #include <algorithm>                    // copy
 #include <iostream>                     // cout
 #include <iterator>                     // ostream_iterator
+#include <tuple>                        // tuple
 
 int main()
 {
         using namespace tabula;
-        constexpr auto boards = std::make_tuple(
+        constexpr auto boards = std::tuple(
                 // draughts variants played on chequered boards
                 draughts::nano(),
                 draughts::micro(),
