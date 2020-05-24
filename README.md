@@ -11,8 +11,9 @@ This header-only library only depends on the C++ Standard Library, and is contin
 
 | Platform | Compiler | Versions | Build |
 | :------- | :------- | :------- | :---- |
-| Linux    | Clang <br> GCC | 10, 11-SVN<br> 10, 11-SVN | [![codecov](https://codecov.io/gh/rhalbersma/tabula/branch/master/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula) <br> [![Build Status](https://travis-ci.org/rhalbersma/tabula.svg)](https://travis-ci.org/rhalbersma/tabula) |
-| Windows  | Visual Studio  | 2019                      | [![Build status](https://ci.appveyor.com/api/projects/status/86oy76904uc4newg?svg=true)](https://ci.appveyor.com/project/rhalbersma/tabula) |
+| Linux    | GCC            | 10, 11-SVN | [![codecov](https://codecov.io/gh/rhalbersma/tabula/branch/master/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula) <br> [![Build Status](https://travis-ci.org/rhalbersma/tabula.svg)](https://travis-ci.org/rhalbersma/tabula) |
+
+Note that this library makes liberal use of C++20 features. Only GCC >= 10 is supported at the moment. Clang and Visual Studio are catching up fast, and will be added as soon as possible.
 
 ## Acknowledgments
 
