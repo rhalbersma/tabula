@@ -26,7 +26,7 @@ struct basic_rectangle
         static constexpr auto height = Height;
         static constexpr auto area   = Width * Height;
 
-        using   lake_type = Lakes;
+        using    lake_type = Lakes;
 
         using flipped_type = basic_rectangle<Width, Height, _compose<Lakes, _flip>>;
         using flopped_type = basic_rectangle<Width, Height, _compose<Lakes, _flop>>;

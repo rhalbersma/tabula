@@ -28,7 +28,8 @@ struct chequered_rectangle
         static constexpr auto coloring = Coloring;
         static constexpr auto area     = (Width * Height + Coloring) / 2;
 
-        using   lake_type = Lakes;
+        using    lake_type = Lakes;
+
         using flipped_type = chequered_rectangle<Width, Height, Coloring ^ !(Height % 2), _compose<Lakes, _flip>>;
         using flopped_type = chequered_rectangle<Width, Height, Coloring ^ !(Width  % 2), _compose<Lakes, _flop>>;
         using swapped_type = chequered_rectangle<Height, Width, Coloring,                 _compose<Lakes, _swap>>;
