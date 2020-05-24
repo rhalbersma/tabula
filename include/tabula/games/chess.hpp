@@ -12,7 +12,7 @@
 namespace tabula::chess {
 
 template<int Width, int Height, class Padding>
-using basic_chess    = basic_board<basic_rectangle< Height, Width>, Padding>;
+using basic_chess    = basic_board<basic_rectangle<Width, Height>, Padding>;
 
 // https://www.chessprogramming.org/8x8_Board
 using board_08x08    = basic_chess< 8,  8, basic_padding<0>>;
