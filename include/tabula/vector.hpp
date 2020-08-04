@@ -15,26 +15,28 @@ struct basic_vector
         int file;
         int rank;
 
+        using grid_type = Grid;
+
         bool operator==(basic_vector const&) const = default;
 
-        constexpr auto& operator+=(basic_vector const& rhs) noexcept
+        constexpr auto& operator+=(basic_vector const& v) noexcept
         {
-                file += rhs.file;
-                rank += rhs.rank;
+                file += v.file;
+                rank += v.rank;
                 return *this;
         }
 
-        constexpr auto& operator-=(basic_vector const& rhs) noexcept
+        constexpr auto& operator-=(basic_vector const& v) noexcept
         {
-                file -= rhs.file;
-                rank -= rhs.rank;
+                file -= v.file;
+                rank -= v.rank;
                 return *this;
         }
 
-        constexpr auto& operator*=(int scalar) noexcept
+        constexpr auto& operator*=(int n) noexcept
         {
-                file *= scalar;
-                rank *= scalar;
+                file *= n;
+                rank *= n;
                 return *this;
         }
 
@@ -115,15 +117,15 @@ constexpr auto operator-(basic_vector<Grid> const& lhs, basic_vector<Grid> const
 }
 
 template<class Grid>
-constexpr auto operator*(basic_vector<Grid> const& lhs, int rhs) noexcept
+constexpr auto operator*(basic_vector<Grid> const& v, int n) noexcept
 {
-        auto nrv = lhs; nrv *= rhs; return nrv;
+        auto nrv = v; nrv *= n; return nrv;
 }
 
 template<class Grid>
-constexpr auto operator*(int lhs, basic_vector<Grid> const& rhs) noexcept
+constexpr auto operator*(int n, basic_vector<Grid> const& v) noexcept
 {
-        auto nrv = rhs; nrv *= lhs; return nrv;
+        auto nrv = v; nrv *= n; return nrv;
 }
 
 }       // namespace tabula

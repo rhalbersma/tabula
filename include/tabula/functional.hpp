@@ -28,7 +28,7 @@ inline constexpr auto compose = [](auto... funs) {
 };
 
 template<class... Fs>
-struct _compose
+struct compose_
 {
         constexpr auto operator()(auto arg) const noexcept
         {
@@ -36,7 +36,7 @@ struct _compose
         }
 };
 
-struct _flip
+struct flip_
 {
         constexpr auto operator()(auto arg) const noexcept
         {
@@ -44,7 +44,7 @@ struct _flip
         }
 };
 
-struct _flop
+struct flop_
 {
         constexpr auto operator()(auto arg) const noexcept
         {
@@ -52,7 +52,7 @@ struct _flop
         }
 };
 
-struct _swap
+struct swap_
 {
         constexpr auto operator()(auto arg) const noexcept
         {
@@ -60,8 +60,8 @@ struct _swap
         }
 };
 
-inline constexpr auto flip = _flip();
-inline constexpr auto flop = _flop();
-inline constexpr auto swap = _swap();
+inline constexpr auto flip = flip_();
+inline constexpr auto flop = flop_();
+inline constexpr auto swap = swap_();
 
 }       // namespace tabula

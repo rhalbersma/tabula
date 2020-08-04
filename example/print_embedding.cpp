@@ -69,13 +69,14 @@ int main()
                 if constexpr (is_chequered<grid_type>) {
                         std::cout << ", C = " << grid_type::coloring;
                 }
+                std::cout << ", size = " << b.area;
                 std::cout << '\n';
-                enumerate(mappings, [&](auto i, auto map)  {
-                        std::cout << i << ": " << map(b.embedding_v).valid_padded_size << '\n';
-                });
-                std::cout << "optimal index = " << b.idx << " with size = " << b.valid_padded_size << '\n';
-                std::cout << "embedding W = " << b.image_v.width << ", H = " << b.image_v.height;
-                std::cout << ", size = " << b.padded_size << " with a valid range of " << b.valid_padded_size << '\n';
+                //enumerate(orientations, [&](auto i, auto fun)  {
+                //        std::cout << i << ": " << fun(b.basic_embedding_v).valid_squares << '\n';
+                //});
+                //std::cout << "optimal index = " << b.idx << " with size = " << b.valid_squares << '\n';
+                std::cout << "embedding W = " << b.padded_width << ", H = " << b.padded_height;
+                std::cout << ", size = " << b.padded_area << " with a valid range of " << b.valid_squares << '\n';
                 std::cout << "directional strides: ";
                 constexpr auto strides = b.strides;
                 std::copy(strides.begin(), strides.end(), std::ostream_iterator<int>(std::cout, ","));

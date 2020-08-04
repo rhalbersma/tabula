@@ -19,15 +19,14 @@ inline constexpr auto is_chequered<Grid, std::void_t<decltype(
 
 template<class T> using    lake_t = typename T::   lake_type;
 
-template<class T> using flipped_t = typename T::flipped_type;
-template<class T> using flopped_t = typename T::flopped_type;
-template<class T> using swapped_t = typename T::swapped_type;
-
 template<class T> using    grid_t = typename T::   grid_type;
+template<class T> using padding_t = typename T::padding_type;
+
 template<class T> using  square_t = typename T:: square_type;
 template<class T> using  vector_t = typename T:: vector_type;
 
-template<class Grid, class Padding>
-using padded_t = typename Grid::template padded_type<Padding>;
+template<class T> using flipped_t = typename T::flipped_type;
+template<class T> using flopped_t = typename T::flopped_type;
+template<class T> using swapped_t = typename T::swapped_type;
 
 }       // namespace tabula

@@ -81,9 +81,9 @@ public:
                 return str;
         }
 
-        template<class Shape, class Padding>
-        static auto board(std::ios_base& str, basic_board<Shape, Padding> const& b)
-                -> std::function<std::string(square_t<basic_board<Shape, Padding>> const&)>
+        template<class Grid, class Padding>
+        static auto board(std::ios_base& str, basic_board<Grid, Padding> const& b)
+                -> std::function<std::string(basic_square<Grid> const&)>
         {
                 switch (str.iword(index)) {
                 case algebraic_: return [] (auto const& sq) {
@@ -101,8 +101,8 @@ public:
         }
 };
 
-template<class CharT, class Traits, class Shape, class Padding>
-auto& operator<<(std::basic_ostream<CharT, Traits>& ostr, basic_board<Shape, Padding> const& b)
+template<class CharT, class Traits, class Grid, class Padding>
+auto& operator<<(std::basic_ostream<CharT, Traits>& ostr, basic_board<Grid, Padding> const& b)
 {
         auto const format = format_square::board(ostr, b);
         for (auto r = b.height - 1; r >= 0; --r) {

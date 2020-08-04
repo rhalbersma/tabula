@@ -5,28 +5,25 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <tabula/functional.hpp>        // compose, identity, flip, flop, swap
 #include <tabula/square.hpp>            // basic_square
-#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, padded_t
+#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t
 #include <tabula/vector.hpp>            // basic_vector
 #include <optional>                     // optional
+#include <tuple>                        // tuple
 
 namespace tabula {
 
 template<class Grid, class Padding>
-struct basic_embedding
+class basic_embedding
 {
-        using grid_type    = Grid;
-        using padding_type = Padding;
-        using padded_type  = padded_t<Grid, Padding>;
+        using padded_grid = typename Grid::template padded_type<Padding>;
+        using grid_square = basic_square<Grid>;
 
-        using        square = basic_square<Grid>;
-        using padded_square = basic_square<padded_type>;
-        using padded_vector = basic_vector<padded_type>;
-
-        static constexpr auto first_valid = []() -> std::optional<square> {
+        static constexpr auto first_valid = []() -> std::optional<grid_square> {
                 for (auto r = 0; r < Grid::height; ++r) {
                         for (auto f = 0; f < Grid::width; ++f) {
-                                if (auto const sq = square(f, r); sq.is_valid()) {
+                                if (auto const sq = grid_square(f, r); sq.is_valid()) {
                                         return sq;
                                 }
                         }
@@ -35,10 +32,10 @@ struct basic_embedding
         }();
         static_assert(first_valid && first_valid->is_valid());
 
-        static constexpr auto last_valid = []() -> std::optional<square> {
+        static constexpr auto last_valid = []() -> std::optional<grid_square> {
                 for (auto r = Grid::height - 1; r >= 0; --r) {
                         for (auto f = Grid::width - 1; f >= 0; --f) {
-                                if (auto const sq = square(f, r); sq.is_valid()) {
+                                if (auto const sq = grid_square(f, r); sq.is_valid()) {
                                         return sq;
                                 }
                         }
@@ -47,17 +44,24 @@ struct basic_embedding
         }();
         static_assert(last_valid && last_valid->is_valid());
 
-        static constexpr auto size = Grid::area;
-        static constexpr auto width = padded_type::width;
-        static constexpr auto height = padded_type::height;
-        static constexpr auto padded_size = padded_type::area;
+public:
+        using    grid_type = Grid;
+        using padding_type = Padding;
 
-        static constexpr auto to_padded(square const& sq)
-                -> padded_square
+        using  square_type = basic_square<padded_grid>;
+        using  vector_type = basic_vector<padded_grid>;
+
+        static constexpr auto width  = padded_grid::width;
+        static constexpr auto height = padded_grid::height;
+        static constexpr auto area   = padded_grid::area;
+
+        static constexpr auto embed(grid_square const& sq)
+                -> square_type
         {
                 return { sq.file + Padding::left, sq.rank + Padding::bottom };
         }
-        static constexpr auto valid_padded_size = to_padded(*last_valid).index() - to_padded(*first_valid).index() + 1;
+
+        static constexpr auto valid_squares = embed(*last_valid).index() - embed(*first_valid).index() + 1;
 
         using flipped_type = basic_embedding<flipped_t<Grid>, Padding>;
         using flopped_type = basic_embedding<flopped_t<Grid>, Padding>;

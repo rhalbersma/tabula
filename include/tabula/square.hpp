@@ -16,19 +16,21 @@ struct basic_square
         int file;
         int rank;
 
+        using grid_type = Grid;
+
         bool operator==(basic_square const&) const = default;
 
-        constexpr auto& operator+=(basic_vector<Grid> const& rhs) noexcept
+        constexpr auto& operator+=(basic_vector<Grid> const& v) noexcept
         {
-                file += rhs.file;
-                rank += rhs.rank;
+                file += v.file;
+                rank += v.rank;
                 return *this;
         }
 
-        constexpr auto& operator-=(basic_vector<Grid> const& rhs) noexcept
+        constexpr auto& operator-=(basic_vector<Grid> const& v) noexcept
         {
-                file -= rhs.file;
-                rank -= rhs.rank;
+                file -= v.file;
+                rank -= v.rank;
                 return *this;
         }
 

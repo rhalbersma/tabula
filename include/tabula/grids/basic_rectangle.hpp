@@ -26,11 +26,7 @@ struct basic_rectangle
         static constexpr auto height = Height;
         static constexpr auto area   = Width * Height;
 
-        using    lake_type = Lakes;
-
-        using flipped_type = basic_rectangle<Width, Height, _compose<Lakes, _flip>>;
-        using flopped_type = basic_rectangle<Width, Height, _compose<Lakes, _flop>>;
-        using swapped_type = basic_rectangle<Height, Width, _compose<Lakes, _swap>>;
+        using lake_type = Lakes;
 
         template<class Padding>
         using padded_type = basic_rectangle<
@@ -69,6 +65,10 @@ struct basic_rectangle
         {
                 return v.file + v.rank * Width;
         }
+
+        using flipped_type = basic_rectangle<Width, Height, compose_<Lakes, flip_>>;
+        using flopped_type = basic_rectangle<Width, Height, compose_<Lakes, flop_>>;
+        using swapped_type = basic_rectangle<Height, Width, compose_<Lakes, swap_>>;
 };
 
 }       // namespace tabula

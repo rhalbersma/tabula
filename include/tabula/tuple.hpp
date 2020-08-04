@@ -5,6 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <functional>   // less
 #include <tuple>        // apply, tuple, tuple_cat, tuple_size_v
 #include <type_traits>  // bool_constant, conditional_t, integral_constant
 
@@ -74,23 +75,20 @@ constexpr auto remove_if(auto tup, auto pred) noexcept
         }, tup);
 }
 
-constexpr auto min_index(auto tup) noexcept
+template<class Cmp = std::less<>>
+constexpr auto min_index(auto tup, Cmp cmp = Cmp()) noexcept
 {
-        if constexpr (std::tuple_size_v<decltype(tup)> == 0) {
-                return 0;
-        } else {
-                return std::apply([index = 0, i = 1](auto head, auto... tail) mutable {
-                        auto min = head;
-                        ([&](auto arg) {
-                                if (arg < min) {
-                                        min = arg;
-                                        index = i;
-                                }
-                                ++i;
-                        }(tail), ...);
-                        return index;
-                }, tup);
-        }
+        return std::apply([=, index = 0, i = 1](auto head, auto... tail) mutable {
+                auto min = head;
+                ([&, cmp](auto arg) {
+                        if (cmp(arg, min)) {
+                                min = arg;
+                                index = i;
+                        }
+                        ++i;
+                }(tail), ...);
+                return index;
+        }, tup);
 }
 
 }       // namespace tabula
