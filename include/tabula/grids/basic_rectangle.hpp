@@ -5,18 +5,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/functional.hpp>        // _compose, _flip, _flop, _swap
+#include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
 #include <tabula/lakes.hpp>             // basic_lakes
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/vector.hpp>            // basic_vector
 
 namespace tabula {
 
-template<
-        int Width,
-        int Height,
-        class Lakes = basic_lakes<>
->
+template<int Width, int Height, class Lakes = basic_lakes<>>
 struct basic_rectangle
 {
         static_assert(0 < Width);
@@ -24,14 +20,14 @@ struct basic_rectangle
 
         static constexpr auto width  = Width;
         static constexpr auto height = Height;
-        static constexpr auto area   = Width * Height;
+        static constexpr auto size   = Width * Height;
 
         using lake_type = Lakes;
 
         template<class Padding>
         using padded_type = basic_rectangle<
-                Width + Padding::left + Padding::right,
-                Height + Padding::top + Padding::bottom,
+                Width  + Padding::left + Padding::right,
+                Height + Padding::top  + Padding::bottom,
                 Lakes
         >;
 

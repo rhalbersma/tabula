@@ -15,7 +15,7 @@ template<class Grid>
 class basic_compass
 {
         // unit increment for the cardinal directions (N, E, S, W)
-        static constexpr auto c = is_chequered<Grid> ? 2 : 1;
+        static constexpr auto c = is_chequered_v<Grid> ? 2 : 1;
 
         using vector = basic_vector<Grid>;
 public:

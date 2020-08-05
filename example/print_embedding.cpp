@@ -3,14 +3,15 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#define FMT_HEADER_ONLY
+#include <fmt/core.h>
+#include <fmt/ranges.h>
+
 #include <tabula/board.hpp>             // basic_board
+#include <tabula/format.hpp>            // print
 #include <tabula/games.hpp>             // draughts, stratego
-#include <tabula/ostream.hpp>           // operator<<, format_square
 #include <tabula/tuple.hpp>             // for_each, enumerate
 #include <tabula/type_traits.hpp>       // is_chequered
-#include <algorithm>                    // copy
-#include <iostream>                     // cout
-#include <iterator>                     // ostream_iterator
 #include <tuple>                        // tuple
 
 int main()
@@ -63,24 +64,18 @@ int main()
         );
 
         for_each(boards, [](auto b) {
-                std::cout << format_square::padded << b << '\n';
-                std::cout << "W = " << b.width << ", H = " << b.height;
-                using grid_type = grid_t<decltype(b)>;
-                if constexpr (is_chequered<grid_type>) {
-                        std::cout << ", C = " << grid_type::coloring;
+                fmt::print("{}\n", b);
+                fmt::print("config: W = {}, H = {}", b.width, b.height);
+                if constexpr (b.is_chequered) {
+                        fmt::print(", C = {}", b.coloring());
                 }
-                std::cout << ", size = " << b.area;
-                std::cout << '\n';
-                //enumerate(orientations, [&](auto i, auto fun)  {
-                //        std::cout << i << ": " << fun(b.basic_embedding_v).valid_squares << '\n';
-                //});
-                //std::cout << "optimal index = " << b.idx << " with size = " << b.valid_squares << '\n';
-                std::cout << "embedding W = " << b.padded_width << ", H = " << b.padded_height;
-                std::cout << ", size = " << b.padded_area << " with a valid range of " << b.valid_squares << '\n';
-                std::cout << "directional strides: ";
-                constexpr auto strides = b.strides;
-                std::copy(strides.begin(), strides.end(), std::ostream_iterator<int>(std::cout, ","));
-                std::cout << '\n';
-                std::cout << "-----------------------------------------------------------\n";
+                fmt::print(", size = {}\n", b.size);
+                fmt::print("padded: W = {}, H = {}", b.padded_width, b.padded_height);
+                if constexpr (b.is_chequered) {
+                        fmt::print(", C = {}", b.padded_coloring());
+                }
+                fmt::print(", size = {}, with a valid size of {}\n", b.size, b.valid_size);
+                fmt::print("directional strides: {}\n", b.strides);
+                fmt::print("{:->40}\n", "");
         });
 }

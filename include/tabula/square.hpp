@@ -44,6 +44,16 @@ struct basic_square
                 return Grid::index(*this);
         }
 
+        template<class Padding>
+        using padded_type = basic_square<typename Grid::template padded_type<Padding>>;
+
+        template<class Padding>
+        constexpr auto pad() const noexcept
+                -> padded_type<Padding>
+        {
+                return { file + Padding::left, rank + Padding::bottom };
+        }
+
         using flipped_type = basic_square<flipped_t<Grid>>;
         using flopped_type = basic_square<flopped_t<Grid>>;
         using swapped_type = basic_square<swapped_t<Grid>>;

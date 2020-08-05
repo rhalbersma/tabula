@@ -5,19 +5,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/functional.hpp>        // _compose, _flip, _flop, _swap
+#include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
 #include <tabula/lakes.hpp>             // basic_lakes
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/vector.hpp>            // basic_vector
 
 namespace tabula {
 
-template<
-        int Width,
-        int Height,
-        bool Coloring = true,
-        class Lakes = basic_lakes<>
->
+template<int Width, int Height, bool Coloring = true, class Lakes = basic_lakes<>>
 struct chequered_rectangle
 {
         static_assert(0 < Width);
@@ -26,14 +21,14 @@ struct chequered_rectangle
         static constexpr auto width    = Width;
         static constexpr auto height   = Height;
         static constexpr auto coloring = Coloring;
-        static constexpr auto area     = (Width * Height + Coloring) / 2;
+        static constexpr auto size     = (Width * Height + Coloring) / 2;
 
         using lake_type = Lakes;
 
         template<class Padding>
         using padded_type = chequered_rectangle<
-                Width + Padding::left + Padding::right,
-                Height + Padding::top + Padding::bottom,
+                Width  + Padding::left + Padding::right,
+                Height + Padding::top  + Padding::bottom,
                 Coloring ^ (Padding::left % 2) ^ (Padding::bottom % 2),
                 Lakes
         >;

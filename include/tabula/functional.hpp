@@ -23,8 +23,8 @@ constexpr auto operator>>(composable<F> f, composable<G> g) noexcept
 
 inline constexpr auto identity = [](auto arg) { return arg; };
 
-inline constexpr auto compose = [](auto... funs) {
-        return (composable(funs) >> ... >> composable(identity)).call;
+inline constexpr auto compose = [](auto... fs) {
+        return (composable(fs) >> ... >> composable(identity)).call;
 };
 
 template<class... Fs>

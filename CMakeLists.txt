@@ -14,12 +14,6 @@ add_library(
     ${PROJECT_NAME} INTERFACE
 )
 
-find_package(Boost REQUIRED)
-target_link_libraries(
-    ${PROJECT_NAME} INTERFACE
-    Boost::boost
-)
-
 set(project_include_dir
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
@@ -27,6 +21,12 @@ set(project_include_dir
 target_include_directories(
     ${PROJECT_NAME} INTERFACE
     ${project_include_dir}
+)
+# {fmt} has -Wshadow and -Wsign-conversion errors that are deliberately ignored in its build config.
+# The SYSTEM flag will treat {fmt} on the same footing as system headers and ignore these warnings.
+target_include_directories(
+    ${PROJECT_NAME} SYSTEM INTERFACE
+    SYSTEM ${PROJECT_SOURCE_DIR}/../fmt/include
 )
 
 target_compile_features(
