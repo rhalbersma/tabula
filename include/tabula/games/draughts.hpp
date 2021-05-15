@@ -15,12 +15,12 @@ namespace tabula::draughts {
 template<
         int Width,
         int Height,
-        bool Coloring = true,
+        bool Parity = true,
         bool IsOrthogonalJumps = false,
         class... Cuts
 >
 using basic_draughts = basic_board<
-        chequered_rectangle<Width, Height, Coloring, basic_lakes<Cuts...>>,
+        chequered_rectangle<Width, Height, Parity, basic_lakes<Cuts...>>,
         right_padding<(Width % 2) ? 2 : (IsOrthogonalJumps ? 3 : 1)>
 >;
 

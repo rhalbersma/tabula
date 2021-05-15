@@ -67,12 +67,12 @@ int main()
                 fmt::print("{}\n", b);
                 fmt::print("config: W = {}, H = {}", b.width, b.height);
                 if constexpr (b.is_chequered) {
-                        fmt::print(", C = {}", b.coloring());
+                        fmt::print(", P = {}", b.parity());
                 }
                 fmt::print(", size = {}\n", b.size);
                 fmt::print("padded: W = {}, H = {}", b.padded_width, b.padded_height);
                 if constexpr (b.is_chequered) {
-                        fmt::print(", C = {}", b.padded_coloring());
+                        fmt::print(", P = {}", b.padded_parity());
                 }
                 fmt::print(", size = {}, with a valid size of {}\n", b.size, b.valid_size);
                 fmt::print("directional strides: {}\n", b.strides);

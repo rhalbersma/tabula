@@ -12,16 +12,16 @@
 
 namespace tabula {
 
-template<int Width, int Height, bool Coloring = true, class Lakes = basic_lakes<>>
+template<int Width, int Height, bool Parity = true, class Lakes = basic_lakes<>>
 struct chequered_rectangle
 {
         static_assert(0 < Width);
         static_assert(0 < Height);
 
-        static constexpr auto width    = Width;
-        static constexpr auto height   = Height;
-        static constexpr auto coloring = Coloring;
-        static constexpr auto size     = (Width * Height + Coloring) / 2;
+        static constexpr auto width     = Width;
+        static constexpr auto height    = Height;
+        static constexpr auto parity    = Parity;
+        static constexpr auto size      = (Width * Height + Parity) / 2;
 
         using lake_type = Lakes;
 
@@ -29,7 +29,7 @@ struct chequered_rectangle
         using padded_type = chequered_rectangle<
                 Width  + Padding::left + Padding::right,
                 Height + Padding::top  + Padding::bottom,
-                Coloring ^ (Padding::left % 2) ^ (Padding::bottom % 2),
+                Parity ^ (Padding::left % 2) ^ (Padding::bottom % 2),
                 Lakes
         >;
 
@@ -46,7 +46,7 @@ struct chequered_rectangle
 
         static constexpr auto is_colored(square_type const& s) noexcept
         {
-                return (s.file ^ s.rank ^ Coloring) % 2;
+                return (s.file ^ s.rank ^ Parity) % 2;
         }
 
         static constexpr auto is_lake(square_type const& s) noexcept
@@ -59,6 +59,15 @@ struct chequered_rectangle
                 return is_within(s) && is_colored(s) && !is_lake(s);
         }
 
+        static constexpr auto square(int const n) noexcept
+        {
+                auto const d = 2 * n;
+                auto const width_parity = Width % 2;
+                auto const row_parity = (d / Width) % 2;
+                auto const i = d + !Parity * width_parity + (!Parity ^ row_parity) * !width_parity;
+                return square_type(i % Width, i / Width);
+        }
+
         static constexpr auto index(square_type const& s) noexcept
         {
                 return (s.file + s.rank * Width) / 2;
@@ -69,9 +78,9 @@ struct chequered_rectangle
                 return (v.file + v.rank * Width) / 2;
         }
 
-        using flipped_type = chequered_rectangle<Width, Height, Coloring ^ !(Height % 2), compose_<Lakes, flip_>>;
-        using flopped_type = chequered_rectangle<Width, Height, Coloring ^ !(Width  % 2), compose_<Lakes, flop_>>;
-        using swapped_type = chequered_rectangle<Height, Width, Coloring,                 compose_<Lakes, swap_>>;
+        using flipped_type = chequered_rectangle<Width, Height, Parity ^ !(Height % 2), compose_<Lakes, flip_>>;
+        using flopped_type = chequered_rectangle<Width, Height, Parity ^ !(Width  % 2), compose_<Lakes, flop_>>;
+        using swapped_type = chequered_rectangle<Height, Width, Parity,                 compose_<Lakes, swap_>>;
 };
 
 }       // namespace tabula

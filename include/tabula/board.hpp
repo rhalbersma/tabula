@@ -92,16 +92,16 @@ public:
 
         static constexpr auto is_chequered = is_chequered_v<Grid>;
 
-        static constexpr auto coloring() noexcept
+        static constexpr auto parity() noexcept
                 requires is_chequered
         {
-                return Grid::coloring;
+                return Grid::parity;
         }
 
-        static constexpr auto padded_coloring() noexcept
+        static constexpr auto padded_parity() noexcept
                 requires is_chequered
         {
-                return padded_grid::coloring;
+                return padded_grid::parity;
         }
 
         static constexpr auto square(int f, int r) noexcept

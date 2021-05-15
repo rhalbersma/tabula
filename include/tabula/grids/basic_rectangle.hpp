@@ -52,6 +52,11 @@ struct basic_rectangle
                 return is_within(s) && !is_lake(s);
         }
 
+        static constexpr auto square(int const i) noexcept
+        {
+                return square_type(i % Width, i / Width);
+        }
+
         static constexpr auto index(square_type const& s) noexcept
         {
                 return s.file + s.rank * Width;

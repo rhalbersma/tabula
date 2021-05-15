@@ -21,7 +21,7 @@ inline constexpr auto is_chequered_v = false;
 
 template<class Grid>
 inline constexpr auto is_chequered_v<Grid, std::void_t<decltype(
-        Grid::coloring
+        Grid::parity
 )>> = true;
 
 }       // namespace tabula
