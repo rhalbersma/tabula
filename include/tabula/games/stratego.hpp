@@ -13,7 +13,10 @@
 namespace tabula::stratego {
 
 template<int Width, int Height, class... Cuts>
-using basic_stratego = basic_board<basic_rectangle<Width, Height, basic_lakes<Cuts...>>, right_padding<1>>;
+using basic_stratego = basic_board<
+        basic_rectangle<Width, Height, basic_lakes<Cuts...>>, 
+        right_padding<1>
+>;
 
 // A precursor to classic Stratego is the game L'Attaque played on a 9x10 board
 // with three 1x2 lakes on the 5th and 6th rows of the c, e and g files.

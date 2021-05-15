@@ -12,7 +12,7 @@
 namespace tabula {
 
 template<class Grid>
-inline constexpr auto valid_range = []() {
+inline constexpr auto compute_valid_range = []() {
         using square = basic_square<Grid>;
 
         constexpr auto first = []() {
@@ -53,7 +53,7 @@ struct basic_embedding
         }
 
         static constexpr auto valid_range = []() {
-                auto const [first, last] = valid_range<Grid>;
+                auto const [first, last] = compute_valid_range<Grid>;
                 return std::pair(pad(first), pad(last));
         }();
 

@@ -29,8 +29,8 @@ int main()
                 draughts::sri_lankan(),
                 draughts::dumm(),
                 draughts::spantsiretti(),
-                draughts::ktar<11, 10>(),
-                draughts::ktar<12, 10>(),
+                draughts::ktar<10, 11>(),
+                draughts::ktar<10, 12>(),
 
                 // chequered boards with irregular shapes
                 draughts::mertens_cut_j10(),
@@ -74,7 +74,7 @@ int main()
                 if constexpr (b.is_chequered) {
                         fmt::print(", P = {}", b.padded_parity());
                 }
-                fmt::print(", size = {}, with a valid size of {}\n", b.size, b.valid_size);
+                fmt::print(", size = {} ({})\n", b.padded_size, b.valid_size);
                 fmt::print("directional strides: {}\n", b.strides);
                 fmt::print("{:->40}\n", "");
         });

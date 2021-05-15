@@ -11,11 +11,14 @@
 
 namespace tabula::chess {
 
-template<int Width, int Height, class Padding>
-using basic_chess    = basic_board<basic_rectangle<Width, Height>, Padding>;
+template<int Width, int Height, class Padding = basic_padding<0>>
+using basic_chess = basic_board<
+        basic_rectangle<Width, Height>, 
+        Padding
+>;
 
 // https://www.chessprogramming.org/8x8_Board
-using board_08x08    = basic_chess< 8,  8, basic_padding<0>>;
+using board_08x08    = basic_chess< 8,  8>;
 using board          = board_08x08;
 
 // https://www.chessprogramming.org/10x12_Board
