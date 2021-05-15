@@ -27,17 +27,6 @@ using grid_types = boost::mpl::vector
 ,       basic_rectangle<3, 3>
 ,       basic_rectangle<3, 5>
 ,       basic_rectangle<5, 3>
-,       chequered_rectangle<1, 1>
-,       chequered_rectangle<1, 2>
-,       chequered_rectangle<2, 1>
-,       chequered_rectangle<2, 2>
-,       chequered_rectangle<2, 3>
-,       chequered_rectangle<3, 2>
-,       chequered_rectangle<2, 4>
-,       chequered_rectangle<4, 2>
-,       chequered_rectangle<3, 3>
-,       chequered_rectangle<3, 5>
-,       chequered_rectangle<5, 3>
 ,       chequered_rectangle<1, 1, 0>
 ,       chequered_rectangle<1, 2, 0>
 ,       chequered_rectangle<2, 1, 0>
@@ -49,9 +38,20 @@ using grid_types = boost::mpl::vector
 ,       chequered_rectangle<3, 3, 0>
 ,       chequered_rectangle<3, 5, 0>
 ,       chequered_rectangle<5, 3, 0>
+,       chequered_rectangle<1, 1, 1>
+,       chequered_rectangle<1, 2, 1>
+,       chequered_rectangle<2, 1, 1>
+,       chequered_rectangle<2, 2, 1>
+,       chequered_rectangle<2, 3, 1>
+,       chequered_rectangle<3, 2, 1>
+,       chequered_rectangle<2, 4, 1>
+,       chequered_rectangle<4, 2, 1>
+,       chequered_rectangle<3, 3, 1>
+,       chequered_rectangle<3, 5, 1>
+,       chequered_rectangle<5, 3, 1>
 >;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(IndexIsInvertable, Grid, grid_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(IndexIsInvertible, Grid, grid_types)
 {
         for (auto i = 0; i < Grid::size; ++i) {
                 auto const s = Grid::square(i);
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(IndexIsInvertable, Grid, grid_types)
         }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(SquareIsInvertable, Grid, grid_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(SquareIsInvertible, Grid, grid_types)
 {
         for (auto r = 0; r < Grid::height; ++r) {
                 for (auto f = 0; f < Grid::width; ++f) {
