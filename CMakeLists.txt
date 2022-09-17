@@ -26,7 +26,7 @@ target_include_directories(
 # The SYSTEM flag will treat {fmt} on the same footing as system headers and ignore these warnings.
 target_include_directories(
     ${PROJECT_NAME} SYSTEM INTERFACE
-    SYSTEM ${PROJECT_SOURCE_DIR}/../fmt/include
+    SYSTEM ${PROJECT_SOURCE_DIR}/../third_party/fmt/include
 )
 
 target_compile_features(
