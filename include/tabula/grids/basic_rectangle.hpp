@@ -14,7 +14,7 @@
 namespace tabula {
 
 template<int Width, int Height, class Lakes = basic_lakes<>>
-requires (0 < Width && 0 < Height)
+        requires (0 < Width && 0 < Height)
 struct basic_rectangle
 {
         static constexpr auto width  = Width;

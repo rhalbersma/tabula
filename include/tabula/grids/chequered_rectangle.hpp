@@ -14,7 +14,7 @@
 namespace tabula {
 
 template<int Width, int Height, int Parity = 0, class Lakes = basic_lakes<>>
-requires (0 < Width &&  0 < Height && (Parity == 0 || Parity == 1))
+        requires (0 < Width &&  0 < Height && (Parity == 0 || Parity == 1))
 struct chequered_rectangle
 {
         static constexpr auto width  = Width;
