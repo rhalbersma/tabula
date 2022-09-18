@@ -1,13 +1,13 @@
 #pragma once
 
-//          Copyright Rein Halbersma 2019-2021.
+//          Copyright Rein Halbersma 2019-2022.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/type_traits.hpp>       // is_chequered
-#include <tabula/vector.hpp>            // basic_vector
-#include <array>                        // array
+#include <tabula/concepts.hpp>  // chequered
+#include <tabula/vector.hpp>    // basic_vector
+#include <array>                // array
 
 namespace tabula {
 
@@ -15,14 +15,13 @@ template<class Grid>
 class basic_compass
 {
         // unit increment for the cardinal directions (N, E, S, W)
-        static constexpr auto c = is_chequered_v<Grid> ? 2 : 1;
+        static constexpr auto c = chequered<Grid> ? 2 : 1;
 
         using vector = basic_vector<Grid>;
 public:
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
-        static constexpr auto points = std::array
-        {
+        static constexpr auto points = std::array{
                 vector{ 0,  c},  // N
                 vector{ 1,  1},  // NE
                 vector{ c,  0},  // E

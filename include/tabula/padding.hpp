@@ -1,6 +1,6 @@
 #pragma once
 
-//          Copyright Rein Halbersma 2019-2021.
+//          Copyright Rein Halbersma 2019-2022.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -13,10 +13,9 @@ template<int...>
 struct basic_padding;
 
 template<int Top, int Right, int Bottom, int Left>
+        requires (0 <= Top && 0 <= Right && 0 <= Bottom && 0 <= Left)
 struct basic_padding<Top, Right, Bottom, Left>
 {
-        static_assert(0 <= Top && 0 <= Right && 0 <= Bottom && 0 <= Left);
-
         static constexpr auto top       = Top;
         static constexpr auto right     = Right;
         static constexpr auto bottom    = Bottom;
@@ -24,10 +23,9 @@ struct basic_padding<Top, Right, Bottom, Left>
 };
 
 template<int Top, int RightLeft, int Bottom>
+        requires (0 <= Top && 0 <= RightLeft && 0 <= Bottom)
 struct basic_padding<Top, RightLeft, Bottom>
 {
-        static_assert(0 <= Top && 0 <= RightLeft && 0 <= Bottom);
-
         static constexpr auto top       = Top;
         static constexpr auto right     = RightLeft;
         static constexpr auto bottom    = Bottom;
@@ -35,10 +33,9 @@ struct basic_padding<Top, RightLeft, Bottom>
 };
 
 template<int TopBottom, int RightLeft>
+        requires (0 <= TopBottom && 0 <= RightLeft)
 struct basic_padding<TopBottom, RightLeft>
 {
-        static_assert(0 <= TopBottom && 0 <= RightLeft);
-
         static constexpr auto top       = TopBottom;
         static constexpr auto right     = RightLeft;
         static constexpr auto bottom    = TopBottom;
@@ -46,10 +43,9 @@ struct basic_padding<TopBottom, RightLeft>
 };
 
 template<int TopRightBottomLeft>
+        requires (0 <= TopRightBottomLeft)
 struct basic_padding<TopRightBottomLeft>
 {
-        static_assert(0 <= TopRightBottomLeft);
-
         static constexpr auto top       = TopRightBottomLeft;
         static constexpr auto right     = TopRightBottomLeft;
         static constexpr auto bottom    = TopRightBottomLeft;

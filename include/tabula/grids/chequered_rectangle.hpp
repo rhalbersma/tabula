@@ -1,6 +1,6 @@
 #pragma once
 
-//          Copyright Rein Halbersma 2019-2021.
+//          Copyright Rein Halbersma 2019-2022.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -13,18 +13,19 @@
 namespace tabula {
 
 template<int Width, int Height, int Parity = 0, class Lakes = basic_lakes<>>
+requires (0 < Width &&  0 < Height && (Parity == 0 || Parity == 1))
 struct chequered_rectangle
 {
-        static_assert(0 < Width);
-        static_assert(0 < Height);
-        static_assert(Parity == 0 or Parity == 1);
-
-        static constexpr auto width     = Width;
-        static constexpr auto height    = Height;
-        static constexpr auto parity    = Parity;
-        static constexpr auto size      = (Width * Height + !Parity) / 2;
+        static constexpr auto width  = Width;
+        static constexpr auto height = Height;
+        static constexpr auto parity = Parity;
+        static constexpr auto size   = (Width * Height + !Parity) / 2;
 
         using lake_type = Lakes;
+
+        using flipped_type = chequered_rectangle<Width, Height, Parity ^ !(Height % 2), compose_<Lakes, flip_>>;
+        using flopped_type = chequered_rectangle<Width, Height, Parity ^ !(Width  % 2), compose_<Lakes, flop_>>;
+        using swapped_type = chequered_rectangle<Height, Width, Parity,                 compose_<Lakes, swap_>>;
 
         template<class Padding>
         using padded_type = chequered_rectangle<
@@ -37,7 +38,7 @@ struct chequered_rectangle
         using square_type = basic_square<chequered_rectangle>;
         using vector_type = basic_vector<chequered_rectangle>;
 
-        static constexpr auto is_within(square_type const& s) noexcept
+        [[nodiscard]] static constexpr auto is_within(square_type const& s) noexcept
         {
                 return
                         0 <= s.file && s.file < Width &&
@@ -45,42 +46,40 @@ struct chequered_rectangle
                 ;
         }
 
-        static constexpr auto is_colored(square_type const& s) noexcept
+        [[nodiscard]] static constexpr auto is_lake(square_type const& s) noexcept
+                requires std::regular_invocable<Lakes, square_type>
+        {
+                return Lakes()(s);
+        }
+
+        [[nodiscard]] static constexpr auto is_colored(square_type const& s) noexcept
                 -> bool
         {
                 return (s.file ^ s.rank ^ !Parity) % 2;
         }
 
-        static constexpr auto is_lake(square_type const& s) noexcept
+        [[nodiscard]] static constexpr auto is_valid(square_type const& s) noexcept
         {
-                return Lakes()(s);
+                return is_within(s) && !is_lake(s) && is_colored(s);
         }
 
-        static constexpr auto is_valid(square_type const& s) noexcept
-        {
-                return is_within(s) && is_colored(s) && !is_lake(s);
-        }
-
-        static constexpr auto square(int const n) noexcept
+        [[nodiscard]] static constexpr auto square(int const n) noexcept
+                -> square_type
         {
                 auto const d = 2 * n;
                 auto const i = d + ((Width % 2) ? Parity : Parity ^ ((d / Width) % 2));
-                return square_type(i % Width, i / Width);
+                return { i % Width, i / Width };
         }
 
-        static constexpr auto index(square_type const& s) noexcept
+        [[nodiscard]] static constexpr auto index(square_type const& s) noexcept
         {
                 return (s.file + s.rank * Width) / 2;
         }
 
-        static constexpr auto stride(vector_type const& v) noexcept
+        [[nodiscard]] static constexpr auto stride(vector_type const& v) noexcept
         {
                 return (v.file + v.rank * Width) / 2;
         }
-
-        using flipped_type = chequered_rectangle<Width, Height, Parity ^ !(Height % 2), compose_<Lakes, flip_>>;
-        using flopped_type = chequered_rectangle<Width, Height, Parity ^ !(Width  % 2), compose_<Lakes, flop_>>;
-        using swapped_type = chequered_rectangle<Height, Width, Parity,                 compose_<Lakes, swap_>>;
 };
 
 }       // namespace tabula

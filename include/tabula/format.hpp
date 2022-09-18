@@ -1,6 +1,6 @@
 #pragma once
 
-//          Copyright Rein Halbersma 2019-2021.
+//          Copyright Rein Halbersma 2019-2022.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -12,13 +12,13 @@
 #include <tabula/square.hpp>
 
 template<class Grid, class Padding>
-struct fmt::formatter<tabula::basic_board<Grid, Padding>> 
+struct fmt::formatter<tabula::basic_board<Grid, Padding>>
 {
         // Presentation format: 'f' - fixed, 'e' - exponential.
         char presentation = 'f';
 
         // Parses format specifications of the form ['f' | 'e'].
-        constexpr auto parse(format_parse_context& ctx) 
+        constexpr auto parse(format_parse_context& ctx)
         {
                 // auto parse(format_parse_context &ctx) -> decltype(ctx.begin()) // c++11
                 // [ctx.begin(), ctx.end()) is a character range that contains a part of
@@ -40,7 +40,7 @@ struct fmt::formatter<tabula::basic_board<Grid, Padding>>
         // Formats the point p using the parsed format specification (presentation)
         // stored in this formatter.
         template<typename FormatContext>
-        auto format(tabula::basic_board<Grid, Padding> const& b, FormatContext& ctx) 
+        auto format(tabula::basic_board<Grid, Padding> const& b, FormatContext& ctx)
         {
                 for (auto r = b.height - 1; r >= 0; --r) {
                         for (auto f = 0; f < b.width; ++f) {

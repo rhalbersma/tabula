@@ -1,11 +1,14 @@
 #pragma once
 
-//          Copyright Rein Halbersma 2019-2021.
+//          Copyright Rein Halbersma 2019-2022.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <functional>   // identity
+
 namespace tabula {
+namespace detail {
 
 template<class F>
 struct composable
@@ -21,47 +24,29 @@ constexpr auto operator>>(composable<F> f, composable<G> g) noexcept
         });
 }
 
-inline constexpr auto identity = [](auto arg) { return arg; };
+}       // namespace detail
 
+inline constexpr auto identity = std::identity();
 inline constexpr auto compose = [](auto... fs) {
-        return (composable(fs) >> ... >> composable(identity)).call;
+        return (detail::composable(fs) >> ... >> detail::composable(identity)).call;
 };
+
+namespace detail {
 
 template<class... Fs>
-struct compose_
-{
-        constexpr auto operator()(auto arg) const noexcept
-        {
-                return compose(Fs()...)(arg);
-        }
-};
+inline constexpr auto composed = [](auto arg) { return compose(Fs()...)(arg); };
 
-struct flip_
-{
-        constexpr auto operator()(auto arg) const noexcept
-        {
-                return arg.flip();
-        }
-};
+}       // namespace detail
 
-struct flop_
-{
-        constexpr auto operator()(auto arg) const noexcept
-        {
-                return arg.flop();
-        }
-};
+template<class... Fs>
+using compose_ = decltype(detail::composed<Fs...>);
 
-struct swap_
-{
-        constexpr auto operator()(auto arg) const noexcept
-        {
-                return arg.swap();
-        }
-};
+inline constexpr auto flip = [](auto arg) { return arg.flip(); };
+inline constexpr auto flop = [](auto arg) { return arg.flop(); };
+inline constexpr auto swap = [](auto arg) { return arg.swap(); };
 
-inline constexpr auto flip = flip_();
-inline constexpr auto flop = flop_();
-inline constexpr auto swap = swap_();
+using flip_ = decltype(flip);
+using flop_ = decltype(flop);
+using swap_ = decltype(swap);
 
 }       // namespace tabula

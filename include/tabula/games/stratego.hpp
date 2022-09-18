@@ -1,6 +1,6 @@
 #pragma once
 
-//          Copyright Rein Halbersma 2019-2021.
+//          Copyright Rein Halbersma 2019-2022.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -14,7 +14,7 @@ namespace tabula::stratego {
 
 template<int Width, int Height, class... Cuts>
 using basic_stratego = basic_board<
-        basic_rectangle<Width, Height, basic_lakes<Cuts...>>, 
+        basic_rectangle<Width, Height, basic_lakes<Cuts...>>,
         right_padding<1>
 >;
 

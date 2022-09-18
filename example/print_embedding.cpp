@@ -1,4 +1,4 @@
-//          Copyright Rein Halbersma 2019-2021.
+//          Copyright Rein Halbersma 2019-2022.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -7,12 +7,12 @@
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 
-#include <tabula/board.hpp>             // basic_board
-#include <tabula/format.hpp>            // print
-#include <tabula/games.hpp>             // draughts, stratego
-#include <tabula/tuple.hpp>             // for_each, enumerate
-#include <tabula/type_traits.hpp>       // is_chequered
-#include <tuple>                        // tuple
+#include <tabula/board.hpp>     // basic_board
+#include <tabula/concepts.hpp>  // chequered
+#include <tabula/format.hpp>    // print
+#include <tabula/games.hpp>     // draughts, stratego
+#include <tabula/tuple.hpp>     // for_each, enumerate
+#include <tuple>                // tuple
 
 int main()
 {

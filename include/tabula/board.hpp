@@ -1,13 +1,14 @@
 #pragma once
 
-//          Copyright Rein Halbersma 2019-2021.
+//          Copyright Rein Halbersma 2019-2022.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/compass.hpp>           // basic_compass
+#include <tabula/concepts.hpp>          // chequered
 #include <tabula/embedding.hpp>         // basic_embedding
-#include <tabula/functional.hpp>        // compose, identity, flip, flop, swap
+#include <tabula/functional.hpp>        // compose, flip, flop, swap
 #include <tabula/lakes.hpp>             // basic_lakes
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/tuple.hpp>             // min_index, transform
@@ -90,7 +91,7 @@ public:
         static constexpr auto valid_range = embedding_type::valid_range;
         static constexpr auto valid_size  = embedding_type::valid_size;
 
-        static constexpr auto is_chequered = is_chequered_v<Grid>;
+        static constexpr auto is_chequered = chequered<Grid>;
 
         static constexpr auto parity() noexcept
                 requires is_chequered
@@ -128,7 +129,7 @@ public:
 
         static constexpr auto strides = []() {
                 constexpr auto points = basic_compass<Grid>::points;
-                std::array<int, points.size()> table;                
+                std::array<int, points.size()> table;
                 for (auto i = std::size_t(0); auto p : points) {
                         table[i++] = pad(p).stride();
                 }
