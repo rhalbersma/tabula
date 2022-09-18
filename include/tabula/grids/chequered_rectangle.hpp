@@ -9,6 +9,7 @@
 #include <tabula/lakes.hpp>             // basic_lakes
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/vector.hpp>            // basic_vector
+#include <concepts>                     // regular_invocable
 
 namespace tabula {
 
