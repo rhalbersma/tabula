@@ -5,7 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t
+#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, add_padding
 
 namespace tabula {
 
@@ -20,6 +20,9 @@ struct basic_vector
         using flipped_type = basic_vector<flipped_t<Grid>>;
         using flopped_type = basic_vector<flopped_t<Grid>>;
         using swapped_type = basic_vector<swapped_t<Grid>>;
+
+        template<class Padding>
+        using padded = basic_vector<add_padding<Grid, Padding>>;
 
         bool operator==(basic_vector const&) const = default;
 
@@ -42,6 +45,37 @@ struct basic_vector
                 file *= n;
                 rank *= n;
                 return *this;
+        }
+
+        [[nodiscard]] constexpr auto reverse() const noexcept
+                -> basic_vector
+        {
+                return { -file, -rank };
+        }
+
+        [[nodiscard]] constexpr auto flip() const noexcept
+                -> flipped_type
+        {
+                return { file, -rank };
+        }
+
+        [[nodiscard]] constexpr auto flop() const noexcept
+                -> flopped_type
+        {
+                return { -file, rank };
+        }
+
+        [[nodiscard]] constexpr auto swap() const noexcept
+                -> swapped_type
+        {
+                return { rank, file };
+        }
+
+        template<class Padding>
+        [[nodiscard]] constexpr auto pad() const noexcept
+                -> padded<Padding>
+        {
+                return { file, rank };
         }
 
         [[nodiscard]] constexpr auto is_cardinal() const noexcept
@@ -74,33 +108,9 @@ struct basic_vector
                 return rank < 0;
         }
 
-        [[nodiscard]] constexpr auto stride() const noexcept
+        [[nodiscard]] constexpr auto index() const noexcept
         {
-                return Grid::stride(*this);
-        }
-
-        [[nodiscard]] constexpr auto flip() const noexcept
-                -> flipped_type
-        {
-                return { file, -rank };
-        }
-
-        [[nodiscard]] constexpr auto flop() const noexcept
-                -> flopped_type
-        {
-                return { -file, rank };
-        }
-
-        [[nodiscard]] constexpr auto swap() const noexcept
-                -> swapped_type
-        {
-                return { rank, file };
-        }
-
-        [[nodiscard]] constexpr auto reverse() const noexcept
-                -> basic_vector
-        {
-                return { -file, -rank };
+                return Grid::index(*this);
         }
 };
 

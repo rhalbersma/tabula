@@ -6,14 +6,14 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
-#include <tabula/lakes.hpp>             // basic_lakes
+#include <tabula/lake.hpp>              // basic_lake
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/vector.hpp>            // basic_vector
 #include <concepts>                     // regular_invocable
 
 namespace tabula {
 
-template<int Width, int Height, int Parity = 0, class Lakes = basic_lakes<>>
+template<int Width, int Height, int Parity = 0, class Lake = basic_lake<>>
         requires (0 < Width &&  0 < Height && (Parity == 0 || Parity == 1))
 struct chequered_rectangle
 {
@@ -22,18 +22,18 @@ struct chequered_rectangle
         static constexpr auto parity = Parity;
         static constexpr auto size   = (Width * Height + !Parity) / 2;
 
-        using lake_type = Lakes;
+        using lake_type = Lake;
 
-        using flipped_type = chequered_rectangle<Width, Height, Parity ^ !(Height % 2), compose_<Lakes, flip_>>;
-        using flopped_type = chequered_rectangle<Width, Height, Parity ^ !(Width  % 2), compose_<Lakes, flop_>>;
-        using swapped_type = chequered_rectangle<Height, Width, Parity,                 compose_<Lakes, swap_>>;
+        using flipped_type = chequered_rectangle<Width, Height, Parity ^ !(Height % 2), compose_<Lake, flip_>>;
+        using flopped_type = chequered_rectangle<Width, Height, Parity ^ !(Width  % 2), compose_<Lake, flop_>>;
+        using swapped_type = chequered_rectangle<Height, Width, Parity,                 compose_<Lake, swap_>>;
 
         template<class Padding>
-        using padded_type = chequered_rectangle<
+        using padded = chequered_rectangle<
                 Width  + Padding::left + Padding::right + !((Width + Padding::left + Padding::right) % 2),
                 Height + Padding::top  + Padding::bottom,
                 Parity ^ (Padding::left % 2) ^ (Padding::bottom % 2),
-                Lakes
+                Lake
         >;
 
         using square_type = basic_square<chequered_rectangle>;
@@ -48,9 +48,9 @@ struct chequered_rectangle
         }
 
         [[nodiscard]] static constexpr auto is_lake(square_type const& s) noexcept
-                requires std::regular_invocable<Lakes, square_type>
+                requires std::regular_invocable<Lake, square_type>
         {
-                return Lakes()(s);
+                return Lake()(s);
         }
 
         [[nodiscard]] static constexpr auto is_colored(square_type const& s) noexcept
@@ -64,23 +64,18 @@ struct chequered_rectangle
                 return is_within(s) && !is_lake(s) && is_colored(s);
         }
 
-        [[nodiscard]] static constexpr auto square(int const n) noexcept
+        [[nodiscard]] static constexpr auto square(int index) noexcept
                 -> square_type
         {
-                auto const d = 2 * n;
-                auto const i = d + ((Width % 2) ? Parity : Parity ^ ((d / Width) % 2));
-                return { i % Width, i / Width };
+                index *= 2;
+                index += (Width % 2) ? Parity : Parity ^ ((index / Width) % 2);
+                return { index % Width, index / Width };
         }
 
-        [[nodiscard]] static constexpr auto index(square_type const& s) noexcept
+        [[nodiscard]] static constexpr auto index(auto const& arg) noexcept
         {
-                return (s.file + s.rank * Width) / 2;
-        }
-
-        [[nodiscard]] static constexpr auto stride(vector_type const& v) noexcept
-        {
-                return (v.file + v.rank * Width) / 2;
-        }
+                return (arg.file + arg.rank * Width) / 2;
+        };
 };
 
 }       // namespace tabula

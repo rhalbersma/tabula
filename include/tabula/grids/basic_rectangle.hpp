@@ -6,14 +6,14 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
-#include <tabula/lakes.hpp>             // basic_lakes
+#include <tabula/lake.hpp>              // basic_lake
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/vector.hpp>            // basic_vector
 #include <concepts>                     // regular_invocable
 
 namespace tabula {
 
-template<int Width, int Height, class Lakes = basic_lakes<>>
+template<int Width, int Height, class Lake = basic_lake<>>
         requires (0 < Width && 0 < Height)
 struct basic_rectangle
 {
@@ -21,17 +21,17 @@ struct basic_rectangle
         static constexpr auto height = Height;
         static constexpr auto size   = Width * Height;
 
-        using lake_type = Lakes;
+        using lake_type = Lake;
 
-        using flipped_type = basic_rectangle<Width, Height, compose_<Lakes, flip_>>;
-        using flopped_type = basic_rectangle<Width, Height, compose_<Lakes, flop_>>;
-        using swapped_type = basic_rectangle<Height, Width, compose_<Lakes, swap_>>;
+        using flipped_type = basic_rectangle<Width, Height, compose_<Lake, flip_>>;
+        using flopped_type = basic_rectangle<Width, Height, compose_<Lake, flop_>>;
+        using swapped_type = basic_rectangle<Height, Width, compose_<Lake, swap_>>;
 
         template<class Padding>
-        using padded_type = basic_rectangle<
+        using padded = basic_rectangle<
                 Width  + Padding::left + Padding::right,
                 Height + Padding::top  + Padding::bottom,
-                Lakes
+                Lake
         >;
 
         using square_type = basic_square<basic_rectangle>;
@@ -46,9 +46,9 @@ struct basic_rectangle
         }
 
         [[nodiscard]] static constexpr auto is_lake(square_type const& s) noexcept
-                requires std::regular_invocable<Lakes, square_type>
+                requires std::regular_invocable<Lake, square_type>
         {
-                return Lakes()(s);
+                return Lake()(s);
         }
 
         [[nodiscard]] static constexpr auto is_valid(square_type const& s) noexcept
@@ -56,20 +56,15 @@ struct basic_rectangle
                 return is_within(s) && !is_lake(s);
         }
 
-        [[nodiscard]] static constexpr auto square(int const i) noexcept
+        [[nodiscard]] static constexpr auto square(int index) noexcept
                 -> square_type
         {
-                return { i % Width, i / Width };
+                return { index % Width, index / Width };
         }
 
-        [[nodiscard]] static constexpr auto index(square_type const& s) noexcept
+        [[nodiscard]] static constexpr auto index(auto const& arg) noexcept
         {
-                return s.file + s.rank * Width;
-        }
-
-        [[nodiscard]] static constexpr auto stride(vector_type const& v) noexcept
-        {
-                return v.file + v.rank * Width;
+                return arg.file + arg.rank * Width;
         }
 };
 

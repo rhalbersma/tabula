@@ -53,19 +53,17 @@ using grid_types = boost::mpl::vector
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(IndexIsInvertible, Grid, grid_types)
 {
-        for (auto i = 0; i < Grid::size; ++i) {
-                auto const s = Grid::square(i);
-                BOOST_CHECK_EQUAL(i, Grid::index(s));
+        for (auto index = 0; index < Grid::size; ++index) {
+                BOOST_CHECK_EQUAL(index, Grid::index(Grid::square(index)));
         }
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(SquareIsInvertible, Grid, grid_types)
 {
-        for (auto r = 0; r < Grid::height; ++r) {
-                for (auto f = 0; f < Grid::width; ++f) {
-                        if (auto const s = square_t<Grid>(f, r); s.is_valid()) {
-                                auto const i = Grid::index(s);
-                                BOOST_CHECK(s == Grid::square(i));
+        for (auto rank = 0; rank < Grid::height; ++rank) {
+                for (auto file = 0; file < Grid::width; ++file) {
+                        if (auto const square = square_t<Grid>(file, rank); square.is_valid()) {
+                                BOOST_CHECK(square == Grid::square(Grid::index(square)));
                         }
                 }
         }

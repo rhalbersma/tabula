@@ -5,7 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, padded_t, swapped_t
+#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, add_padding
 #include <tabula/vector.hpp>            // vector
 
 namespace tabula {
@@ -23,7 +23,7 @@ struct basic_square
         using swapped_type = basic_square<swapped_t<Grid>>;
 
         template<class Padding>
-        using padded_type = basic_square<padded_t<Grid, Padding>>;
+        using padded = basic_square<add_padding<Grid, Padding>>;
 
         bool operator==(basic_square const&) const = default;
 
@@ -39,16 +39,6 @@ struct basic_square
                 this->file -= v.file;
                 this->rank -= v.rank;
                 return *this;
-        }
-
-        [[nodiscard]] constexpr auto is_valid() const noexcept
-        {
-                return Grid::is_valid(*this);
-        }
-
-        [[nodiscard]] constexpr auto index() const noexcept
-        {
-                return Grid::index(*this);
         }
 
         [[nodiscard]] constexpr auto flip() const noexcept
@@ -71,9 +61,19 @@ struct basic_square
 
         template<class Padding>
         [[nodiscard]] constexpr auto pad() const noexcept
-                -> padded_type<Padding>
+                -> padded<Padding>
         {
                 return { file + Padding::left, rank + Padding::bottom };
+        }
+
+        [[nodiscard]] constexpr auto is_valid() const noexcept
+        {
+                return Grid::is_valid(*this);
+        }
+
+        [[nodiscard]] constexpr auto index() const noexcept
+        {
+                return Grid::index(*this);
         }
 };
 

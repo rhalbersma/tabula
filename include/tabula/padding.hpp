@@ -9,11 +9,11 @@ namespace tabula {
 
 // CSS padding Property: https://www.w3schools.com/cssref/pr_padding.asp
 
-template<int...>
+template<int... Margins>
+        requires (((0 <= Margins) && ...) && sizeof...(Margins) <= 4)
 struct basic_padding;
 
 template<int Top, int Right, int Bottom, int Left>
-        requires (0 <= Top && 0 <= Right && 0 <= Bottom && 0 <= Left)
 struct basic_padding<Top, Right, Bottom, Left>
 {
         static constexpr auto top       = Top;
@@ -23,7 +23,6 @@ struct basic_padding<Top, Right, Bottom, Left>
 };
 
 template<int Top, int RightLeft, int Bottom>
-        requires (0 <= Top && 0 <= RightLeft && 0 <= Bottom)
 struct basic_padding<Top, RightLeft, Bottom>
 {
         static constexpr auto top       = Top;
@@ -33,7 +32,6 @@ struct basic_padding<Top, RightLeft, Bottom>
 };
 
 template<int TopBottom, int RightLeft>
-        requires (0 <= TopBottom && 0 <= RightLeft)
 struct basic_padding<TopBottom, RightLeft>
 {
         static constexpr auto top       = TopBottom;
@@ -43,13 +41,21 @@ struct basic_padding<TopBottom, RightLeft>
 };
 
 template<int TopRightBottomLeft>
-        requires (0 <= TopRightBottomLeft)
 struct basic_padding<TopRightBottomLeft>
 {
         static constexpr auto top       = TopRightBottomLeft;
         static constexpr auto right     = TopRightBottomLeft;
         static constexpr auto bottom    = TopRightBottomLeft;
         static constexpr auto left      = TopRightBottomLeft;
+};
+
+template<>
+struct basic_padding<>
+{
+        static constexpr auto top       = 0;
+        static constexpr auto right     = 0;
+        static constexpr auto bottom    = 0;
+        static constexpr auto left      = 0;
 };
 
 template<int Right>

@@ -31,6 +31,8 @@ int main()
                 draughts::spantsiretti(),
                 draughts::ktar<10, 11>(),
                 draughts::ktar<10, 12>(),
+                draughts::basic_draughts<19, 10>(),
+                draughts::basic_draughts<10, 10, 0, right_padding<9>>(),
 
                 // chequered boards with irregular shapes
                 draughts::mertens_cut_j10(),

@@ -11,7 +11,7 @@
 
 namespace tabula::chess {
 
-template<int Width, int Height, class Padding = basic_padding<0>>
+template<int Width, int Height, class Padding = basic_padding<>>
 using basic_chess = basic_board<
         basic_rectangle<Width, Height>,
         Padding
