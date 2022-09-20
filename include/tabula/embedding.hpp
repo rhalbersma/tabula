@@ -40,12 +40,12 @@ struct basic_embedding
                 return {};
         }
 
-        [[nodiscard]] static constexpr auto pad(auto const& arg) noexcept
+        [[nodiscard]] static constexpr auto pad(auto arg) noexcept
         {
                 return arg.template pad<Padding>();
         }
 
-        static constexpr auto valid_size = []() {
+        static constexpr auto min_size = []() {
                 constexpr auto first = first_valid_square<Grid>();
                 constexpr auto last = last_valid_square<Grid>();
                 if constexpr (first && last) {

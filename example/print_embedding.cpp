@@ -76,7 +76,7 @@ int main()
                 if constexpr (b.is_chequered) {
                         fmt::print(", P = {}", b.padded_parity());
                 }
-                fmt::print(", size = {} ({})\n", b.padded_size, b.valid_size);
+                fmt::print(", size = {} ({})\n", b.padded_size, b.min_size);
                 fmt::print("directional strides: {}\n", b.strides);
                 fmt::print("{:->40}\n", "");
         });

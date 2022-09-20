@@ -37,7 +37,7 @@ class basic_board
         static constexpr auto basic_embedding_v = basic_embedding<Grid, Padding>();
         static constexpr auto idx = min_index(
                 transform(orientations, [](auto fun) {
-                        return fun(basic_embedding_v).valid_size;
+                        return fun(basic_embedding_v).min_size;
                 })
         );
         static constexpr auto transform_v = std::get<idx>(orientations);
@@ -50,7 +50,7 @@ class basic_board
         using padded_square_type = square_t<padded_type>;
         using padded_vector_type = vector_t<padded_type>;
 
-        [[nodiscard]] static constexpr auto pad(auto const& arg) noexcept
+        [[nodiscard]] static constexpr auto pad(auto arg) noexcept
         {
                 return embedding_v.pad(transform_v(arg));
         }
@@ -79,7 +79,7 @@ public:
         static constexpr auto padded_height = padded_type::height;
         static constexpr auto padded_size   = padded_type::size;
 
-        static constexpr auto valid_size  = embedding_type::valid_size;
+        static constexpr auto min_size  = embedding_type::min_size;
 
         static constexpr auto is_chequered = chequered<Grid>;
 

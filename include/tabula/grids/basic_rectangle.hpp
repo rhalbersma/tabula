@@ -62,7 +62,7 @@ struct basic_rectangle
                 return { index % Width, index / Width };
         }
 
-        [[nodiscard]] static constexpr auto index(auto const& arg) noexcept
+        [[nodiscard]] static constexpr auto index(auto arg) noexcept
         {
                 return arg.file + arg.rank * Width;
         }
