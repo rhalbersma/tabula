@@ -7,9 +7,9 @@
 #define BOOST_MPL_LIMIT_VECTOR_SIZE 50
 
 #include <tabula/grids.hpp>             // basic_rectangle, chequered_rectangle
-#include <tabula/type_traits.hpp>       // square_t
 #include <boost/mpl/vector.hpp>         // vector
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
+#include <utility>                      // pair
 
 using namespace tabula;
 
@@ -54,16 +54,16 @@ using grid_types = boost::mpl::vector
 BOOST_AUTO_TEST_CASE_TEMPLATE(IndexIsInvertible, Grid, grid_types)
 {
         for (auto index = 0; index < Grid::size; ++index) {
-                BOOST_CHECK_EQUAL(index, Grid::index(Grid::square(index)));
+                BOOST_CHECK_EQUAL(index, Grid::index(Grid::coordinates(index)));
         }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(SquareIsInvertible, Grid, grid_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(CoordinatesAreInvertible, Grid, grid_types)
 {
         for (auto rank = 0; rank < Grid::height; ++rank) {
                 for (auto file = 0; file < Grid::width; ++file) {
-                        if (auto const square = square_t<Grid>(file, rank); square.is_valid()) {
-                                BOOST_CHECK(square == Grid::square(Grid::index(square)));
+                        if (auto const coordinates = std::pair(file, rank); Grid::is_valid(coordinates)) {
+                                BOOST_CHECK(coordinates == Grid::coordinates(Grid::index(coordinates)));
                         }
                 }
         }

@@ -7,9 +7,8 @@
 
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
 #include <tabula/lake.hpp>              // basic_lake
-#include <tabula/square.hpp>            // basic_square
-#include <tabula/vector.hpp>            // basic_vector
 #include <concepts>                     // regular_invocable
+#include <utility>                      // pair
 
 namespace tabula {
 
@@ -36,46 +35,46 @@ struct chequered_rectangle
                 Lake
         >;
 
-        using square_type = basic_square<chequered_rectangle>;
-        using vector_type = basic_vector<chequered_rectangle>;
-
-        [[nodiscard]] static constexpr auto is_within(square_type const& s) noexcept
+        [[nodiscard]] static constexpr auto is_within(auto square) noexcept
         {
+                auto const [ file, rank ] = square;
                 return
-                        0 <= s.file && s.file < Width &&
-                        0 <= s.rank && s.rank < Height
+                        0 <= file && file < Width &&
+                        0 <= rank && rank < Height
                 ;
         }
 
-        [[nodiscard]] static constexpr auto is_lake(square_type const& s) noexcept
-                requires std::regular_invocable<Lake, square_type>
+        [[nodiscard]] static constexpr auto is_lake(auto square) noexcept
+                requires std::regular_invocable<Lake, decltype(square)>
         {
-                return Lake()(s);
+                return Lake()(square);
         }
 
-        [[nodiscard]] static constexpr auto is_colored(square_type const& s) noexcept
+        [[nodiscard]] static constexpr auto is_colored(auto square) noexcept
                 -> bool
         {
-                return (s.file ^ s.rank ^ !Parity) % 2;
+                auto const [ file, rank ] = square;
+                return (file ^ rank ^ !Parity) % 2;
         }
 
-        [[nodiscard]] static constexpr auto is_valid(square_type const& s) noexcept
+        [[nodiscard]] static constexpr auto is_valid(auto square) noexcept
         {
-                return is_within(s) && !is_lake(s) && is_colored(s);
+                return is_within(square) && !is_lake(square) && is_colored(square);
         }
 
-        [[nodiscard]] static constexpr auto square(int index) noexcept
-                -> square_type
+        [[nodiscard]] static constexpr auto index(auto coordinates) noexcept
+        {
+                auto const [ file, rank ] = coordinates;
+                return (file + rank * Width) / 2;
+        };
+
+        [[nodiscard]] static constexpr auto coordinates(int index) noexcept
+                -> std::pair<int, int>
         {
                 index *= 2;
                 index += (Width % 2) ? Parity : Parity ^ ((index / Width) % 2);
                 return { index % Width, index / Width };
         }
-
-        [[nodiscard]] static constexpr auto index(auto arg) noexcept
-        {
-                return (arg.file + arg.rank * Width) / 2;
-        };
 };
 
 }       // namespace tabula

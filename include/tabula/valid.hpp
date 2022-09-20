@@ -5,12 +5,12 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/type_traits.hpp>       // square_t
-#include <optional>                     // nullopt, optional
+#include <tabula/square.hpp>    // basic_square
+#include <optional>             // nullopt, optional
 
 namespace tabula {
 
-template<class Grid, class Square = square_t<Grid>>
+template<class Grid, class Square = basic_square<Grid>>
 [[nodiscard]] constexpr auto first_valid_square() noexcept
         -> std::optional<Square>
 {
@@ -24,7 +24,7 @@ template<class Grid, class Square = square_t<Grid>>
         return std::nullopt;
 }
 
-template<class Grid, class Square = square_t<Grid>>
+template<class Grid, class Square = basic_square<Grid>>
 [[nodiscard]] constexpr auto last_valid_square() noexcept
         -> std::optional<Square>
 {

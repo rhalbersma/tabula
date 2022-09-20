@@ -108,7 +108,7 @@ struct basic_vector
                 return rank < 0;
         }
 
-        [[nodiscard]] constexpr auto index() const noexcept
+        [[nodiscard]] constexpr auto stride() const noexcept
         {
                 return Grid::index(*this);
         }

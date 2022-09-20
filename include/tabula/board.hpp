@@ -10,8 +10,8 @@
 #include <tabula/embedding.hpp>         // basic_embedding
 #include <tabula/functional.hpp>        // compose, flip, flop, swap
 #include <tabula/lake.hpp>              // basic_lake
+#include <tabula/square.hpp>            // basic_square
 #include <tabula/tuple.hpp>             // min_index, transform
-#include <tabula/type_traits.hpp>       // square_t, vector_t
 #include <array>                        // array
 #include <cassert>                      // assert
 #include <cstddef>                      // size_t
@@ -43,12 +43,9 @@ class basic_board
         static constexpr auto transform_v = std::get<idx>(orientations);
         static constexpr auto embedding_v = transform_v(basic_embedding_v);
 
-        using     embedding_type = decltype(embedding_v);
-        using        padded_type = padded_t<embedding_type>;
-        using        square_type = square_t<Grid>;
-        using        vector_type = vector_t<Grid>;
-        using padded_square_type = square_t<padded_type>;
-        using padded_vector_type = vector_t<padded_type>;
+        using embedding_type = decltype(embedding_v);
+        using    padded_type = padded_t<embedding_type>;
+        using    square_type = basic_square<Grid>;
 
         [[nodiscard]] static constexpr auto pad(auto arg) noexcept
         {
@@ -56,7 +53,7 @@ class basic_board
         }
 
         static constexpr auto padded_table = []() {
-                auto table = std::array<int, Grid::size>{};
+                auto table = std::array<std::optional<int>, Grid::size>{};
                 for (auto rank = 0; rank < Grid::height; ++rank) {
                         for (auto file = 0; file < Grid::width; ++file) {
                                 if (auto const square = square_type(file, rank); square.is_valid()) {
@@ -114,14 +111,14 @@ public:
         static constexpr auto padded(square_type const& s) noexcept
         {
                 assert(s.is_valid());
-                return padded_table[static_cast<std::size_t>(s.index())];
+                return *padded_table[static_cast<std::size_t>(s.index())];
         }
 
         static constexpr auto strides = []() {
                 constexpr auto points = basic_compass<Grid>::points;
                 std::array<int, points.size()> table;
                 for (auto i = std::size_t(0); auto p : points) {
-                        table[i++] = pad(p).index();
+                        table[i++] = pad(p).stride();
                 }
                 return table;
         }();

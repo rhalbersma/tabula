@@ -5,17 +5,16 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/type_traits.hpp>   // square_t
-#include <concepts>                 // convertible_to, same_as
-#include <utility>                  // declval
+#include <concepts>     // convertible_to, same_as
+#include <utility>      // declval, pair
 
 namespace tabula {
 
 template<class Grid>
 concept chequered = requires
 {
-        { Grid::parity                                     } -> std::convertible_to<bool>;
-        { Grid::is_colored(std::declval<square_t<Grid>>()) } -> std::       same_as<bool>;
+        { Grid::parity                                          } -> std::convertible_to<bool>;
+        { Grid::is_colored(std::declval<std::pair<int, int>>()) } -> std::       same_as<bool>;
 };
 
 }       // namespace tabula

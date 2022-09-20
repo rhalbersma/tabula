@@ -9,7 +9,6 @@
 #include <fmt/format.h>
 
 #include <tabula/board.hpp>
-#include <tabula/square.hpp>
 
 template<class Grid, class Padding>
 struct fmt::formatter<tabula::basic_board<Grid, Padding>>
@@ -40,16 +39,16 @@ struct fmt::formatter<tabula::basic_board<Grid, Padding>>
         // Formats the point p using the parsed format specification (presentation)
         // stored in this formatter.
         template<typename FormatContext>
-        auto format(tabula::basic_board<Grid, Padding> const& b, FormatContext& ctx)
+        auto format(tabula::basic_board<Grid, Padding> const& board, FormatContext& ctx)
         {
-                for (auto r = b.height - 1; r >= 0; --r) {
-                        for (auto f = 0; f < b.width; ++f) {
-                                if (auto const sq = b.square(f, r); sq.is_valid()) {
-                                        format_to(ctx.out(), "{:>4}", b.padded(sq));
+                for (auto rank = board.height - 1; rank >= 0; --rank) {
+                        for (auto file = 0; file < board.width; ++file) {
+                                if (auto const square = board.square(file, rank); square.is_valid()) {
+                                        format_to(ctx.out(), "{:>4}", board.padded(square));
                                 } else {
                                         format_to(ctx.out(), "{:>4}", "");
                                 }
-                                if (f == b.width - 1) {
+                                if (file == board.width - 1) {
                                         format_to(ctx.out(), "\n");
                                 }
                         }

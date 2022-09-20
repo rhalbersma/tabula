@@ -9,8 +9,8 @@ namespace tabula {
 
 // CSS padding Property: https://www.w3schools.com/cssref/pr_padding.asp
 
-template<int... Margins>
-        requires (((0 <= Margins) && ...) && sizeof...(Margins) <= 4)
+template<int... Sides>
+        requires (((0 <= Sides) && ...) && sizeof...(Sides) <= 4)
 struct basic_padding;
 
 template<int Top, int Right, int Bottom, int Left>
