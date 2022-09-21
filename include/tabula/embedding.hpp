@@ -5,14 +5,38 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <tabula/square.hpp>            // to_square
 #include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, add_padding
-#include <tabula/valid.hpp>             // first_valid_square, last_valid_square
+#include <optional>                     // nullopt, optional
 
 namespace tabula {
 
 template<class Grid, class Padding>
-struct basic_embedding
+class basic_embedding
 {
+        [[nodiscard]] static constexpr auto first_valid_index() noexcept
+                -> std::optional<int>
+        {
+                for (auto index = 0; index < Grid::size; ++index) {
+                        if (auto const square = to_square<Grid>(Grid::coordinates(index)); square.is_valid()) {
+                                return pad(square).index();
+                        }
+                }
+                return std::nullopt;
+        }
+
+        [[nodiscard]] static constexpr auto last_valid_index() noexcept
+                -> std::optional<int>
+        {
+                for (auto index = Grid::size - 1; index >= 0; --index) {
+                        if (auto const square = to_square<Grid>(Grid::coordinates(index)); square.is_valid()) {
+                                return pad(square).index();
+                        }
+                }
+                return std::nullopt;
+        }
+
+public:
         using    grid_type = Grid;
         using padding_type = Padding;
 
@@ -22,36 +46,22 @@ struct basic_embedding
 
         using padded_type = add_padding<Grid, Padding>;
 
-        [[nodiscard]] static constexpr auto flip() noexcept
-                -> flipped_type
-        {
-                return {};
-        }
+        [[nodiscard]] static constexpr auto flip() noexcept -> flipped_type { return {}; }
+        [[nodiscard]] static constexpr auto flop() noexcept -> flopped_type { return {}; }
+        [[nodiscard]] static constexpr auto swap() noexcept -> swapped_type { return {}; }
 
-        [[nodiscard]] static constexpr auto flop() noexcept
-                -> flopped_type
+        [[nodiscard]] static constexpr auto pad(auto coordinates) noexcept
         {
-                return {};
-        }
-
-        [[nodiscard]] static constexpr auto swap() noexcept
-                -> swapped_type
-        {
-                return {};
-        }
-
-        [[nodiscard]] static constexpr auto pad(auto arg) noexcept
-        {
-                return arg.template pad<Padding>();
+                return coordinates.template pad<Padding>();
         }
 
         static constexpr auto min_size = []() {
-                constexpr auto first = first_valid_square<Grid>();
-                constexpr auto last = last_valid_square<Grid>();
+                constexpr auto first = first_valid_index();
+                constexpr auto last = last_valid_index();
                 if constexpr (first && last) {
-                        return last->index() - first->index() + 1;
+                        return *last - *first + 1;
                 } else {
-                        0;
+                        return 0;
                 }
         }();
 };

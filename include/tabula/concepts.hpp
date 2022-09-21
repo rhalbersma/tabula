@@ -6,15 +6,23 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <concepts>     // convertible_to, same_as
-#include <utility>      // declval, pair
+#include <utility>      // std::pair
 
 namespace tabula {
 
 template<class Grid>
-concept chequered = requires
+concept chequered = requires(std::pair<int, int>&& square)
 {
-        { Grid::parity                                          } -> std::convertible_to<bool>;
-        { Grid::is_colored(std::declval<std::pair<int, int>>()) } -> std::       same_as<bool>;
+        { Grid::parity             } -> std::convertible_to<bool>;
+        { Grid::is_colored(square) } -> std::       same_as<bool>;
+};
+
+template<class Square>
+concept transformable = requires(Square&& square)
+{
+        { square.flip() };
+        { square.flop() };
+        { square.swap() };
 };
 
 }       // namespace tabula

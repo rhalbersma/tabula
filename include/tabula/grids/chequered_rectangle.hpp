@@ -5,6 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <tabula/concepts.hpp>          // transformable
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
 #include <tabula/lake.hpp>              // basic_lake
 #include <concepts>                     // regular_invocable
@@ -14,8 +15,30 @@ namespace tabula {
 
 template<int Width, int Height, int Parity = 0, class Lake = basic_lake<>>
         requires (0 < Width &&  0 < Height && (Parity == 0 || Parity == 1))
-struct chequered_rectangle
+class chequered_rectangle
 {
+        [[nodiscard]] static constexpr auto is_within(auto coordinates) noexcept
+        {
+                auto const [ file, rank ] = coordinates;
+                return
+                        0 <= file && file < Width &&
+                        0 <= rank && rank < Height
+                ;
+        }
+
+        [[nodiscard]] static constexpr auto is_colored(auto coordinates) noexcept
+        {
+                auto const [ file, rank ] = coordinates;
+                return !((file ^ rank ^ Parity) % 2);
+        }
+
+        [[nodiscard]] static constexpr auto is_lake(auto square) noexcept
+                requires transformable<decltype(square)> && std::regular_invocable<Lake, decltype(square)>
+        {
+                return Lake()(square);
+        }
+
+public:
         static constexpr auto width  = Width;
         static constexpr auto height = Height;
         static constexpr auto parity = Parity;
@@ -35,31 +58,10 @@ struct chequered_rectangle
                 Lake
         >;
 
-        [[nodiscard]] static constexpr auto is_within(auto square) noexcept
-        {
-                auto const [ file, rank ] = square;
-                return
-                        0 <= file && file < Width &&
-                        0 <= rank && rank < Height
-                ;
-        }
-
-        [[nodiscard]] static constexpr auto is_lake(auto square) noexcept
-                requires std::regular_invocable<Lake, decltype(square)>
-        {
-                return Lake()(square);
-        }
-
-        [[nodiscard]] static constexpr auto is_colored(auto square) noexcept
-                -> bool
-        {
-                auto const [ file, rank ] = square;
-                return (file ^ rank ^ !Parity) % 2;
-        }
-
         [[nodiscard]] static constexpr auto is_valid(auto square) noexcept
+                requires transformable<decltype(square)> && std::regular_invocable<Lake, decltype(square)>
         {
-                return is_within(square) && !is_lake(square) && is_colored(square);
+                return is_within(square) && is_colored(square) && !is_lake(square);
         }
 
         [[nodiscard]] static constexpr auto index(auto coordinates) noexcept

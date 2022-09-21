@@ -6,7 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, add_padding
-#include <tabula/vector.hpp>            // vector
+#include <tabula/vector.hpp>            // basic_vector
 
 namespace tabula {
 
@@ -76,6 +76,13 @@ struct basic_square
                 return Grid::index(*this);
         }
 };
+
+template<class Grid>
+[[nodiscard]] constexpr auto to_square(auto coordinates) noexcept
+{
+        auto const [ file, rank ] = coordinates;
+        return basic_square<Grid>(file, rank);
+}
 
 template<class Grid>
 [[nodiscard]] constexpr auto operator+(basic_square<Grid> const& s, basic_vector<Grid> const& v) noexcept
