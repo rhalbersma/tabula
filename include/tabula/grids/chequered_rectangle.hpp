@@ -51,7 +51,7 @@ public:
         using swapped_type = chequered_rectangle<Height, Width, Parity,                 compose_<Lake, swap_>>;
 
         template<class Padding>
-        using padded = chequered_rectangle<
+        using add_padding = chequered_rectangle<
                 Width  + Padding::left + Padding::right + !((Width + Padding::left + Padding::right) % 2),
                 Height + Padding::top  + Padding::bottom,
                 Parity ^ (Padding::left % 2) ^ (Padding::bottom % 2),

@@ -22,14 +22,14 @@ public:
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
         static constexpr auto points = std::array{
-                vector{ 0,  c},  // N
-                vector{ 1,  1},  // NE
-                vector{ c,  0},  // E
-                vector{ 1, -1},  // SE
-                vector{ 0, -c},  // S
-                vector{-1, -1},  // SW
-                vector{-c,  0},  // W
-                vector{-1,  1}   // NW
+                vector( 0,  c),  // N
+                vector( 1,  1),  // NE
+                vector( c,  0),  // E
+                vector( 1, -1),  // SE
+                vector( 0, -c),  // S
+                vector(-1, -1),  // SW
+                vector(-c,  0),  // W
+                vector(-1,  1)   // NW
         };
 };
 

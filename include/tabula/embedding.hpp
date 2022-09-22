@@ -40,15 +40,11 @@ public:
         using    grid_type = Grid;
         using padding_type = Padding;
 
-        using flipped_type = basic_embedding<flipped_t<Grid>, Padding>;
-        using flopped_type = basic_embedding<flopped_t<Grid>, Padding>;
-        using swapped_type = basic_embedding<swapped_t<Grid>, Padding>;
-
         using padded_type = add_padding<Grid, Padding>;
 
-        [[nodiscard]] static constexpr auto flip() noexcept -> flipped_type { return {}; }
-        [[nodiscard]] static constexpr auto flop() noexcept -> flopped_type { return {}; }
-        [[nodiscard]] static constexpr auto swap() noexcept -> swapped_type { return {}; }
+        [[nodiscard]] static constexpr auto flip() noexcept -> basic_embedding<flipped_t<Grid>, Padding> { return {}; }
+        [[nodiscard]] static constexpr auto flop() noexcept -> basic_embedding<flopped_t<Grid>, Padding> { return {}; }
+        [[nodiscard]] static constexpr auto swap() noexcept -> basic_embedding<swapped_t<Grid>, Padding> { return {}; }
 
         [[nodiscard]] static constexpr auto pad(auto coordinates) noexcept
         {

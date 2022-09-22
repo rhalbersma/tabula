@@ -10,7 +10,7 @@
 #include <tabula/embedding.hpp>         // basic_embedding
 #include <tabula/functional.hpp>        // compose, flip, flop, swap
 #include <tabula/lake.hpp>              // basic_lake
-#include <tabula/square.hpp>            // basic_square
+#include <tabula/square.hpp>            // basic_square, to_square
 #include <tabula/tuple.hpp>             // min_index, transform
 #include <array>                        // array
 #include <cassert>                      // assert
@@ -54,11 +54,9 @@ class basic_board
 
         static constexpr auto padded_table = []() {
                 auto table = std::array<std::optional<int>, Grid::size>{};
-                for (auto rank = 0; rank < Grid::height; ++rank) {
-                        for (auto file = 0; file < Grid::width; ++file) {
-                                if (auto const square = square_type(file, rank); square.is_valid()) {
-                                        table[static_cast<std::size_t>(square.index())] = pad(square).index();
-                                }
+                for (auto index = 0; index < Grid::size; ++index) {
+                        if (auto const square = to_square<Grid>(Grid::coordinates(index)); square.is_valid()) {
+                                table[static_cast<std::size_t>(index)] = pad(square).index();
                         }
                 }
                 return table;

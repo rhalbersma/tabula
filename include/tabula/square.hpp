@@ -18,13 +18,6 @@ struct basic_square
 
         using grid_type = Grid;
 
-        using flipped_type = basic_square<flipped_t<Grid>>;
-        using flopped_type = basic_square<flopped_t<Grid>>;
-        using swapped_type = basic_square<swapped_t<Grid>>;
-
-        template<class Padding>
-        using padded = basic_square<add_padding<Grid, Padding>>;
-
         bool operator==(basic_square const&) const = default;
 
         [[nodiscard]] constexpr auto& operator+=(basic_vector<Grid> const& v) noexcept
@@ -42,26 +35,26 @@ struct basic_square
         }
 
         [[nodiscard]] constexpr auto flip() const noexcept
-                -> flipped_type
+                -> basic_square<flipped_t<Grid>>
         {
                 return { file, Grid::height - 1 - rank };
         }
 
         [[nodiscard]] constexpr auto flop() const noexcept
-                -> flopped_type
+                -> basic_square<flopped_t<Grid>>
         {
                 return { Grid::width - 1 - file, rank };
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept
-                -> swapped_type
+                -> basic_square<swapped_t<Grid>>
         {
                 return { rank, file };
         }
 
         template<class Padding>
         [[nodiscard]] constexpr auto pad() const noexcept
-                -> padded<Padding>
+                -> basic_square<add_padding<Grid, Padding>>
         {
                 return { file + Padding::left, rank + Padding::bottom };
         }

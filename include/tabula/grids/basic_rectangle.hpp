@@ -44,7 +44,7 @@ public:
         using swapped_type = basic_rectangle<Height, Width, compose_<Lake, swap_>>;
 
         template<class Padding>
-        using padded = basic_rectangle<
+        using add_padding = basic_rectangle<
                 Width  + Padding::left + Padding::right,
                 Height + Padding::top  + Padding::bottom,
                 Lake

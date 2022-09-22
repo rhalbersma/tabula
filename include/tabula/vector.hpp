@@ -17,13 +17,6 @@ struct basic_vector
 
         using grid_type = Grid;
 
-        using flipped_type = basic_vector<flipped_t<Grid>>;
-        using flopped_type = basic_vector<flopped_t<Grid>>;
-        using swapped_type = basic_vector<swapped_t<Grid>>;
-
-        template<class Padding>
-        using padded = basic_vector<add_padding<Grid, Padding>>;
-
         bool operator==(basic_vector const&) const = default;
 
         [[nodiscard]] constexpr auto& operator+=(basic_vector const& other) noexcept
@@ -54,26 +47,26 @@ struct basic_vector
         }
 
         [[nodiscard]] constexpr auto flip() const noexcept
-                -> flipped_type
+                -> basic_vector<flipped_t<Grid>>
         {
                 return { file, -rank };
         }
 
         [[nodiscard]] constexpr auto flop() const noexcept
-                -> flopped_type
+                -> basic_vector<flopped_t<Grid>>
         {
                 return { -file, rank };
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept
-                -> swapped_type
+                -> basic_vector<swapped_t<Grid>>
         {
                 return { rank, file };
         }
 
         template<class Padding>
         [[nodiscard]] constexpr auto pad() const noexcept
-                -> padded<Padding>
+                -> basic_vector<add_padding<Grid, Padding>>
         {
                 return { file, rank };
         }
@@ -113,6 +106,13 @@ struct basic_vector
                 return Grid::index(*this);
         }
 };
+
+template<class Grid>
+[[nodiscard]] constexpr auto to_vector(auto coordinates) noexcept
+{
+        auto const [ file, rank ] = coordinates;
+        return basic_vector<Grid>(file, rank);
+}
 
 template<class Grid>
 [[nodiscard]] constexpr auto operator+(basic_vector<Grid> const& lhs, basic_vector<Grid> const& rhs) noexcept

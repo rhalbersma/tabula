@@ -14,6 +14,6 @@ template<class T> using swapped_t = typename T::swapped_type;
 template<class T> using padded_t = typename T::padded_type;
 
 template<class T, class P>
-using add_padding = typename T::template padded<P>;
+using add_padding = typename T::template add_padding<P>;
 
 }       // namespace tabula
