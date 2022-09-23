@@ -5,13 +5,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/concepts.hpp>          // transformable
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
 #include <tabula/lake.hpp>              // basic_lake_
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/vector.hpp>            // basic_vector
 #include <array>                        // array
-#include <concepts>                     // regular_invocable
 #include <utility>                      // pair
 
 namespace tabula {
@@ -32,7 +30,6 @@ class basic_rectangle
         }
 
         [[nodiscard]] static constexpr auto is_lake(square_type const& square) noexcept
-                requires transformable<square_type> && std::regular_invocable<Lake, square_type>
         {
                 return Lake()(square);
         }
@@ -69,7 +66,6 @@ public:
         };
 
         [[nodiscard]] static constexpr auto is_valid(square_type const& square) noexcept
-                requires transformable<square_type> && std::regular_invocable<Lake, square_type>
         {
                 return is_within(square) && !is_lake(square);
         }

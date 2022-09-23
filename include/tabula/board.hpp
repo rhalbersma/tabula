@@ -46,9 +46,9 @@ class basic_board
         using    padded_type = padded_t<embedding_type>;
         using    square_type = basic_square<Grid>;
 
-        [[nodiscard]] static constexpr auto pad(auto arg) noexcept
+        [[nodiscard]] static constexpr auto pad(auto const& coordinates) noexcept
         {
-                return embedding_v.pad(transform_v(arg));
+                return embedding_v.pad(transform_v(coordinates));
         }
 
         static constexpr auto padded_table = []() {

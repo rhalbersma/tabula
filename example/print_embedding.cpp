@@ -8,7 +8,6 @@
 #include <fmt/ranges.h>
 
 #include <tabula/board.hpp>     // basic_board
-#include <tabula/concepts.hpp>  // chequered
 #include <tabula/format.hpp>    // print
 #include <tabula/games.hpp>     // draughts, stratego
 #include <tabula/tuple.hpp>     // for_each, enumerate

@@ -5,7 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <concepts>     // convertible_to, same_as
+#include <concepts>     // convertible_to
 
 namespace tabula {
 
@@ -13,14 +13,6 @@ template<class Grid>
 concept chequered = requires
 {
         { Grid::parity } -> std::convertible_to<bool>;
-};
-
-template<class Coordinates>
-concept transformable = requires(Coordinates&& coordinates)
-{
-        { coordinates.flip() };
-        { coordinates.flop() };
-        { coordinates.swap() };
 };
 
 }       // namespace tabula
