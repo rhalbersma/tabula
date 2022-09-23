@@ -6,9 +6,9 @@
 #define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
 #define BOOST_MPL_LIMIT_VECTOR_SIZE 50
 
-#include <tabula/compass.hpp>           // basic_compass
 #include <tabula/games.hpp>             // draughts, stratego
 #include <tabula/grids.hpp>             // basic_rectangle, chequered_rectangle
+#include <tabula/vector.hpp>            // to_vector
 #include <boost/mpl/vector.hpp>         // vector
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
 
@@ -52,26 +52,23 @@ using grid_types = boost::mpl::vector
 ,       chequered_rectangle<5, 3, 1>
 >;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(IsCardinal, T, grid_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(IsCardinal, Grid, grid_types)
 {
-        using compass = basic_compass<T>;
-        for (auto p : { compass::N, compass::E, compass::S, compass::W }) {
-                BOOST_CHECK(compass::points[p].is_cardinal());
+        for (auto d : { Grid::N, Grid::E, Grid::S, Grid::W }) {
+                BOOST_CHECK(Grid::directions[d].is_cardinal());
         }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(IsOrdinal, T, grid_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(IsOrdinal, Grid, grid_types)
 {
-        using compass = basic_compass<T>;
-        for (auto p : { compass::NE, compass::SE, compass::SW, compass::NW }) {
-                BOOST_CHECK(compass::points[p].is_ordinal());
+        for (auto d : { Grid::NE, Grid::SE, Grid::SW, Grid::NW }) {
+                BOOST_CHECK(Grid::directions[d].is_ordinal());
         }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, T, grid_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, Grid, grid_types)
 {
-        using compass = basic_compass<T>;
-        for (auto p : compass::points) {
+        for (auto p : Grid::directions) {
                 auto const r = p.reverse();
                 BOOST_CHECK((p != r));
                 BOOST_CHECK_EQUAL(p.is_left() ,  r.is_right());

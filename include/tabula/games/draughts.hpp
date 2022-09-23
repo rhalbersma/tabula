@@ -7,12 +7,12 @@
 
 #include <tabula/board.hpp>     // basic_board
 #include <tabula/grids.hpp>     // basic_rectangle, chequered_rectangle
-#include <tabula/lake.hpp>      // basic_lake, square_
+#include <tabula/lake.hpp>      // basic_lake_, algebraic_
 #include <tabula/padding.hpp>   // basic_padding, right_padding
 
 namespace tabula::draughts {
 
-template<int Width, int Height, int Parity = 0, class Padding = right_padding<1>, class Lake = basic_lake<>>
+template<int Width, int Height, int Parity = 0, class Padding = right_padding<1>, class Lake = basic_lake_<>>
 using basic_draughts = basic_board<
         chequered_rectangle<Width, Height, Parity, Lake>,
         Padding
@@ -48,8 +48,8 @@ using ktar              = basic_draughts<Width, Height, 1>;
 
 // Removing square j10 or adding square k9 to the 10x10 board
 // yields a winning endgame of 3 kings vs 1 king.
-using mertens_cut_j10   = basic_draughts<10, 10, 0, right_padding<1>, basic_lake<square_<'j',10>>>;
-using mertens_add_k9    = basic_draughts<11, 10, 0, right_padding<1>, basic_lake<square_<'k',7>, square_<'k',5>, square_<'k',3>, square_<'k',1>>>;
+using mertens_cut_j10   = basic_draughts<10, 10, 0, right_padding<1>, basic_lake_<algebraic_<'j',10>>>;
+using mertens_add_k9    = basic_draughts<11, 10, 0, right_padding<1>, basic_lake_<algebraic_<'k',7>, algebraic_<'k',5>, algebraic_<'k',3>, algebraic_<'k',1>>>;
 
 using turkish           = basic_board<basic_rectangle<8, 8>, right_padding<1>>;
 using dameo             = turkish;

@@ -7,7 +7,7 @@
 #define BOOST_MPL_LIMIT_VECTOR_SIZE 50
 
 #include <tabula/grids.hpp>             // basic_rectangle, chequered_rectangle
-#include <tabula/square.hpp>            // basic_square, to_square
+#include <tabula/square.hpp>            // basic_square
 #include <boost/mpl/vector.hpp>         // vector
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
 #include <utility>                      // pair
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(CoordinatesAreInvertible, Grid, grid_types)
         for (auto rank = 0; rank < Grid::height; ++rank) {
                 for (auto file = 0; file < Grid::width; ++file) {
                         if (auto const square = basic_square<Grid>(file, rank); square.is_valid()) {
-                                BOOST_CHECK(square == to_square<Grid>(Grid::coordinates(Grid::index(square))));
+                                BOOST_CHECK(square == Grid::coordinates(Grid::index(square)));
                         }
                 }
         }

@@ -7,33 +7,36 @@
 
 #include <tabula/concepts.hpp>          // transformable
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
-#include <tabula/lake.hpp>              // basic_lake
+#include <tabula/lake.hpp>              // basic_lake_
+#include <tabula/square.hpp>            // basic_square
+#include <tabula/vector.hpp>            // basic_vector
 #include <concepts>                     // regular_invocable
 #include <utility>                      // pair
 
 namespace tabula {
 
-template<int Width, int Height, int Parity = 0, class Lake = basic_lake<>>
+template<int Width, int Height, int Parity = 0, class Lake = basic_lake_<>>
         requires (0 < Width &&  0 < Height && (Parity == 0 || Parity == 1))
 class chequered_rectangle
 {
-        [[nodiscard]] static constexpr auto is_within(auto coordinates) noexcept
+        using square_type = basic_square<chequered_rectangle<Width, Height, Parity, Lake>>;
+        using vector_type = basic_vector<chequered_rectangle<Width, Height, Parity, Lake>>;
+
+        [[nodiscard]] static constexpr auto is_within(square_type const& square) noexcept
         {
-                auto const [ file, rank ] = coordinates;
                 return
-                        0 <= file && file < Width &&
-                        0 <= rank && rank < Height
+                        0 <= square.file && square.file < Width &&
+                        0 <= square.rank && square.rank < Height
                 ;
         }
 
-        [[nodiscard]] static constexpr auto is_colored(auto coordinates) noexcept
+        [[nodiscard]] static constexpr auto is_colored(square_type const& square) noexcept
         {
-                auto const [ file, rank ] = coordinates;
-                return !((file ^ rank ^ Parity) % 2);
+                return !((square.file ^ square.rank ^ Parity) % 2);
         }
 
-        [[nodiscard]] static constexpr auto is_lake(auto square) noexcept
-                requires transformable<decltype(square)> && std::regular_invocable<Lake, decltype(square)>
+        [[nodiscard]] static constexpr auto is_lake(square_type const& square) noexcept
+                requires transformable<square_type> && std::regular_invocable<Lake, square_type>
         {
                 return Lake()(square);
         }
@@ -58,20 +61,33 @@ public:
                 Lake
         >;
 
-        [[nodiscard]] static constexpr auto is_valid(auto square) noexcept
-                requires transformable<decltype(square)> && std::regular_invocable<Lake, decltype(square)>
+        enum : unsigned { N, NE, E, SE, S, SW, W, NW };
+
+        static constexpr auto directions = std::array{
+                vector_type( 0,  2),    // N
+                vector_type( 1,  1),    // NE
+                vector_type( 2,  0),    // E
+                vector_type( 1, -1),    // SE
+                vector_type( 0, -2),    // S
+                vector_type(-1, -1),    // SW
+                vector_type(-2,  0),    // W
+                vector_type(-1,  1)     // NW
+        };
+
+        [[nodiscard]] static constexpr auto is_valid(square_type const& square) noexcept
+                requires transformable<square_type> && std::regular_invocable<Lake, square_type>
         {
                 return is_within(square) && is_colored(square) && !is_lake(square);
         }
 
-        [[nodiscard]] static constexpr auto index(auto coordinates) noexcept
+        [[nodiscard]] static constexpr auto index(auto const& coordinates) noexcept
         {
                 auto const [ file, rank ] = coordinates;
                 return (file + rank * Width) / 2;
         };
 
         [[nodiscard]] static constexpr auto coordinates(int index) noexcept
-                -> std::pair<int, int>
+                -> square_type
         {
                 index *= 2;
                 index += (Width % 2) ? Parity : Parity ^ ((index / Width) % 2);

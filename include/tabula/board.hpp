@@ -5,13 +5,12 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/compass.hpp>           // basic_compass
 #include <tabula/concepts.hpp>          // chequered
 #include <tabula/embedding.hpp>         // basic_embedding
 #include <tabula/functional.hpp>        // compose, flip, flop, swap
-#include <tabula/lake.hpp>              // basic_lake
 #include <tabula/square.hpp>            // basic_square, to_square
 #include <tabula/tuple.hpp>             // min_index, transform
+#include <tabula/vector.hpp>            // to_vector
 #include <array>                        // array
 #include <cassert>                      // assert
 #include <cstddef>                      // size_t
@@ -55,7 +54,7 @@ class basic_board
         static constexpr auto padded_table = []() {
                 auto table = std::array<std::optional<int>, Grid::size>{};
                 for (auto index = 0; index < Grid::size; ++index) {
-                        if (auto const square = to_square<Grid>(Grid::coordinates(index)); square.is_valid()) {
+                        if (auto const square = Grid::coordinates(index); square.is_valid()) {
                                 table[static_cast<std::size_t>(index)] = pad(square).index();
                         }
                 }
@@ -113,10 +112,9 @@ public:
         }
 
         static constexpr auto strides = []() {
-                constexpr auto points = basic_compass<Grid>::points;
-                std::array<int, points.size()> table;
-                for (auto i = std::size_t(0); auto p : points) {
-                        table[i++] = pad(p).stride();
+                std::array<int, Grid::directions.size()> table;
+                for (auto index = std::size_t(0); auto direction : Grid::directions) {
+                        table[index++] = pad(direction).stride();
                 }
                 return table;
         }();

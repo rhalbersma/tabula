@@ -8,19 +8,22 @@
 namespace tabula {
 
 template<class... Squares>
-struct basic_lake;
+struct basic_lake_;
+
+template<int File, int Rank>
+        requires (File >= 0 && Rank >= 0)
+struct basic_square_;
 
 template<char File, int Rank>
         requires (File >= 'a' && Rank >= 1)
-struct square_;
+using algebraic_ = basic_square_<File - 'a', Rank - 1>;
 
-template<char... Files, int... Ranks>
-struct basic_lake<square_<Files, Ranks>...>
+template<int... Files, int... Ranks>
+struct basic_lake_<basic_square_<Files, Ranks>...>
 {
-        template<class Square>
-        [[nodiscard]] constexpr auto operator()(Square const& s) const noexcept
+        [[nodiscard]] constexpr auto operator()(auto square) const noexcept
         {
-                return (... || (s == Square(Files - 'a', Ranks - 1)));
+                return (... || (square == decltype(square)(Files, Ranks)));
         }
 };
 

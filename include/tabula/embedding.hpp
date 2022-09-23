@@ -5,7 +5,6 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/square.hpp>            // to_square
 #include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, add_padding
 #include <optional>                     // nullopt, optional
 
@@ -18,7 +17,7 @@ class basic_embedding
                 -> std::optional<int>
         {
                 for (auto index = 0; index < Grid::size; ++index) {
-                        if (auto const square = to_square<Grid>(Grid::coordinates(index)); square.is_valid()) {
+                        if (auto const square = Grid::coordinates(index); square.is_valid()) {
                                 return pad(square).index();
                         }
                 }
@@ -29,7 +28,7 @@ class basic_embedding
                 -> std::optional<int>
         {
                 for (auto index = Grid::size - 1; index >= 0; --index) {
-                        if (auto const square = to_square<Grid>(Grid::coordinates(index)); square.is_valid()) {
+                        if (auto const square = Grid::coordinates(index); square.is_valid()) {
                                 return pad(square).index();
                         }
                 }
@@ -54,11 +53,7 @@ public:
         static constexpr auto min_size = []() {
                 constexpr auto first = first_valid_index();
                 constexpr auto last = last_valid_index();
-                if constexpr (first && last) {
-                        return *last - *first + 1;
-                } else {
-                        return 0;
-                }
+                return first && last ? *last - *first + 1 : 0;
         }();
 };
 
