@@ -8,9 +8,8 @@
 #include <tabula/concepts.hpp>          // chequered
 #include <tabula/embedding.hpp>         // basic_embedding
 #include <tabula/functional.hpp>        // compose, flip, flop, swap
-#include <tabula/square.hpp>            // basic_square, to_square
+#include <tabula/square.hpp>            // basic_square
 #include <tabula/tuple.hpp>             // min_index, transform
-#include <tabula/vector.hpp>            // to_vector
 #include <array>                        // array
 #include <cassert>                      // assert
 #include <cstddef>                      // size_t
@@ -36,7 +35,7 @@ class basic_board
         static constexpr auto basic_embedding_v = basic_embedding<Grid, Padding>();
         static constexpr auto idx = min_index(
                 transform(orientations, [](auto fun) {
-                        return fun(basic_embedding_v).min_size;
+                        return fun(basic_embedding_v).valid_range;
                 })
         );
         static constexpr auto transform_v = std::get<idx>(orientations);
@@ -54,7 +53,7 @@ class basic_board
         static constexpr auto padded_table = []() {
                 auto table = std::array<std::optional<int>, Grid::size>{};
                 for (auto index = 0; index < Grid::size; ++index) {
-                        if (auto const square = Grid::coordinates(index); square.is_valid()) {
+                        if (auto const square = Grid::square(index); square.is_valid()) {
                                 table[static_cast<std::size_t>(index)] = pad(square).index();
                         }
                 }
@@ -73,7 +72,7 @@ public:
         static constexpr auto padded_height = padded_type::height;
         static constexpr auto padded_size   = padded_type::size;
 
-        static constexpr auto min_size  = embedding_type::min_size;
+        static constexpr auto valid_range = embedding_type::valid_range;
 
         static constexpr auto is_chequered = chequered<Grid>;
 

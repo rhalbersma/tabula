@@ -82,7 +82,7 @@ public:
                 return (file + rank * Width) / 2;
         };
 
-        [[nodiscard]] static constexpr auto coordinates(int index) noexcept
+        [[nodiscard]] static constexpr auto square(int index) noexcept
                 -> square_type
         {
                 index *= 2;

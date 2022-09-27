@@ -17,7 +17,7 @@ class basic_embedding
                 -> std::optional<int>
         {
                 for (auto index = 0; index < Grid::size; ++index) {
-                        if (auto const square = Grid::coordinates(index); square.is_valid()) {
+                        if (auto const square = Grid::square(index); square.is_valid()) {
                                 return pad(square).index();
                         }
                 }
@@ -28,7 +28,7 @@ class basic_embedding
                 -> std::optional<int>
         {
                 for (auto index = Grid::size - 1; index >= 0; --index) {
-                        if (auto const square = Grid::coordinates(index); square.is_valid()) {
+                        if (auto const square = Grid::square(index); square.is_valid()) {
                                 return pad(square).index();
                         }
                 }
@@ -50,7 +50,7 @@ public:
                 return coordinates.template pad<Padding>();
         }
 
-        static constexpr auto min_size = []() {
+        static constexpr auto valid_range = []() {
                 constexpr auto first = first_valid_index();
                 constexpr auto last = last_valid_index();
                 return first && last ? *last - *first + 1 : 0;

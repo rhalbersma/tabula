@@ -46,6 +46,8 @@ int main()
                 // 10x10 draughts with 19x10 vector representation
                 basic_board<chequered_rectangle<10, 10>, right_padding<9>>(),
 
+                draughts::cylinder(),
+
                 // stratego variants
                 stratego::l_attaque(),
                 stratego::classic(),
@@ -75,7 +77,7 @@ int main()
                 if constexpr (b.is_chequered) {
                         fmt::print(", P = {}", b.padded_parity());
                 }
-                fmt::print(", size = {} ({})\n", b.padded_size, b.min_size);
+                fmt::print(", size = {} ({})\n", b.padded_size, b.valid_range);
                 fmt::print("directional strides: {}\n", b.strides);
                 fmt::print("{:->40}\n", "");
         });

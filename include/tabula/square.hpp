@@ -71,13 +71,6 @@ struct basic_square
 };
 
 template<class Grid>
-[[nodiscard]] constexpr auto to_square(auto coordinates) noexcept
-{
-        auto const [ file, rank ] = coordinates;
-        return basic_square<Grid>(file, rank);
-}
-
-template<class Grid>
 [[nodiscard]] constexpr auto operator+(basic_square<Grid> const& s, basic_vector<Grid> const& v) noexcept
 {
         auto nrv = s; nrv += v; return nrv;

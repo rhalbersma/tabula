@@ -108,13 +108,6 @@ struct basic_vector
 };
 
 template<class Grid>
-[[nodiscard]] constexpr auto to_vector(auto coordinates) noexcept
-{
-        auto const [ file, rank ] = coordinates;
-        return basic_vector<Grid>(file, rank);
-}
-
-template<class Grid>
 [[nodiscard]] constexpr auto operator+(basic_vector<Grid> const& lhs, basic_vector<Grid> const& rhs) noexcept
 {
         auto nrv = lhs; nrv += rhs; return nrv;
