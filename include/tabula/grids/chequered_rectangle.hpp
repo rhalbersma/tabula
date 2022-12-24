@@ -80,7 +80,7 @@ public:
         {
                 auto const [ file, rank ] = coordinates;
                 return (file + rank * Width) / 2;
-        };
+        }
 
         [[nodiscard]] static constexpr auto square(int index) noexcept
                 -> square_type
