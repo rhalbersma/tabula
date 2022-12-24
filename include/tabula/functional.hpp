@@ -8,7 +8,6 @@
 #include <functional>   // identity
 
 namespace tabula {
-namespace detail {
 
 template<class F>
 struct composable
@@ -24,22 +23,16 @@ constexpr auto operator>>(composable<F> f, composable<G> g) noexcept
         });
 }
 
-}       // namespace detail
-
 inline constexpr auto identity = std::identity();
-inline constexpr auto compose = [](auto... fs) {
-        return (detail::composable(fs) >> ... >> detail::composable(identity)).call;
+inline constexpr auto composed = [](auto... fs) {
+        return (composable(fs) >> ... >> composable(identity)).call;
 };
 
-namespace detail {
+template<class... Fs>
+inline constexpr auto compose = [](auto arg) { return composed(Fs()...)(arg); };
 
 template<class... Fs>
-inline constexpr auto composed = [](auto arg) { return compose(Fs()...)(arg); };
-
-}       // namespace detail
-
-template<class... Fs>
-using compose_ = decltype(detail::composed<Fs...>);
+using compose_ = decltype(compose<Fs...>);
 
 inline constexpr auto flip = [](auto arg) { return arg.flip(); };
 inline constexpr auto flop = [](auto arg) { return arg.flop(); };

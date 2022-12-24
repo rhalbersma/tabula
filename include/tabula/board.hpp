@@ -7,7 +7,7 @@
 
 #include <tabula/concepts.hpp>          // chequered
 #include <tabula/embedding.hpp>         // basic_embedding
-#include <tabula/functional.hpp>        // compose, flip, flop, swap
+#include <tabula/functional.hpp>        // composed, flip, flop, swap
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/tuple.hpp>             // min_index, transform
 #include <array>                        // array
@@ -22,11 +22,11 @@ inline constexpr auto orientations = std::tuple(
         identity,                       // origin at bottom-left,  left-to-right, bottom-to-top
         swap,                           // origin at bottom-left,  bottom-to-top, left-to-right
         flip,                           // origin at top-left,     left-to-right, top-to-bottom
-        compose(swap, flip),            // origin at top-left,     top-to-bottom, left-to-right
+        composed(swap, flip),           // origin at top-left,     top-to-bottom, left-to-right
         flop,                           // origin at bottom-right, right-to-left, bottom-to-top
-        compose(swap, flop),            // origin at bottom-right, bottom-to-top, right-to-left
-        compose(flop, flip),            // origin at top-right,    right-to-left, top-to-bottom
-        compose(swap, flop, flip)       // origin at top-right,    top-to-bottom, right-to-left
+        composed(swap, flop),           // origin at bottom-right, bottom-to-top, right-to-left
+        composed(flop, flip),           // origin at top-right,    right-to-left, top-to-bottom
+        composed(swap, flop, flip)      // origin at top-right,    top-to-bottom, right-to-left
 );
 
 template<class Grid, class Padding>

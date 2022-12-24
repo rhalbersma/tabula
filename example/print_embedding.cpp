@@ -46,8 +46,6 @@ int main()
                 // 10x10 draughts with 19x10 vector representation
                 basic_board<chequered_rectangle<10, 10>, right_padding<9>>(),
 
-                draughts::cylinder(),
-
                 // stratego variants
                 stratego::l_attaque(),
                 stratego::classic(),
