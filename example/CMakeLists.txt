@@ -15,11 +15,17 @@ set(cxx_compile_options_warnings
         /permissive-
         /WX
     >
+    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+        -Werror
+        -pedantic-errors
+    >
     $<$<CXX_COMPILER_ID:Clang>:
         -Weverything
         -Wno-unknown-warning-option     # forward compatibility for new Clang warnings
         -Wno-c++98-compat
         -Wno-c++98-compat-pedantic
+        -Wno-padded
+        -Wno-unsafe-buffer-usage
         -Wno-global-constructors        # triggered by std::ios_base::xalloc()
     >
     $<$<CXX_COMPILER_ID:GNU>:
@@ -31,10 +37,6 @@ set(cxx_compile_options_warnings
         -Wsign-compare
         -Wsign-conversion
         -Wsign-promo
-    >
-    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
-        -Werror
-        -pedantic-errors
     >
 )
 

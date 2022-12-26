@@ -25,12 +25,17 @@ set(cxx_compile_options_warnings
         /permissive-
         /WX
     >
+    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+        -Werror
+        -pedantic-errors
+    >
     $<$<CXX_COMPILER_ID:Clang>:
         -Weverything
         -Wno-unknown-warning-option         # forward compatibility for new Clang warnings
         -Wno-c++98-compat
         -Wno-c++98-compat-pedantic
-        -Wno-c++20-compat
+        -Wno-padded
+        -Wno-unsafe-buffer-usage
         -Wno-disabled-macro-expansion       # triggered by Boost.Test
         -Wno-global-constructors            # triggered by Boost.Test
         -Wno-used-but-marked-unused         # triggered by Boost.Test
@@ -44,10 +49,6 @@ set(cxx_compile_options_warnings
         -Wsign-compare
         -Wsign-conversion
         -Wsign-promo
-    >
-    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
-        -Werror
-        -pedantic-errors
     >
 )
 

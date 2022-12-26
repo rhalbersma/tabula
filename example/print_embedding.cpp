@@ -9,7 +9,7 @@
 
 #include <tabula/board.hpp>     // basic_board
 #include <tabula/format.hpp>    // print
-#include <tabula/games.hpp>     // draughts, stratego
+#include <tabula/games.hpp>     // chess, draughts, stratego
 #include <tabula/tuple.hpp>     // for_each, enumerate
 #include <tuple>                // tuple
 

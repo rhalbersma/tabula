@@ -55,14 +55,14 @@ public:
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
         static constexpr auto directions = std::array{
-                vector_type( 0,  1),    // N
-                vector_type( 1,  1),    // NE
-                vector_type( 1,  0),    // E
-                vector_type( 1, -1),    // SE
-                vector_type( 0, -1),    // S
-                vector_type(-1, -1),    // SW
-                vector_type(-1,  0),    // W
-                vector_type(-1,  1)     // NW
+                vector_type{ 0,  1},    // N
+                vector_type{ 1,  1},    // NE
+                vector_type{ 1,  0},    // E
+                vector_type{ 1, -1},    // SE
+                vector_type{ 0, -1},    // S
+                vector_type{-1, -1},    // SW
+                vector_type{-1,  0},    // W
+                vector_type{-1,  1}     // NW
         };
 
         [[nodiscard]] static constexpr auto is_valid(square_type const& square) noexcept

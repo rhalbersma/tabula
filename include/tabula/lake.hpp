@@ -11,11 +11,11 @@ template<class... Squares>
 struct basic_lake_;
 
 template<int File, int Rank>
-        requires (File >= 0 && Rank >= 0)
+        requires (0 <= File && 0 <= Rank)
 struct basic_square_;
 
 template<char File, int Rank>
-        requires (File >= 'a' && Rank >= 1)
+        requires ('a' <= File && 1 <= Rank)
 using algebraic_ = basic_square_<File - 'a', Rank - 1>;
 
 template<int... Files, int... Ranks>
@@ -23,7 +23,7 @@ struct basic_lake_<basic_square_<Files, Ranks>...>
 {
         [[nodiscard]] constexpr auto operator()(auto square) const noexcept
         {
-                return (... || (square == decltype(square)(Files, Ranks)));
+                return (... || (square == decltype(square){Files, Ranks}));
         }
 };
 

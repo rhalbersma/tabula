@@ -10,7 +10,6 @@
 #include <tabula/square.hpp>            // basic_square
 #include <boost/mpl/vector.hpp>         // vector
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
-#include <utility>                      // pair
 
 using namespace tabula;
 
@@ -63,7 +62,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(SquareIsInvertible, Grid, grid_types)
 {
         for (auto rank = 0; rank < Grid::height; ++rank) {
                 for (auto file = 0; file < Grid::width; ++file) {
-                        if (auto const square = basic_square<Grid>(file, rank); square.is_valid()) {
+                        if (auto const square = basic_square<Grid>{file, rank}; square.is_valid()) {
                                 BOOST_CHECK(square == Grid::square(Grid::index(square)));
                         }
                 }

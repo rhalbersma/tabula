@@ -15,17 +15,22 @@ struct composable
         F call;
 };
 
+// Explicit deduction guide to support Clang 13, 14, 15, 16-SVN
+// https://stackoverflow.com/a/70660785/819272
+template<class F>
+composable(F) -> composable<F>;
+
 template<class F, class G>
 constexpr auto operator>>(composable<F> f, composable<G> g) noexcept
 {
-        return composable([=](auto arg) {
+        return composable{[=](auto arg) {
                 return f.call(g.call(arg));
-        });
+        }};
 }
 
 inline constexpr auto identity = std::identity();
 inline constexpr auto composed = [](auto... fs) {
-        return (composable(fs) >> ... >> composable(identity)).call;
+        return (composable{fs} >> ... >> composable{identity}).call;
 };
 
 template<class... Fs>
