@@ -12,13 +12,13 @@
 namespace tabula {
 
 template<bool B>
-constexpr auto bool_c = std::bool_constant<B>();
+inline constexpr auto bool_c = std::bool_constant<B>();
 
 template<int N>
-constexpr auto int_c = std::integral_constant<int, N>();
+inline constexpr auto int_c = std::integral_constant<int, N>();
 
 template<class T, T... Ns>
-constexpr auto tuple_c = std::tuple(std::integral_constant<T, Ns>()...);
+inline constexpr auto tuple_c = std::tuple(std::integral_constant<T, Ns>()...);
 
 constexpr auto for_each(auto tup, auto fun) noexcept
 {
@@ -75,8 +75,8 @@ constexpr auto remove_if(auto tup, auto pred) noexcept
         }, tup);
 }
 
-template<class Cmp = std::less<>>
-constexpr auto min_index(auto tup, Cmp cmp = Cmp()) noexcept
+template<class Compare = std::less<>>
+constexpr auto min_index(auto tup, Compare cmp = Compare()) noexcept
 {
         return std::apply([=, index = 0, i = 1](auto head, auto... tail) mutable {
                 auto min = head;

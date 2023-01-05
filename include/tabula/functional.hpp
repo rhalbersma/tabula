@@ -23,9 +23,7 @@ composable(F) -> composable<F>;
 template<class F, class G>
 constexpr auto operator>>(composable<F> f, composable<G> g) noexcept
 {
-        return composable{[=](auto arg) {
-                return f.call(g.call(arg));
-        }};
+        return composable{ [=](auto arg) { return f.call(g.call(arg)); }};
 }
 
 inline constexpr auto identity = std::identity();
