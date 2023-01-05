@@ -26,7 +26,6 @@ set(cxx_compile_options_warnings
         -Wno-c++98-compat-pedantic
         -Wno-padded
         -Wno-unsafe-buffer-usage
-        -Wno-global-constructors        # triggered by std::ios_base::xalloc()
     >
     $<$<CXX_COMPILER_ID:GNU>:
         -Wall

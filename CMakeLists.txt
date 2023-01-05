@@ -18,10 +18,12 @@ set(project_include_dir
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
 )
+
 target_include_directories(
     ${PROJECT_NAME} INTERFACE
     ${project_include_dir}
 )
+
 # {fmt} has -Wshadow and -Wsign-conversion errors that are deliberately ignored in its build config.
 # The SYSTEM flag will treat {fmt} on the same footing as system headers and ignore these warnings.
 target_include_directories(
