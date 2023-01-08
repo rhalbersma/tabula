@@ -8,6 +8,7 @@
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
 #include <tabula/lake.hpp>              // basic_lake_
 #include <tabula/square.hpp>            // basic_square
+#include <tabula/type_traits.hpp>       // add_padding
 #include <tabula/vector.hpp>            // basic_vector
 #include <array>                        // array
 #include <utility>                      // pair
@@ -45,13 +46,6 @@ public:
         using flopped_type = basic_rectangle<Width, Height, compose_<Lake, flop_>>;
         using swapped_type = basic_rectangle<Height, Width, compose_<Lake, swap_>>;
 
-        template<class Padding>
-        using add_padding = basic_rectangle<
-                Width  + Padding::left + Padding::right,
-                Height + Padding::top  + Padding::bottom,
-                Lake
-        >;
-
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
         static constexpr auto directions = std::array{
@@ -81,6 +75,17 @@ public:
         {
                 return { index % Width, index / Width };
         }
+};
+
+template<int Width, int Height, class Lake, class Padding>
+struct add_padding<basic_rectangle<Width, Height, Lake>, Padding>
+{
+        using type = basic_rectangle
+        <
+                Width  + Padding::left + Padding::right,
+                Height + Padding::top  + Padding::bottom,
+                Lake
+        >;
 };
 
 }       // namespace tabula

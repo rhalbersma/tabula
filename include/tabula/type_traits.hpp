@@ -10,10 +10,12 @@ namespace tabula {
 template<class T> using flipped_t = typename T::flipped_type;
 template<class T> using flopped_t = typename T::flopped_type;
 template<class T> using swapped_t = typename T::swapped_type;
+template<class T> using  padded_t = typename T:: padded_type;
 
-template<class T> using padded_t = typename T::padded_type;
+template<class, class>
+struct add_padding;
 
 template<class T, class P>
-using add_padding = typename T::template add_padding<P>;
+using add_padding_t = typename add_padding<T, P>::type;
 
 }       // namespace tabula

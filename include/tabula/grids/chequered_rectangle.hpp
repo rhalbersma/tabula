@@ -8,6 +8,7 @@
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
 #include <tabula/lake.hpp>              // basic_lake_
 #include <tabula/square.hpp>            // basic_square
+#include <tabula/type_traits.hpp>       // add_padding
 #include <tabula/vector.hpp>            // basic_vector
 #include <utility>                      // pair
 
@@ -50,14 +51,6 @@ public:
         using flopped_type = chequered_rectangle<Width, Height, Parity ^ !(Width  % 2), compose_<Lake, flop_>>;
         using swapped_type = chequered_rectangle<Height, Width, Parity,                 compose_<Lake, swap_>>;
 
-        template<class Padding>
-        using add_padding = chequered_rectangle<
-                Width  + Padding::left + Padding::right + !((Width + Padding::left + Padding::right) % 2),
-                Height + Padding::top  + Padding::bottom,
-                Parity ^ (Padding::left % 2) ^ (Padding::bottom % 2),
-                Lake
-        >;
-
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
         static constexpr auto directions = std::array{
@@ -89,6 +82,18 @@ public:
                 index += (Width % 2) ? Parity : Parity ^ ((index / Width) % 2);
                 return { index % Width, index / Width };
         }
+};
+
+template<int Width, int Height, int Parity, class Lake, class Padding>
+struct add_padding<chequered_rectangle<Width, Height, Parity, Lake>, Padding>
+{
+        using type = chequered_rectangle
+        <
+                Width  + Padding::left + Padding::right + !((Width + Padding::left + Padding::right) % 2),
+                Height + Padding::top  + Padding::bottom,
+                Parity ^ (Padding::left % 2) ^ (Padding::bottom % 2),
+                Lake
+        >;
 };
 
 }       // namespace tabula
