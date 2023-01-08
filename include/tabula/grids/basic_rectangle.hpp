@@ -6,7 +6,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
-#include <tabula/lake.hpp>              // basic_lake_
+#include <tabula/lake.hpp>              // lake_
+#include <tabula/padding.hpp>           // padding
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/type_traits.hpp>       // add_padding
 #include <tabula/vector.hpp>            // basic_vector
@@ -15,7 +16,7 @@
 
 namespace tabula {
 
-template<int Width, int Height, class Lake = basic_lake_<>>
+template<int Width, int Height, class Lake = lake_<>>
         requires (0 < Width && 0 < Height)
 class basic_rectangle
 {
@@ -77,13 +78,13 @@ public:
         }
 };
 
-template<int Width, int Height, class Lake, class Padding>
+template<int Width, int Height, class Lake, padding Padding>
 struct add_padding<basic_rectangle<Width, Height, Lake>, Padding>
 {
         using type = basic_rectangle
         <
-                Width  + Padding::left + Padding::right,
-                Height + Padding::top  + Padding::bottom,
+                Width  + Padding.left + Padding.right,
+                Height + Padding.top  + Padding.bottom,
                 Lake
         >;
 };

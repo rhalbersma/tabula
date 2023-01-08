@@ -9,56 +9,51 @@ namespace tabula {
 
 // CSS padding Property: https://www.w3schools.com/cssref/pr_padding.asp
 
-template<int... Sides>
-        requires (((0 <= Sides) && ...) && sizeof...(Sides) <= 4)
-struct basic_padding;
-
-template<int Top, int Right, int Bottom, int Left>
-struct basic_padding<Top, Right, Bottom, Left>
+struct padding
 {
-        static constexpr auto top       = Top;
-        static constexpr auto right     = Right;
-        static constexpr auto bottom    = Bottom;
-        static constexpr auto left      = Left;
+        int top         = 0;
+        int right       = 0;
+        int bottom      = 0;
+        int left        = 0;
+
+        padding() = default;
+
+        [[nodiscard]] constexpr padding(int trbl) noexcept
+        :
+                top(trbl),
+                right(trbl),
+                bottom(trbl),
+                left(trbl)
+        {}
+
+        [[nodiscard]] constexpr padding(int tb, int rl) noexcept
+        :
+                top(tb),
+                right(rl),
+                bottom(tb),
+                left(rl)
+        {}
+
+        [[nodiscard]] constexpr padding(int t, int rl, int b) noexcept
+        :
+                top(t),
+                right(rl),
+                bottom(b),
+                left(rl)
+        {}
+
+        [[nodiscard]] constexpr padding(int t, int r, int b, int l) noexcept
+        :
+                top(t),
+                right(r),
+                bottom(b),
+                left(l)
+        {}
 };
 
-template<int Top, int RightLeft, int Bottom>
-struct basic_padding<Top, RightLeft, Bottom>
+[[nodiscard]] inline constexpr auto right_padding(int r) noexcept
 {
-        static constexpr auto top       = Top;
-        static constexpr auto right     = RightLeft;
-        static constexpr auto bottom    = Bottom;
-        static constexpr auto left      = RightLeft;
-};
-
-template<int TopBottom, int RightLeft>
-struct basic_padding<TopBottom, RightLeft>
-{
-        static constexpr auto top       = TopBottom;
-        static constexpr auto right     = RightLeft;
-        static constexpr auto bottom    = TopBottom;
-        static constexpr auto left      = RightLeft;
-};
-
-template<int TopRightBottomLeft>
-struct basic_padding<TopRightBottomLeft>
-{
-        static constexpr auto top       = TopRightBottomLeft;
-        static constexpr auto right     = TopRightBottomLeft;
-        static constexpr auto bottom    = TopRightBottomLeft;
-        static constexpr auto left      = TopRightBottomLeft;
-};
-
-template<>
-struct basic_padding<>
-{
-        static constexpr auto top       = 0;
-        static constexpr auto right     = 0;
-        static constexpr auto bottom    = 0;
-        static constexpr auto left      = 0;
-};
-
-template<int Right>
-using right_padding = basic_padding<0, Right, 0, 0>;
+        return padding(0, r, 0, 0);
+}
 
 }       // namespace tabula

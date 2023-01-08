@@ -5,12 +5,13 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <tabula/padding.hpp>           // padding
 #include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, add_padding_t
 #include <optional>                     // nullopt, optional
 
 namespace tabula {
 
-template<class Grid, class Padding>
+template<class Grid, padding Padding>
 class basic_embedding
 {
         [[nodiscard]] static constexpr auto first_valid_index() noexcept
@@ -37,7 +38,6 @@ class basic_embedding
 
 public:
         using    grid_type = Grid;
-        using padding_type = Padding;
         using  padded_type = add_padding_t<Grid, Padding>;
 
         [[nodiscard]] static constexpr auto flip() noexcept -> basic_embedding<flipped_t<Grid>, Padding> { return {}; }

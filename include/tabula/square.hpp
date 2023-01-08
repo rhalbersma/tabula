@@ -5,6 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <tabula/padding.hpp>           // padding
 #include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, add_padding_t
 #include <tabula/vector.hpp>            // basic_vector
 
@@ -52,11 +53,11 @@ struct basic_square
                 return { rank, file };
         }
 
-        template<class Padding>
+        template<padding Padding>
         [[nodiscard]] constexpr auto pad() const noexcept
                 -> basic_square<add_padding_t<Grid, Padding>>
         {
-                return { file + Padding::left, rank + Padding::bottom };
+                return { file + Padding.left, rank + Padding.bottom };
         }
 
         [[nodiscard]] constexpr auto is_valid() const noexcept

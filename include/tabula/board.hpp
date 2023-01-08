@@ -8,6 +8,7 @@
 #include <tabula/concepts.hpp>          // chequered
 #include <tabula/embedding.hpp>         // basic_embedding
 #include <tabula/functional.hpp>        // composed, flip, flop, swap
+#include <tabula/padding.hpp>           // padding
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/tuple.hpp>             // min_index, transform
 #include <array>                        // array
@@ -29,7 +30,7 @@ inline constexpr auto orientations = std::tuple(
         composed(swap, flop, flip)      // origin at top-right,    top-to-bottom, right-to-left
 );
 
-template<class Grid, class Padding>
+template<class Grid, padding Padding>
 class basic_board
 {
         static constexpr auto basic_embedding_v = basic_embedding<Grid, Padding>();
@@ -62,7 +63,6 @@ class basic_board
 
 public:
         using    grid_type = Grid;
-        using padding_type = Padding;
 
         static constexpr auto width  = Grid::width;
         static constexpr auto height = Grid::height;

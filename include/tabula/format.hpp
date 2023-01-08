@@ -9,8 +9,9 @@
 #include <fmt/format.h>
 
 #include <tabula/board.hpp>
+#include <tabula/padding.hpp>   // padding
 
-template<class Grid, class Padding>
+template<class Grid, tabula::padding Padding>
 struct fmt::formatter<tabula::basic_board<Grid, Padding>>
 {
         // Presentation format: 'f' - fixed, 'e' - exponential.

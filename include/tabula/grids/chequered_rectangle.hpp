@@ -6,7 +6,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
-#include <tabula/lake.hpp>              // basic_lake_
+#include <tabula/lake.hpp>              // lake_
+#include <tabula/padding.hpp>           // padding
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/type_traits.hpp>       // add_padding
 #include <tabula/vector.hpp>            // basic_vector
@@ -14,7 +15,7 @@
 
 namespace tabula {
 
-template<int Width, int Height, int Parity = 0, class Lake = basic_lake_<>>
+template<int Width, int Height, int Parity = 0, class Lake = lake_<>>
         requires (0 < Width &&  0 < Height && (Parity == 0 || Parity == 1))
 class chequered_rectangle
 {
@@ -84,14 +85,14 @@ public:
         }
 };
 
-template<int Width, int Height, int Parity, class Lake, class Padding>
+template<int Width, int Height, int Parity, class Lake, padding Padding>
 struct add_padding<chequered_rectangle<Width, Height, Parity, Lake>, Padding>
 {
         using type = chequered_rectangle
         <
-                Width  + Padding::left + Padding::right + !((Width + Padding::left + Padding::right) % 2),
-                Height + Padding::top  + Padding::bottom,
-                Parity ^ (Padding::left % 2) ^ (Padding::bottom % 2),
+                Width  + Padding.left + Padding.right + !((Width + Padding.left + Padding.right) % 2),
+                Height + Padding.top  + Padding.bottom,
+                Parity ^ (Padding.left % 2) ^ (Padding.bottom % 2),
                 Lake
         >;
 };
