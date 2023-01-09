@@ -22,7 +22,7 @@ struct lake_
 
 [[nodiscard]] inline constexpr auto algebraic(char file, int rank) noexcept
 {
-        return square_(file - 'a',  rank - 1);
+        return square_{file - 'a',  rank - 1};
 }
 
 }       // namespace tabula
