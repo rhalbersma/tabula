@@ -20,8 +20,9 @@ template<int Width, int Height, class Lake = lake_<>>
         requires (0 < Width && 0 < Height)
 class basic_rectangle
 {
-        using square_type = basic_square<basic_rectangle<Width, Height, Lake>>;
-        using vector_type = basic_vector<basic_rectangle<Width, Height, Lake>>;
+        using   grid_type = basic_rectangle<Width, Height, Lake>;
+        using square_type = basic_square<grid_type>;
+        using vector_type = basic_vector<grid_type>;
 
         [[nodiscard]] static constexpr auto is_within(square_type const& square) noexcept
         {

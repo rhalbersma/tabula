@@ -19,8 +19,9 @@ template<int Width, int Height, int Parity = 0, class Lake = lake_<>>
         requires (0 < Width &&  0 < Height && (Parity == 0 || Parity == 1))
 class chequered_rectangle
 {
-        using square_type = basic_square<chequered_rectangle<Width, Height, Parity, Lake>>;
-        using vector_type = basic_vector<chequered_rectangle<Width, Height, Parity, Lake>>;
+        using   grid_type = chequered_rectangle<Width, Height, Parity, Lake>;
+        using square_type = basic_square<grid_type>;
+        using vector_type = basic_vector<grid_type>;
 
         [[nodiscard]] static constexpr auto is_within(square_type const& square) noexcept
         {

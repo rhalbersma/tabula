@@ -7,6 +7,9 @@
 #define BOOST_MPL_LIMIT_VECTOR_SIZE 50
 
 #include <tabula/grids.hpp>             // basic_rectangle, chequered_rectangle
+#include <algorithm>                    // equal
+#include <array>                        // array
+#include <ranges>                       // filter, transform
 #include <boost/mpl/vector.hpp>         // vector
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
 
@@ -50,18 +53,30 @@ using grid_types = boost::mpl::vector
 ,       chequered_rectangle<5, 3, 1>
 >;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(IsCardinal, Grid, grid_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, Grid, grid_types)
 {
-        for (auto d : { Grid::N, Grid::E, Grid::S, Grid::W }) {
-                BOOST_CHECK(Grid::directions[d].is_cardinal());
-        }
+        auto computed =
+                Grid::directions |
+                std::views::filter([](auto d) { return d.is_cardinal(); })
+        ;
+        auto expected =
+                std::array{ Grid::N, Grid::E, Grid::S, Grid::W } |
+                std::views::transform([](auto d) { return Grid::directions[d]; })
+        ;
+        BOOST_CHECK(std::ranges::equal(computed, expected));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(IsOrdinal, Grid, grid_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreIsOrdinal, Grid, grid_types)
 {
-        for (auto d : { Grid::NE, Grid::SE, Grid::SW, Grid::NW }) {
-                BOOST_CHECK(Grid::directions[d].is_ordinal());
-        }
+        auto computed =
+                Grid::directions |
+                std::views::filter([](auto d) { return d.is_ordinal(); })
+        ;
+        auto expected =
+                std::array{ Grid::NE, Grid::SE, Grid::SW, Grid::NW } |
+                std::views::transform([](auto d) { return Grid::directions[d]; })
+        ;
+        BOOST_CHECK(std::ranges::equal(computed, expected));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, Grid, grid_types)
