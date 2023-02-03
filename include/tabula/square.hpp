@@ -78,6 +78,12 @@ template<class Grid>
 }
 
 template<class Grid>
+[[nodiscard]] constexpr auto operator+(basic_vector<Grid> const& v, basic_square<Grid> const& s) noexcept
+{
+        auto nrv = s; nrv += v; return nrv;
+}
+
+template<class Grid>
 [[nodiscard]] constexpr auto operator-(basic_square<Grid> const& s, basic_vector<Grid> const& v) noexcept
 {
         auto nrv = s; nrv -= v; return nrv;
