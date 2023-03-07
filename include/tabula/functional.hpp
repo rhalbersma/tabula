@@ -6,6 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <functional>   // identity
+#include <utility>      // forward
 
 namespace tabula {
 
@@ -13,11 +14,11 @@ namespace tabula {
 
 constexpr auto operator*(auto&& f, auto&& g) noexcept
 {
-        return [f = FWD(f), g = FWD(g)](auto&& arg) { return f(g(FWD(arg))); };
+        return [f = FWD(f), g = FWD(g)](auto&&... args) { return f(g(FWD(args)...)); };
 }
 
 template<class... Fs>
-inline constexpr auto compose = [](auto&& arg) { return (Fs() * ... * std::identity())(FWD(arg)); };
+inline constexpr auto compose = [](auto&&... args) { return (Fs() * ... * std::identity())(FWD(args)...); };
 
 template<class... Fs>
 using compose_ = decltype(compose<Fs...>);
