@@ -9,37 +9,22 @@
 
 namespace tabula {
 
-template<class F>
-struct composable
-{
-        F call;
-};
+#define FWD(arg) std::forward<decltype(arg)>(arg)
 
-// Explicit deduction guide to support Clang 13, 14, 15, 16-SVN
-// https://stackoverflow.com/a/70660785/819272
-template<class F>
-composable(F) -> composable<F>;
-
-template<class F, class G>
-constexpr auto operator>>(composable<F> f, composable<G> g) noexcept
+constexpr auto operator*(auto&& f, auto&& g) noexcept
 {
-        return composable{[=](auto arg) { return f.call(g.call(arg)); }};
+        return [f = FWD(f), g = FWD(g)](auto&& arg) { return f(g(FWD(arg))); };
 }
 
-inline constexpr auto identity = std::identity();
-inline constexpr auto composed = [](auto... fs) {
-        return (composable{fs} >> ... >> composable{identity}).call;
-};
-
 template<class... Fs>
-inline constexpr auto compose = [](auto arg) { return composed(Fs()...)(arg); };
+inline constexpr auto compose = [](auto&& arg) { return (Fs() * ... * std::identity())(FWD(arg)); };
 
 template<class... Fs>
 using compose_ = decltype(compose<Fs...>);
 
-inline constexpr auto flip = [](auto arg) { return arg.flip(); };
-inline constexpr auto flop = [](auto arg) { return arg.flop(); };
-inline constexpr auto swap = [](auto arg) { return arg.swap(); };
+inline constexpr auto flip = [](auto&& arg) { return FWD(arg).flip(); };
+inline constexpr auto flop = [](auto&& arg) { return FWD(arg).flop(); };
+inline constexpr auto swap = [](auto&& arg) { return FWD(arg).swap(); };
 
 using flip_ = decltype(flip);
 using flop_ = decltype(flop);

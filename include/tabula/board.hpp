@@ -7,27 +7,28 @@
 
 #include <tabula/concepts.hpp>          // chequered
 #include <tabula/embedding.hpp>         // basic_embedding
-#include <tabula/functional.hpp>        // composed, flip, flop, swap
+#include <tabula/functional.hpp>        // operator*, flip, flop, swap
 #include <tabula/padding.hpp>           // padding
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/tuple.hpp>             // min_index, transform
 #include <array>                        // array
 #include <cassert>                      // assert
 #include <cstddef>                      // size_t
+#include <functional>                   // identity
 #include <optional>                     // optional
 #include <tuple>                        // get, tuple
 
 namespace tabula {
 
 inline constexpr auto orientations = std::tuple(
-        identity,                       // origin at bottom-left,  left-to-right, bottom-to-top
-        swap,                           // origin at bottom-left,  bottom-to-top, left-to-right
-        flip,                           // origin at top-left,     left-to-right, top-to-bottom
-        composed(swap, flip),           // origin at top-left,     top-to-bottom, left-to-right
-        flop,                           // origin at bottom-right, right-to-left, bottom-to-top
-        composed(swap, flop),           // origin at bottom-right, bottom-to-top, right-to-left
-        composed(flop, flip),           // origin at top-right,    right-to-left, top-to-bottom
-        composed(swap, flop, flip)      // origin at top-right,    top-to-bottom, right-to-left
+        std::identity(),        // origin at bottom-left,  left-to-right, bottom-to-top
+        swap,                   // origin at bottom-left,  bottom-to-top, left-to-right
+        flip,                   // origin at top-left,     left-to-right, top-to-bottom
+        swap * flip,            // origin at top-left,     top-to-bottom, left-to-right
+        flop,                   // origin at bottom-right, right-to-left, bottom-to-top
+        swap * flop,            // origin at bottom-right, bottom-to-top, right-to-left
+        flop * flip,            // origin at top-right,    right-to-left, top-to-bottom
+        swap * flop * flip      // origin at top-right,    top-to-bottom, right-to-left
 );
 
 template<class Grid, padding Padding>
