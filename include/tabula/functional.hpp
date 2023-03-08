@@ -14,7 +14,7 @@ namespace tabula {
 
 constexpr auto operator*(auto&& f, auto&& g) noexcept
 {
-        return [f = FWD(f), g = FWD(g)](auto&&... args) { return f(g(FWD(args)...)); };
+        return [f_ = FWD(f), g_ = FWD(g)](auto&&... args) { return f_(g_(FWD(args)...)); };
 }
 
 template<class... Fs>
