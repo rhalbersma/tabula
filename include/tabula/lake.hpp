@@ -9,6 +9,8 @@
 
 namespace tabula {
 
+// Only works for gcc 12 and above.
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97930
 using square_ = std::pair<int, int>;
 
 template<square_... Squares>
