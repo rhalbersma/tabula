@@ -8,6 +8,7 @@
 #include <tabula/padding.hpp>           // padding
 #include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, add_padding_t
 #include <optional>                     // nullopt, optional
+#include <ranges>                       // iota, reverse
 
 namespace tabula {
 
@@ -17,7 +18,7 @@ class basic_embedding
         [[nodiscard]] static constexpr auto first_valid_index() noexcept
                 -> std::optional<int>
         {
-                for (auto index = 0; index < Grid::size; ++index) {
+                for (auto index : std::views::iota(0, Grid::size)) {
                         if (auto const square = Grid::square(index); square.is_valid()) {
                                 return pad(square).index();
                         }
@@ -28,7 +29,7 @@ class basic_embedding
         [[nodiscard]] static constexpr auto last_valid_index() noexcept
                 -> std::optional<int>
         {
-                for (auto index = Grid::size - 1; index >= 0; --index) {
+                for (auto index : std::views::iota(0, Grid::size) | std::views::reverse) {
                         if (auto const square = Grid::square(index); square.is_valid()) {
                                 return pad(square).index();
                         }

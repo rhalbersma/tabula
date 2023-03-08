@@ -8,6 +8,7 @@
 
 #include <tabula/grids.hpp>             // basic_rectangle, chequered_rectangle
 #include <tabula/square.hpp>            // basic_square
+#include <ranges>                       // iota
 #include <boost/mpl/vector.hpp>         // vector
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
 
@@ -53,15 +54,15 @@ using grid_types = boost::mpl::vector
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(IndexIsInvertible, Grid, grid_types)
 {
-        for (auto index = 0; index < Grid::size; ++index) {
+        for (auto index : std::views::iota(0, Grid::size)) {
                 BOOST_CHECK_EQUAL(index, Grid::index(Grid::square(index)));
         }
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(SquareIsInvertible, Grid, grid_types)
 {
-        for (auto rank = 0; rank < Grid::height; ++rank) {
-                for (auto file = 0; file < Grid::width; ++file) {
+        for (auto rank : std::views::iota(0, Grid::height)) {
+                for (auto file : std::views::iota(0, Grid::width)) {
                         if (auto const square = basic_square<Grid>{file, rank}; square.is_valid()) {
                                 BOOST_CHECK(square == Grid::square(Grid::index(square)));
                         }

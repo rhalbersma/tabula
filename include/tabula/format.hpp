@@ -10,6 +10,7 @@
 
 #include <tabula/board.hpp>
 #include <tabula/padding.hpp>   // padding
+#include <ranges>               // iota, reverse
 
 template<class Grid, tabula::padding Padding>
 struct fmt::formatter<tabula::basic_board<Grid, Padding>>
@@ -42,8 +43,8 @@ struct fmt::formatter<tabula::basic_board<Grid, Padding>>
         template<typename FormatContext>
         auto format(tabula::basic_board<Grid, Padding> const& board, FormatContext& ctx)
         {
-                for (auto rank = board.height - 1; rank >= 0; --rank) {
-                        for (auto file = 0; file < board.width; ++file) {
+                for (auto rank : std::views::iota(0, board.height) | std::views::reverse) {
+                        for (auto file : std::views::iota(0, board.width)) {
                                 if (auto const square = board.square(file, rank); square.is_valid()) {
                                         format_to(ctx.out(), "{:>4}", board.padded(square));
                                 } else {

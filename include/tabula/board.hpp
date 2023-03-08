@@ -16,6 +16,7 @@
 #include <cstddef>                      // size_t
 #include <functional>                   // identity
 #include <optional>                     // optional
+#include <ranges>                       // views
 #include <tuple>                        // get, tuple
 
 namespace tabula {
@@ -54,7 +55,7 @@ class basic_board
 
         static constexpr auto padded_table = []() {
                 auto table = std::array<std::optional<int>, Grid::size>{};
-                for (auto index = 0; index < Grid::size; ++index) {
+                for (auto index : std::views::iota(0, Grid::size)) {
                         if (auto const square = Grid::square(index); square.is_valid()) {
                                 table[static_cast<std::size_t>(index)] = pad(square).index();
                         }
