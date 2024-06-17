@@ -3,6 +3,8 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
+find_package(fmt REQUIRED)
+
 set(cxx_compile_definitions
     $<$<CXX_COMPILER_ID:MSVC>:
         _SCL_SECURE_NO_WARNINGS
@@ -66,6 +68,7 @@ foreach(t ${targets})
     target_link_libraries(
         ${target_id} PRIVATE
         ${CMAKE_PROJECT_NAME}
+        fmt::fmt
     )
 
     target_include_directories(

@@ -4,11 +4,11 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 set(Boost_USE_STATIC_LIBS ON)
-
 find_package(
     Boost REQUIRED COMPONENTS
     unit_test_framework
 )
+find_package(fmt REQUIRED)
 
 set(cxx_compile_definitions
     BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
@@ -74,6 +74,7 @@ foreach(t ${targets})
         ${target_id} PRIVATE
         ${CMAKE_PROJECT_NAME}
         Boost::unit_test_framework
+        fmt::fmt
     )
 
     target_include_directories(
