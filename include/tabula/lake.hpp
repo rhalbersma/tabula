@@ -16,15 +16,16 @@ using square_ = std::pair<int, int>;
 template<square_... Squares>
 struct lake_
 {
-        [[nodiscard]] constexpr auto operator()(auto square) const noexcept
+        [[nodiscard]] constexpr auto operator()(auto square [[maybe_unused]]) const noexcept
         {
                 return (... || (square == decltype(square){std::get<0>(Squares), std::get<1>(Squares)}));
         }
 };
 
 [[nodiscard]] inline constexpr auto algebraic(char file, int rank) noexcept
+        -> square_
 {
-        return square_{file - 'a',  rank - 1};
+        return { file - 'a',  rank - 1 };
 }
 
 }       // namespace tabula
