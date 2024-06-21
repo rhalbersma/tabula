@@ -9,7 +9,7 @@
 #include <tabula/lake.hpp>              // lake_
 #include <tabula/padding.hpp>           // padding
 #include <tabula/square.hpp>            // basic_square
-#include <tabula/type_traits.hpp>       // add_padding
+#include <tabula/type_traits.hpp>       // flipped, flopped, swapped, padded
 #include <tabula/vector.hpp>            // basic_vector
 #include <array>                        // array
 #include <utility>                      // pair
@@ -20,11 +20,47 @@ template<int Width, int Height, class Lake = lake_<>>
         requires (0 < Width && 0 < Height)
 class basic_rectangle
 {
-        using   grid_type = basic_rectangle<Width, Height, Lake>;
-        using square_type = basic_square<grid_type>;
-        using vector_type = basic_vector<grid_type>;
+public:
+        static constexpr auto width  = Width;
+        static constexpr auto height = Height;
+        static constexpr auto size   = Width * Height;
 
-        [[nodiscard]] static constexpr auto is_within(square_type const& square) noexcept
+        using lake = Lake;
+        using type = basic_rectangle<Width, Height, Lake>;
+
+        enum : unsigned { N, NE, E, SE, S, SW, W, NW };
+
+        static constexpr auto directions = std::array
+        {
+                basic_vector<type>{ 0,  1},     // N
+                basic_vector<type>{ 1,  1},     // NE
+                basic_vector<type>{ 1,  0},     // E
+                basic_vector<type>{ 1, -1},     // SE
+                basic_vector<type>{ 0, -1},     // S
+                basic_vector<type>{-1, -1},     // SW
+                basic_vector<type>{-1,  0},     // W
+                basic_vector<type>{-1,  1}      // NW
+        };
+
+        [[nodiscard]] static constexpr auto is_valid(basic_square<type> square) noexcept
+        {
+                return is_within(square) && !is_lake(square);
+        }
+
+        [[nodiscard]] static constexpr auto index(auto coordinates) noexcept
+        {
+                auto const [ file, rank ] = coordinates;
+                return file + rank * Width;
+        }
+
+        [[nodiscard]] static constexpr auto square(int index) noexcept
+                -> basic_square<type>
+        {
+                return { index % Width, index / Width };
+        }       
+
+private:
+        [[nodiscard]] static constexpr auto is_within(basic_square<type> square) noexcept
         {
                 return
                         0 <= square.file && square.file < Width &&
@@ -32,55 +68,32 @@ class basic_rectangle
                 ;
         }
 
-        [[nodiscard]] static constexpr auto is_lake(square_type const& square) noexcept
+        [[nodiscard]] static constexpr auto is_lake(basic_square<type> square) noexcept
         {
                 return Lake()(square);
         }
+};
 
-public:
-        static constexpr auto width  = Width;
-        static constexpr auto height = Height;
-        static constexpr auto size   = Width * Height;
+template<int Width, int Height, class Lake>
+struct flipped<basic_rectangle<Width, Height, Lake>>
+{
+        using type = basic_rectangle<Width, Height, compose_<Lake, flip_>>;
+};
 
-        using lake_type = Lake;
+template<int Width, int Height, class Lake>
+struct flopped<basic_rectangle<Width, Height, Lake>>
+{
+        using type = basic_rectangle<Width, Height, compose_<Lake, flop_>>;
+};
 
-        using flipped_type = basic_rectangle<Width, Height, compose_<Lake, flip_>>;
-        using flopped_type = basic_rectangle<Width, Height, compose_<Lake, flop_>>;
-        using swapped_type = basic_rectangle<Height, Width, compose_<Lake, swap_>>;
-
-        enum : unsigned { N, NE, E, SE, S, SW, W, NW };
-
-        static constexpr auto directions = std::array{
-                vector_type{ 0,  1},    // N
-                vector_type{ 1,  1},    // NE
-                vector_type{ 1,  0},    // E
-                vector_type{ 1, -1},    // SE
-                vector_type{ 0, -1},    // S
-                vector_type{-1, -1},    // SW
-                vector_type{-1,  0},    // W
-                vector_type{-1,  1}     // NW
-        };
-
-        [[nodiscard]] static constexpr auto is_valid(square_type const& square) noexcept
-        {
-                return is_within(square) && !is_lake(square);
-        }
-
-        [[nodiscard]] static constexpr auto index(auto const& coordinates) noexcept
-        {
-                auto const [ file, rank ] = coordinates;
-                return file + rank * Width;
-        }
-
-        [[nodiscard]] static constexpr auto square(int index) noexcept
-                -> square_type
-        {
-                return { index % Width, index / Width };
-        }
+template<int Width, int Height, class Lake>
+struct swapped<basic_rectangle<Width, Height, Lake>>
+{
+        using type = basic_rectangle<Height, Width, compose_<Lake, swap_>>;
 };
 
 template<int Width, int Height, class Lake, padding Padding>
-struct add_padding<basic_rectangle<Width, Height, Lake>, Padding>
+struct padded<basic_rectangle<Width, Height, Lake>, Padding>
 {
         using type = basic_rectangle
         <

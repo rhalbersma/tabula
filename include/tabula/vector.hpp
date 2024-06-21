@@ -6,7 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/padding.hpp>           // padding
-#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, add_padding_t
+#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, padded_t
 
 namespace tabula {
 
@@ -18,16 +18,16 @@ struct basic_vector
 
         using grid_type = Grid;
 
-        bool operator==(basic_vector const&) const = default;
+        friend bool operator==(basic_vector, basic_vector) = default;
 
-        [[nodiscard]] constexpr auto& operator+=(basic_vector const& other) noexcept
+        [[nodiscard]] constexpr auto& operator+=(basic_vector other) noexcept
         {
                 this->file += other.file;
                 this->rank += other.rank;
                 return *this;
         }
 
-        [[nodiscard]] constexpr auto& operator-=(basic_vector const& other) noexcept
+        [[nodiscard]] constexpr auto& operator-=(basic_vector other) noexcept
         {
                 this->file -= other.file;
                 this->rank -= other.rank;
@@ -67,7 +67,7 @@ struct basic_vector
 
         template<padding Padding>
         [[nodiscard]] constexpr auto pad() const noexcept
-                -> basic_vector<add_padding_t<Grid, Padding>>
+                -> basic_vector<padded_t<Grid, Padding>>
         {
                 return { file, rank };
         }
@@ -109,25 +109,25 @@ struct basic_vector
 };
 
 template<class Grid>
-[[nodiscard]] constexpr auto operator+(basic_vector<Grid> const& lhs, basic_vector<Grid> const& rhs) noexcept
+[[nodiscard]] constexpr auto operator+(basic_vector<Grid> lhs, basic_vector<Grid> rhs) noexcept
 {
         auto nrv = lhs; nrv += rhs; return nrv;
 }
 
 template<class Grid>
-[[nodiscard]] constexpr auto operator-(basic_vector<Grid> const& lhs, basic_vector<Grid> const& rhs) noexcept
+[[nodiscard]] constexpr auto operator-(basic_vector<Grid> lhs, basic_vector<Grid> rhs) noexcept
 {
         auto nrv = lhs; nrv -= rhs; return nrv;
 }
 
 template<class Grid>
-[[nodiscard]] constexpr auto operator*(basic_vector<Grid> const& v, int n) noexcept
+[[nodiscard]] constexpr auto operator*(basic_vector<Grid> v, int n) noexcept
 {
         auto nrv = v; nrv *= n; return nrv;
 }
 
 template<class Grid>
-[[nodiscard]] constexpr auto operator*(int n, basic_vector<Grid> const& v) noexcept
+[[nodiscard]] constexpr auto operator*(int n, basic_vector<Grid> v) noexcept
 {
         auto nrv = v; nrv *= n; return nrv;
 }

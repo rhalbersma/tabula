@@ -21,7 +21,8 @@
 
 namespace tabula {
 
-inline constexpr auto orientations = std::tuple(
+inline constexpr auto orientations = std::tuple
+(
         std::identity(),        // origin at bottom-left,  left-to-right, bottom-to-top
         swap,                   // origin at bottom-left,  bottom-to-top, left-to-right
         flip,                   // origin at top-left,     left-to-right, top-to-bottom
@@ -35,25 +36,24 @@ inline constexpr auto orientations = std::tuple(
 template<class Grid, padding Padding>
 class basic_board
 {
-        static constexpr auto basic_embedding_v = basic_embedding<Grid, Padding>();
-        static constexpr auto idx = min_index(
-                transform(orientations, [](auto fun) {
-                        return fun(basic_embedding_v).valid_range;
+        static constexpr auto embedding = basic_embedding<Grid, Padding>();
+        static constexpr auto min = min_index(
+                transform(orientations, [](auto orientation) {
+                        return orientation(embedding).valid_range;
                 })
         );
-        static constexpr auto transform_v = std::get<idx>(orientations);
-        static constexpr auto embedding_v = transform_v(basic_embedding_v);
+        static constexpr auto min_orientation = std::get<min>(orientations);
+        static constexpr auto min_embedding = min_orientation(embedding);
 
-        using embedding_type = decltype(embedding_v);
-        using    padded_type = padded_t<embedding_type>;
-        using    square_type = basic_square<Grid>;
+        using embedding_type = decltype(min_embedding);
+        using    padded_type = embedding_type::padded_type;
 
-        [[nodiscard]] static constexpr auto pad(auto const& coordinates) noexcept
+        [[nodiscard]] static constexpr auto pad(auto coordinates) noexcept
         {
-                return embedding_v.pad(transform_v(coordinates));
+                return min_embedding.pad(min_orientation(coordinates));
         }
 
-        static constexpr auto padded_table = []() {
+        static constexpr auto embedding_table = []() {
                 auto table = std::array<std::optional<int>, Grid::size>{};
                 for (auto index : std::views::iota(0, Grid::size)) {
                         if (auto const square = Grid::square(index); square.is_valid()) {
@@ -91,25 +91,25 @@ public:
         }
 
         static constexpr auto square(int file, int rank) noexcept
-                -> square_type
+                -> basic_square<Grid>
         {
                 return { file, rank };
         }
 
-        static constexpr auto sequential0(square_type const& s) noexcept
+        static constexpr auto sequential0(basic_square<Grid> square) noexcept
         {
-                return s.flip().index();
+                return square.flip().index();
         }
 
-        static constexpr auto sequential1(square_type const& s) noexcept
+        static constexpr auto sequential1(basic_square<Grid> square) noexcept
         {
-                return sequential0(s) + 1;
+                return sequential0(square) + 1;
         }
 
-        static constexpr auto padded(square_type const& s) noexcept
+        static constexpr auto embedded(basic_square<Grid> square) noexcept
         {
-                assert(s.is_valid());
-                return *padded_table[static_cast<std::size_t>(s.index())];
+                assert(square.is_valid());
+                return *embedding_table[static_cast<std::size_t>(square.index())];
         }
 
         static constexpr auto strides = []() {

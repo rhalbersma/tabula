@@ -19,16 +19,16 @@ struct basic_square
 
         using grid_type = Grid;
 
-        bool operator==(basic_square const&) const = default;
+        friend bool operator==(basic_square, basic_square) = default;
 
-        [[nodiscard]] constexpr auto& operator+=(basic_vector<Grid> const& v) noexcept
+        [[nodiscard]] constexpr auto& operator+=(basic_vector<Grid> v) noexcept
         {
                 this->file += v.file;
                 this->rank += v.rank;
                 return *this;
         }
 
-        [[nodiscard]] constexpr auto& operator-=(basic_vector<Grid> const& v) noexcept
+        [[nodiscard]] constexpr auto& operator-=(basic_vector<Grid> v) noexcept
         {
                 this->file -= v.file;
                 this->rank -= v.rank;
@@ -55,7 +55,7 @@ struct basic_square
 
         template<padding Padding>
         [[nodiscard]] constexpr auto pad() const noexcept
-                -> basic_square<add_padding_t<Grid, Padding>>
+                -> basic_square<padded_t<Grid, Padding>>
         {
                 return { file + Padding.left, rank + Padding.bottom };
         }
@@ -72,25 +72,25 @@ struct basic_square
 };
 
 template<class Grid>
-[[nodiscard]] constexpr auto operator+(basic_square<Grid> const& s, basic_vector<Grid> const& v) noexcept
+[[nodiscard]] constexpr auto operator+(basic_square<Grid> s, basic_vector<Grid> v) noexcept
 {
         auto nrv = s; nrv += v; return nrv;
 }
 
 template<class Grid>
-[[nodiscard]] constexpr auto operator+(basic_vector<Grid> const& v, basic_square<Grid> const& s) noexcept
+[[nodiscard]] constexpr auto operator+(basic_vector<Grid> v, basic_square<Grid> s) noexcept
 {
         auto nrv = s; nrv += v; return nrv;
 }
 
 template<class Grid>
-[[nodiscard]] constexpr auto operator-(basic_square<Grid> const& s, basic_vector<Grid> const& v) noexcept
+[[nodiscard]] constexpr auto operator-(basic_square<Grid> s, basic_vector<Grid> v) noexcept
 {
         auto nrv = s; nrv -= v; return nrv;
 }
 
 template<class Grid>
-[[nodiscard]] constexpr auto operator-(basic_square<Grid> const& lhs, basic_square<Grid> const& rhs) noexcept
+[[nodiscard]] constexpr auto operator-(basic_square<Grid> lhs, basic_square<Grid> rhs) noexcept
         -> basic_vector<Grid>
 {
         return { lhs.file - rhs.file, lhs.rank - rhs.rank };

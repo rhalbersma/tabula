@@ -9,15 +9,18 @@
 
 namespace tabula {
 
-template<class T> using flipped_t = typename T::flipped_type;
-template<class T> using flopped_t = typename T::flopped_type;
-template<class T> using swapped_t = typename T::swapped_type;
-template<class T> using  padded_t = typename T:: padded_type;
+template<class> struct flipped;
+template<class> struct flopped;
+template<class> struct swapped;
 
-template<class, padding>
-struct add_padding;
+template<class, padding> 
+struct padded;
 
-template<class T, padding P>
-using add_padding_t = typename add_padding<T, P>::type;
+template<class T> using flipped_t = typename flipped<T>::type;
+template<class T> using flopped_t = typename flopped<T>::type;
+template<class T> using swapped_t = typename swapped<T>::type;
+
+template<class T, padding P> 
+using padded_t = typename padded<T, P>::type;
 
 }       // namespace tabula

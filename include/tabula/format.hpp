@@ -23,7 +23,7 @@ struct std::formatter<tabula::basic_board<Grid, Padding>>
                 for (auto rank : std::views::iota(0, board.height) | std::views::reverse) {
                         for (auto file : std::views::iota(0, board.width)) {
                                 if (auto const square = board.square(file, rank); square.is_valid()) {
-                                        std::format_to(ctx.out(), "{:>4}", board.padded(square));
+                                        std::format_to(ctx.out(), "{:>4}", board.embedded(square));
                                 } else {
                                         std::format_to(ctx.out(), "{:>4}", "");
                                 }

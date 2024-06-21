@@ -9,7 +9,7 @@
 #include <tabula/lake.hpp>              // lake_
 #include <tabula/padding.hpp>           // padding
 #include <tabula/square.hpp>            // basic_square
-#include <tabula/type_traits.hpp>       // add_padding
+#include <tabula/type_traits.hpp>       // flipped, flopped, swapped, padded
 #include <tabula/vector.hpp>            // basic_vector
 #include <utility>                      // pair
 
@@ -19,11 +19,50 @@ template<int Width, int Height, int Parity = 0, class Lake = lake_<>>
         requires (0 < Width &&  0 < Height && (Parity == 0 || Parity == 1))
 class chequered_rectangle
 {
-        using   grid_type = chequered_rectangle<Width, Height, Parity, Lake>;
-        using square_type = basic_square<grid_type>;
-        using vector_type = basic_vector<grid_type>;
+public:
+        static constexpr auto width  = Width;
+        static constexpr auto height = Height;
+        static constexpr auto parity = Parity;
+        static constexpr auto size   = (Width * Height + !Parity) / 2;
 
-        [[nodiscard]] static constexpr auto is_within(square_type const& square) noexcept
+        using lake = Lake;
+        using type = chequered_rectangle<Width, Height, Parity, Lake>;
+
+        enum : unsigned { N, NE, E, SE, S, SW, W, NW };
+
+        static constexpr auto directions = std::array
+        {
+                basic_vector<type>{ 0,  2},     // N
+                basic_vector<type>{ 1,  1},     // NE
+                basic_vector<type>{ 2,  0},     // E
+                basic_vector<type>{ 1, -1},     // SE
+                basic_vector<type>{ 0, -2},     // S
+                basic_vector<type>{-1, -1},     // SW
+                basic_vector<type>{-2,  0},     // W
+                basic_vector<type>{-1,  1}      // NW
+        };
+
+        [[nodiscard]] static constexpr auto is_valid(basic_square<type> square) noexcept
+        {
+                return is_within(square) && is_colored(square) && !is_lake(square);
+        }
+
+        [[nodiscard]] static constexpr auto index(auto coordinates) noexcept
+        {
+                auto const [ file, rank ] = coordinates;
+                return (file + rank * Width) / 2;
+        }
+
+        [[nodiscard]] static constexpr auto square(int index) noexcept
+                -> basic_square<type>
+        {
+                index *= 2;
+                index += (Width % 2) ? Parity : Parity ^ ((index / Width) % 2);
+                return { index % Width, index / Width };
+        }
+
+private:
+        [[nodiscard]] static constexpr auto is_within(basic_square<type> square) noexcept
         {
                 return
                         0 <= square.file && square.file < Width &&
@@ -31,63 +70,37 @@ class chequered_rectangle
                 ;
         }
 
-        [[nodiscard]] static constexpr auto is_colored(square_type const& square) noexcept
+        [[nodiscard]] static constexpr auto is_colored(basic_square<type> square) noexcept
         {
                 return !((square.file ^ square.rank ^ Parity) % 2);
         }
 
-        [[nodiscard]] static constexpr auto is_lake(square_type const& square) noexcept
+        [[nodiscard]] static constexpr auto is_lake(basic_square<type> square) noexcept
         {
                 return Lake()(square);
         }
+};
 
-public:
-        static constexpr auto width  = Width;
-        static constexpr auto height = Height;
-        static constexpr auto parity = Parity;
-        static constexpr auto size   = (Width * Height + !Parity) / 2;
+template<int Width, int Height, int Parity, class Lake>
+struct flipped<chequered_rectangle<Width, Height, Parity, Lake>>
+{
+        using type = chequered_rectangle<Width, Height, Parity ^ !(Height % 2), compose_<Lake, flip_>>;
+};
 
-        using lake_type = Lake;
+template<int Width, int Height, int Parity, class Lake>
+struct flopped<chequered_rectangle<Width, Height, Parity, Lake>>
+{
+        using type = chequered_rectangle<Width, Height, Parity ^ !(Width  % 2), compose_<Lake, flop_>>;
+};
 
-        using flipped_type = chequered_rectangle<Width, Height, Parity ^ !(Height % 2), compose_<Lake, flip_>>;
-        using flopped_type = chequered_rectangle<Width, Height, Parity ^ !(Width  % 2), compose_<Lake, flop_>>;
-        using swapped_type = chequered_rectangle<Height, Width, Parity,                 compose_<Lake, swap_>>;
-
-        enum : unsigned { N, NE, E, SE, S, SW, W, NW };
-
-        static constexpr auto directions = std::array{
-                vector_type{ 0,  2},    // N
-                vector_type{ 1,  1},    // NE
-                vector_type{ 2,  0},    // E
-                vector_type{ 1, -1},    // SE
-                vector_type{ 0, -2},    // S
-                vector_type{-1, -1},    // SW
-                vector_type{-2,  0},    // W
-                vector_type{-1,  1}     // NW
-        };
-
-        [[nodiscard]] static constexpr auto is_valid(square_type const& square) noexcept
-        {
-                return is_within(square) && is_colored(square) && !is_lake(square);
-        }
-
-        [[nodiscard]] static constexpr auto index(auto const& coordinates) noexcept
-        {
-                auto const [ file, rank ] = coordinates;
-                return (file + rank * Width) / 2;
-        }
-
-        [[nodiscard]] static constexpr auto square(int index) noexcept
-                -> square_type
-        {
-                index *= 2;
-                index += (Width % 2) ? Parity : Parity ^ ((index / Width) % 2);
-                return { index % Width, index / Width };
-        }
+template<int Width, int Height, int Parity, class Lake>
+struct swapped<chequered_rectangle<Width, Height, Parity, Lake>>
+{
+        using type = chequered_rectangle<Height, Width, Parity, compose_<Lake, swap_>>;
 };
 
 template<int Width, int Height, int Parity, class Lake, padding Padding>
-struct add_padding<chequered_rectangle<Width, Height, Parity, Lake>, Padding>
+struct padded<chequered_rectangle<Width, Height, Parity, Lake>, Padding>
 {
         using type = chequered_rectangle
         <
