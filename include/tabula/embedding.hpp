@@ -15,7 +15,7 @@ namespace tabula {
 template<class Grid, padding Padding>
 class basic_embedding
 {
-        [[nodiscard]] static constexpr auto first_valid_index() noexcept
+        [[nodiscard]] static constexpr auto first_valid() noexcept
                 -> std::optional<int>
         {
                 for (auto index : std::views::iota(0, Grid::size)) {
@@ -26,7 +26,7 @@ class basic_embedding
                 return std::nullopt;
         }
 
-        [[nodiscard]] static constexpr auto last_valid_index() noexcept
+        [[nodiscard]] static constexpr auto last_valid() noexcept
                 -> std::optional<int>
         {
                 for (auto index : std::views::iota(0, Grid::size) | std::views::reverse) {
@@ -50,9 +50,9 @@ public:
                 return coordinates.template pad<Padding>();
         }
 
-        static constexpr auto valid_range = []() {
-                constexpr auto first = first_valid_index();
-                constexpr auto last = last_valid_index();
+        static constexpr auto valid_size = []() {
+                constexpr auto first = first_valid();
+                constexpr auto last = last_valid();
                 return first && last ? *last - *first + 1 : 0;
         }();
 };

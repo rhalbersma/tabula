@@ -75,7 +75,7 @@ int main()
                 if constexpr (b.is_chequered) {
                         std::print(", P = {}", b.padded_parity());
                 }
-                std::println(", size = {} ({})", b.padded_size, b.valid_range);
+                std::println(", size = {} ({})", b.padded_size, b.valid_size);
                 fmt::println("directional strides: {}", b.strides);
                 std::println("{:->40}", "");
         });

@@ -6,7 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
-#include <tabula/lake.hpp>              // lake_
+#include <tabula/lake.hpp>              // basic_lake
 #include <tabula/padding.hpp>           // padding
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/type_traits.hpp>       // flipped, flopped, swapped, padded
@@ -16,7 +16,7 @@
 
 namespace tabula {
 
-template<int Width, int Height, class Lake = lake_<>>
+template<int Width, int Height, class Lake = basic_lake<>>
         requires (0 < Width && 0 < Height)
 class basic_rectangle
 {
@@ -25,21 +25,21 @@ public:
         static constexpr auto height = Height;
         static constexpr auto size   = Width * Height;
 
-        using lake = Lake;
-        using type = basic_rectangle<Width, Height, Lake>;
+        using lake_type = Lake;
+        using      type = basic_rectangle<Width, Height, Lake>;
 
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
         static constexpr auto directions = std::array
         {
-                basic_vector<type>{ 0,  1},     // N
-                basic_vector<type>{ 1,  1},     // NE
-                basic_vector<type>{ 1,  0},     // E
-                basic_vector<type>{ 1, -1},     // SE
-                basic_vector<type>{ 0, -1},     // S
-                basic_vector<type>{-1, -1},     // SW
-                basic_vector<type>{-1,  0},     // W
-                basic_vector<type>{-1,  1}      // NW
+                basic_vector<type>{  0,  1 },   // N
+                basic_vector<type>{  1,  1 },   // NE
+                basic_vector<type>{  1,  0 },   // E
+                basic_vector<type>{  1, -1 },   // SE
+                basic_vector<type>{  0, -1 },   // S
+                basic_vector<type>{ -1, -1 },   // SW
+                basic_vector<type>{ -1,  0 },   // W
+                basic_vector<type>{ -1,  1 }    // NW
         };
 
         [[nodiscard]] static constexpr auto is_valid(basic_square<type> square) noexcept

@@ -39,7 +39,7 @@ class basic_board
         static constexpr auto embedding = basic_embedding<Grid, Padding>();
         static constexpr auto min = min_index(
                 transform(orientations, [](auto orientation) {
-                        return orientation(embedding).valid_range;
+                        return orientation(embedding).valid_size;
                 })
         );
         static constexpr auto min_orientation = std::get<min>(orientations);
@@ -74,7 +74,7 @@ public:
         static constexpr auto padded_height = padded_type::height;
         static constexpr auto padded_size   = padded_type::size;
 
-        static constexpr auto valid_range = embedding_type::valid_range;
+        static constexpr auto valid_size = embedding_type::valid_size;
 
         static constexpr auto is_chequered = chequered<Grid>;
 

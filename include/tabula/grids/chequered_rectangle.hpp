@@ -6,7 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
-#include <tabula/lake.hpp>              // lake_
+#include <tabula/lake.hpp>              // basic_lake
 #include <tabula/padding.hpp>           // padding
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/type_traits.hpp>       // flipped, flopped, swapped, padded
@@ -15,7 +15,7 @@
 
 namespace tabula {
 
-template<int Width, int Height, int Parity = 0, class Lake = lake_<>>
+template<int Width, int Height, int Parity = 0, class Lake = basic_lake<>>
         requires (0 < Width &&  0 < Height && (Parity == 0 || Parity == 1))
 class chequered_rectangle
 {
@@ -25,21 +25,21 @@ public:
         static constexpr auto parity = Parity;
         static constexpr auto size   = (Width * Height + !Parity) / 2;
 
-        using lake = Lake;
-        using type = chequered_rectangle<Width, Height, Parity, Lake>;
+        using lake_type = Lake;
+        using      type = chequered_rectangle<Width, Height, Parity, Lake>;
 
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
         static constexpr auto directions = std::array
         {
-                basic_vector<type>{ 0,  2},     // N
-                basic_vector<type>{ 1,  1},     // NE
-                basic_vector<type>{ 2,  0},     // E
-                basic_vector<type>{ 1, -1},     // SE
-                basic_vector<type>{ 0, -2},     // S
-                basic_vector<type>{-1, -1},     // SW
-                basic_vector<type>{-2,  0},     // W
-                basic_vector<type>{-1,  1}      // NW
+                basic_vector<type>{  0,  2 },   // N
+                basic_vector<type>{  1,  1 },   // NE
+                basic_vector<type>{  2,  0 },   // E
+                basic_vector<type>{  1, -1 },   // SE
+                basic_vector<type>{  0, -2 },   // S
+                basic_vector<type>{ -1, -1 },   // SW
+                basic_vector<type>{ -2,  0 },   // W
+                basic_vector<type>{ -1,  1 }    // NW
         };
 
         [[nodiscard]] static constexpr auto is_valid(basic_square<type> square) noexcept
