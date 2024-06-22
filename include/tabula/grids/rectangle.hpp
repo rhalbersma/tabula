@@ -59,6 +59,10 @@ public:
                 return { index % Width, index / Width };
         }       
 
+        [[nodiscard]] static constexpr auto flip() noexcept -> flipped_t<type> { return {}; }
+        [[nodiscard]] static constexpr auto flop() noexcept -> flopped_t<type> { return {}; }
+        [[nodiscard]] static constexpr auto swap() noexcept -> swapped_t<type> { return {}; }  
+
 private:
         [[nodiscard]] static constexpr auto is_within(basic_square<type> square) noexcept
         {

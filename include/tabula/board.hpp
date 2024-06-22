@@ -36,21 +36,19 @@ inline constexpr auto orientations = std::tuple
 template<class Grid, padding Padding>
 class basic_board
 {
-        static constexpr auto embedding = basic_embedding<Grid, Padding>();
         static constexpr auto min = min_index(
-                transform(orientations, [](auto orientation) {
-                        return orientation(embedding).valid_size;
+                transform(orientations, [](auto orientation [[maybe_unused]]) {                        
+                        return basic_embedding<std::remove_cvref_t<decltype(orientation(Grid()))>, Padding>::valid_size;
                 })
-        );
-        static constexpr auto min_orientation = std::get<min>(orientations);
-        static constexpr auto min_embedding = min_orientation(embedding);
+        );        
+        static constexpr auto orientation = std::get<min>(orientations);
+        using embedding = basic_embedding<std::remove_cvref_t<decltype(orientation(Grid()))>, Padding>;
 
-        using embedding_type = decltype(min_embedding);
-        using    padded_type = embedding_type::padded_type;
+        using    padded_type = padded_t<typename embedding::grid_type, Padding>;
 
         [[nodiscard]] static constexpr auto pad(auto coordinates) noexcept
         {
-                return min_embedding.pad(min_orientation(coordinates));
+                return embedding::pad(orientation(coordinates));
         }
 
         static constexpr auto embedding_table = []() {
@@ -74,7 +72,7 @@ public:
         static constexpr auto padded_height = padded_type::height;
         static constexpr auto padded_size   = padded_type::size;
 
-        static constexpr auto valid_size = embedding_type::valid_size;
+        static constexpr auto valid_size = embedding::valid_size;
 
         static constexpr auto is_chequered = chequered<Grid>;
 

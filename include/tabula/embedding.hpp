@@ -5,10 +5,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/padding.hpp>           // padding
-#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, padded_t
-#include <optional>                     // nullopt, optional
-#include <ranges>                       // iota, reverse
+#include <tabula/padding.hpp>   // padding
+#include <optional>             // nullopt, optional
+#include <ranges>               // iota, reverse
 
 namespace tabula {
 
@@ -38,12 +37,7 @@ class basic_embedding
         }
 
 public:
-        using   grid_type = Grid;
-        using padded_type = padded_t<Grid, Padding>;
-
-        [[nodiscard]] static constexpr auto flip() noexcept -> basic_embedding<flipped_t<Grid>, Padding> { return {}; }
-        [[nodiscard]] static constexpr auto flop() noexcept -> basic_embedding<flopped_t<Grid>, Padding> { return {}; }
-        [[nodiscard]] static constexpr auto swap() noexcept -> basic_embedding<swapped_t<Grid>, Padding> { return {}; }
+        using grid_type = Grid;
 
         [[nodiscard]] static constexpr auto pad(auto coordinates) noexcept
         {
