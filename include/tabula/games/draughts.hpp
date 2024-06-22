@@ -6,7 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/board.hpp>     // basic_board
-#include <tabula/grids.hpp>     // basic_rectangle, chequered_rectangle
+#include <tabula/grids.hpp>     // basic_chequered, basic_rectangle
 #include <tabula/lake.hpp>      // basic_lake, algebraic_
 #include <tabula/padding.hpp>   // padding, right_padding
 
@@ -14,7 +14,7 @@ namespace tabula::draughts {
 
 template<int Width, int Height, int Parity = 0, padding Padding = right_padding(1), class Lake = basic_lake<>>
 using basic_draughts = basic_board<
-        chequered_rectangle<Width, Height, Parity, Lake>,
+        basic_chequered<Width, Height, Parity, Lake>,
         Padding
 >;
 

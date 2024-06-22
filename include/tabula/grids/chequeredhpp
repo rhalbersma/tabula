@@ -17,7 +17,7 @@ namespace tabula {
 
 template<int Width, int Height, int Parity = 0, class Lake = basic_lake<>>
         requires (0 < Width &&  0 < Height && (Parity == 0 || Parity == 1))
-class chequered_rectangle
+class basic_chequered
 {
 public:
         static constexpr auto width  = Width;
@@ -26,7 +26,7 @@ public:
         static constexpr auto size   = (Width * Height + !Parity) / 2;
 
         using lake_type = Lake;
-        using      type = chequered_rectangle<Width, Height, Parity, Lake>;
+        using      type = basic_chequered<Width, Height, Parity, Lake>;
 
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
@@ -82,27 +82,27 @@ private:
 };
 
 template<int Width, int Height, int Parity, class Lake>
-struct flipped<chequered_rectangle<Width, Height, Parity, Lake>>
+struct flipped<basic_chequered<Width, Height, Parity, Lake>>
 {
-        using type = chequered_rectangle<Width, Height, Parity ^ !(Height % 2), compose_<Lake, flip_>>;
+        using type = basic_chequered<Width, Height, Parity ^ !(Height % 2), compose_<Lake, flip_>>;
 };
 
 template<int Width, int Height, int Parity, class Lake>
-struct flopped<chequered_rectangle<Width, Height, Parity, Lake>>
+struct flopped<basic_chequered<Width, Height, Parity, Lake>>
 {
-        using type = chequered_rectangle<Width, Height, Parity ^ !(Width  % 2), compose_<Lake, flop_>>;
+        using type = basic_chequered<Width, Height, Parity ^ !(Width  % 2), compose_<Lake, flop_>>;
 };
 
 template<int Width, int Height, int Parity, class Lake>
-struct swapped<chequered_rectangle<Width, Height, Parity, Lake>>
+struct swapped<basic_chequered<Width, Height, Parity, Lake>>
 {
-        using type = chequered_rectangle<Height, Width, Parity, compose_<Lake, swap_>>;
+        using type = basic_chequered<Height, Width, Parity, compose_<Lake, swap_>>;
 };
 
 template<int Width, int Height, int Parity, class Lake, padding Padding>
-struct padded<chequered_rectangle<Width, Height, Parity, Lake>, Padding>
+struct padded<basic_chequered<Width, Height, Parity, Lake>, Padding>
 {
-        using type = chequered_rectangle
+        using type = basic_chequered
         <
                 Width  + Padding.left + Padding.right + !((Width + Padding.left + Padding.right) % 2),
                 Height + Padding.top  + Padding.bottom,
