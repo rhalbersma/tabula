@@ -58,7 +58,6 @@ set(cxx_compile_options_mbig_obj
     >
 )
 
-set(current_include_dir ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(current_source_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
 file(GLOB_RECURSE targets RELATIVE ${current_source_dir} *.cpp)
 
@@ -75,11 +74,6 @@ foreach(t ${targets})
         ${CMAKE_PROJECT_NAME}
         Boost::unit_test_framework
         fmt::fmt
-    )
-
-    target_include_directories(
-        ${target_id} PRIVATE
-        ${current_include_dir}
     )
 
     target_compile_definitions(

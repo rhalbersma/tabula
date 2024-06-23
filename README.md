@@ -7,14 +7,15 @@
 
 ## Requirements
 
-This header-only library has no other dependencies than the C++ Standard Library and is continuously being tested with the following conforming [C++20](https://open-std.org/jtc1/sc22/wg21/docs/papers/2020/n4868.pdf) compilers:
+This single-header library has no other dependencies than the C++ Standard Library and is continuously being tested with the following conforming [C++23](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/n4950.pdf) compilers:
 
-| Platform | Compiler   | Versions   | Build |
-| :------- | :-------   | :-------   | :---- |
-| Linux    | GCC        | 12, 13-SVN | CI currently being ported to GitHub Actions |
-| Linux    | Clang      | 16, 17-SVN | CI currently being ported to GitHub Actions |
+| Platform | Compiler   | Versions     | Build |
+| :------- | :-------   | :-------     | :---- |
+| Linux    | GCC        | $\geq$ 14    | CI currently being ported to GitHub Actions |
+| Linux    | Clang      | $\geq$ 17    | CI currently being ported to GitHub Actions |
+| Windows  | Visual C++ | $\geq$ 17.10 | CI currently being ported to GitHub Actions |
 
-Note that this library makes liberal use of C++20 features. Visual Studio is catching up fast, and will be added as soon as possible.
+Note that the unit tests depend on [Boost](https://www.boost.io/).
 
 ## Acknowledgments
 

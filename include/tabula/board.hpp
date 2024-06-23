@@ -36,7 +36,7 @@ inline constexpr auto orientations = std::tuple
 template<class Grid, padding Padding>
 class basic_board
 {
-        static constexpr auto min = min_index(
+        static constexpr auto min = min_element(
                 transform(orientations, [](auto orientation [[maybe_unused]]) {                        
                         return basic_embedding<std::remove_cvref_t<decltype(orientation(Grid()))>, Padding>::valid_size;
                 })

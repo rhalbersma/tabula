@@ -22,15 +22,8 @@ inline constexpr auto tuple_c = std::tuple(std::integral_constant<T, Ns>()...);
 
 constexpr auto for_each(auto tup, auto fun) noexcept
 {
-        return std::apply([=](auto... args) {
+        return std::apply([&](auto... args) {
                 return (fun(args), ...);
-        }, tup);
-}
-
-constexpr auto enumerate(auto tup, auto fun) noexcept
-{
-        return std::apply([=, i = 0](auto... args) mutable {
-                return (fun(i++, args), ...);
         }, tup);
 }
 
@@ -76,18 +69,19 @@ constexpr auto remove_if(auto tup, auto pred) noexcept
 }
 
 template<class Compare = std::less<>>
-constexpr auto min_index(auto tup, Compare cmp = Compare()) noexcept
+constexpr auto min_element(auto tup, Compare cmp = Compare()) noexcept
 {
-        return std::apply([=, index = 0, i = 1](auto head, auto... tail) mutable {
+        return std::apply([=](auto head, auto... tail) {
                 auto min = head;
-                ([&, cmp](auto arg) {
+                auto element = 0;
+                for_each(std::tuple(tail...), [&, cmp, index = 1] (auto arg) mutable {
                         if (cmp(arg, min)) {
                                 min = arg;
-                                index = i;
+                                element = index;
                         }
-                        ++i;
-                }(tail), ...);
-                return index;
+                        ++index;
+                });
+                return element;
         }, tup);
 }
 
