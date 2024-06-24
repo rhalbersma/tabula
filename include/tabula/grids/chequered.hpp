@@ -8,7 +8,6 @@
 #include <tabula/compass.hpp>           // basic_compass
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
 #include <tabula/padding.hpp>           // padding
-#include <tabula/square.hpp>            // basic_square
 #include <tabula/type_traits.hpp>       // flipped, flopped, swapped, padded
 #include <tabula/vector.hpp>            // basic_vector
 #include <utility>                      // pair
@@ -45,7 +44,7 @@ struct basic_chequered
         }
 
         [[nodiscard]] static constexpr auto coordinates(int index) noexcept
-                -> basic_square<type>
+                -> std::pair<int, int>
         {
                 index *= 2;
                 index += (Width % 2) ? Parity : Parity ^ ((index / Width) % 2);

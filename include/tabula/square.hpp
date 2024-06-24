@@ -8,6 +8,7 @@
 #include <tabula/padding.hpp>           // padding
 #include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, add_padding_t
 #include <tabula/vector.hpp>            // basic_vector
+#include <utility>                      // pair
 
 namespace tabula {
 
@@ -18,6 +19,18 @@ struct basic_square
         int rank;
 
         using grid_type = Grid;
+
+        constexpr basic_square(int f, int r) noexcept
+        :
+                file(f),
+                rank(r)
+        {}
+
+        constexpr basic_square(std::pair<int, int> p) noexcept
+        :
+                file(p.first),
+                rank(p.second)
+        {}
 
         friend bool operator==(basic_square, basic_square) = default;
 

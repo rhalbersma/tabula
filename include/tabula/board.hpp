@@ -49,7 +49,7 @@ struct basic_board
         static constexpr auto embedding_table = []() {
                 auto table = std::array<std::optional<int>, Grid::size>{};
                 for (auto index : std::views::iota(0, Grid::size)) {
-                        if (auto const square = Grid::coordinates(index); is_valid(square)) {
+                        if (auto const square = basic_square<Grid>(Grid::coordinates(index)); is_valid(square)) {
                                 table[static_cast<std::size_t>(index)] = pad(square).index();
                         }
                 }
