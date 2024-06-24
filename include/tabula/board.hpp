@@ -6,6 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/concepts.hpp>          // chequered
+#include <tabula/dihedral.hpp>
 #include <tabula/embedding.hpp>         // basic_embedding
 #include <tabula/functional.hpp>        // operator*, flip, flop, swap
 #include <tabula/padding.hpp>           // padding
@@ -17,31 +18,19 @@
 #include <functional>                   // identity
 #include <optional>                     // optional
 #include <ranges>                       // views
-#include <tuple>                        // get, tuple
+#include <tuple>                        // get
 
 namespace tabula {
-
-inline constexpr auto actions = std::tuple
-(
-        std::identity(),        // origin at bottom-left,  left-to-right, bottom-to-top
-        swap,                   // origin at bottom-left,  bottom-to-top, left-to-right
-        flip,                   // origin at top-left,     left-to-right, top-to-bottom
-        swap * flip,            // origin at top-left,     top-to-bottom, left-to-right
-        flop,                   // origin at bottom-right, right-to-left, bottom-to-top
-        swap * flop,            // origin at bottom-right, bottom-to-top, right-to-left
-        flop * flip,            // origin at top-right,    right-to-left, top-to-bottom
-        swap * flop * flip      // origin at top-right,    top-to-bottom, right-to-left
-);
 
 template<class Grid, class Lake, padding Padding>
 struct basic_board
 {
         static constexpr auto min = min_element(
-                transform(actions, [](auto orientation [[maybe_unused]]) {                        
+                transform(dihedral, [](auto orientation [[maybe_unused]]) {                        
                         return basic_embedding<std::remove_cvref_t<decltype(orientation(Grid()))>, Lake, Padding>::valid_size;
                 })
         );        
-        static constexpr auto orientation = std::get<min>(actions);
+        static constexpr auto orientation = std::get<min>(dihedral);
         using embedding = basic_embedding<std::remove_cvref_t<decltype(orientation(Grid()))>, Lake, Padding>;
 
         using padded_type = padded_t<typename embedding::grid_type, Padding>;
@@ -92,8 +81,6 @@ public:
         {
                 return padded_type::parity;
         }
-
-
 
         static constexpr auto square(int file, int rank) noexcept
                 -> basic_square<Grid>

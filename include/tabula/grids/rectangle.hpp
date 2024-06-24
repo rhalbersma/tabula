@@ -25,6 +25,8 @@ struct basic_rectangle
 
         using type = basic_rectangle<Width, Height>;
 
+        friend bool operator==(type, type) = default;
+        
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
         static constexpr auto directions = std::array

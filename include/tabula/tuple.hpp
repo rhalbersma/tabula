@@ -41,6 +41,13 @@ constexpr auto accumulate(auto tup) noexcept
         }, tup);
 }
 
+constexpr auto all_of(auto tup, auto pred) noexcept
+{
+        return std::apply([=](auto... args) {
+                return (... && pred(args));
+        }, tup);
+}
+
 constexpr auto any_of(auto tup, auto pred) noexcept
 {
         return std::apply([=](auto... args) {

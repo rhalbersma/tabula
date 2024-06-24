@@ -25,6 +25,8 @@ struct basic_chequered
 
         using type = basic_chequered<Width, Height, Parity>;
 
+        friend bool operator==(type, type) = default;
+
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
         static constexpr auto directions = std::array

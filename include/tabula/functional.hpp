@@ -17,6 +17,7 @@ constexpr auto operator*(auto&& f, auto&& g) noexcept
         return [f_ = FWD(f), g_ = FWD(g)](auto&&... args) { return f_(g_(FWD(args)...)); };
 }
 
+inline constexpr auto id   = std::identity();
 inline constexpr auto flip = [](auto&& arg) { return FWD(arg).flip(); };
 inline constexpr auto flop = [](auto&& arg) { return FWD(arg).flop(); };
 inline constexpr auto swap = [](auto&& arg) { return FWD(arg).swap(); };

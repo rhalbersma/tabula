@@ -3,8 +3,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <tabula/dihedral.hpp>
 #include <tabula/grids.hpp>             // basic_chequered, basic_rectangle
+#include <tabula/functional.hpp>        // operator*, flip, flop, swap
 #include <tabula/square.hpp>            // basic_square
+#include <tabula/tuple.hpp>
 #include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t
 #include <boost/mp11/list.hpp>          // mp_list
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
@@ -69,11 +72,19 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(SquareIsInvertible, Grid, GridTypes)
         }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(TransformationsAreIdempotent, Grid, GridTypes)
+BOOST_AUTO_TEST_CASE_TEMPLATE(GridTransformationsAreIdempotent, Grid, GridTypes)
 {
-        static_assert(std::same_as<flipped_t<flipped_t<Grid>>, Grid>);
-        static_assert(std::same_as<flopped_t<flopped_t<Grid>>, Grid>);
-        static_assert(std::same_as<swapped_t<swapped_t<Grid>>, Grid>);
+        static_assert(is_realized(dihedral, Grid()));
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(SquareTransformationsAreIdempotent, Grid, GridTypes)
+{
+        for (auto rank : std::views::iota(0, Grid::height)) {
+                for (auto file : std::views::iota(0, Grid::width)) {
+                        auto const square = basic_square<Grid>{ file, rank };
+                        BOOST_CHECK(is_realized(dihedral, square));
+                }
+        }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
