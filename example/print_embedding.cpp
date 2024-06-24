@@ -30,8 +30,8 @@ int main()
                 draughts::spantsiretti(),
                 draughts::ktar<10, 11>(),
                 draughts::ktar<10, 12>(),
-                draughts::basic_draughts<19, 10>(),
-                draughts::basic_draughts<10, 10, 0, right_padding(9)>(),
+                basic_draughts<19, 10>(),
+                basic_draughts<10, 10, 0, basic_lake<>, right_padding(9)>(),
 
                 // chequered boards with irregular shapes
                 draughts::mertens_cut_j10(),
@@ -41,10 +41,10 @@ int main()
                 draughts::turkish(),
 
                 // 10x10 draughts with 11x12 mailbox representation
-                basic_board<basic_chequered<10, 10>, padding(1, 1, 1, 0)>(),
+                basic_draughts<10, 10, 0, basic_lake<>, padding(1, 1, 1, 0)>(),
 
                 // 10x10 draughts with 19x10 vector representation
-                basic_board<basic_chequered<10, 10>, right_padding(9)>(),
+                basic_draughts<10, 10, 0, basic_lake<>, right_padding(9)>(),
 
                 // stratego variants
                 stratego::l_attaque(),

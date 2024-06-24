@@ -10,13 +10,12 @@
 #include <tabula/lake.hpp>      // basic_lake, algebraic_
 #include <tabula/padding.hpp>   // padding, right_padding
 
-namespace tabula::draughts {
+namespace tabula {
 
-template<int Width, int Height, int Parity = 0, padding Padding = right_padding(1), class Lake = basic_lake<>>
-using basic_draughts = basic_board<
-        basic_chequered<Width, Height, Parity, Lake>,
-        Padding
->;
+template<int Width, int Height, int Parity = 0, class Lake = basic_lake<>, padding Padding = right_padding(1)>
+using basic_draughts = basic_board<basic_chequered<Width, Height, Parity>, Lake, Padding>;
+
+namespace draughts {
 
 using nano              = basic_draughts< 4,  4>;
 using micro             = basic_draughts< 6,  6>;
@@ -34,7 +33,7 @@ using italian           = latin;
 using spanish           = latin;
 
 using international     = basic_draughts<10, 10>;
-using frisian           = basic_draughts<10, 10, 0, right_padding(2)>;
+using frisian           = basic_draughts<10, 10, 0, basic_lake<>, right_padding(2)>;
 using canadian          = basic_draughts<12, 12>;
 using sri_lankan        = basic_draughts<12, 12, 1>;
 using dumm              = basic_draughts<14, 14>;
@@ -48,10 +47,11 @@ using ktar              = basic_draughts<Width, Height, 1>;
 
 // Removing square j10 or adding square k9 to the 10x10 board
 // yields a winning endgame of 3 kings vs 1 king.
-using mertens_cut_j10   = basic_draughts<10, 10, 0, right_padding(1), basic_lake<algebraic('j',10)>>;
-using mertens_add_k9    = basic_draughts<11, 10, 0, right_padding(1), basic_lake<algebraic('k',7), algebraic('k',5), algebraic('k',3), algebraic('k',1)>>;
+using mertens_cut_j10   = basic_draughts<10, 10, 0, basic_lake<algebraic('j',10)>>;
+using mertens_add_k9    = basic_draughts<11, 10, 0, basic_lake<algebraic('k',7), algebraic('k',5), algebraic('k',3), algebraic('k',1)>>;
 
-using turkish           = basic_board<basic_rectangle<8, 8>, right_padding(1)>;
+using turkish           = basic_board<basic_rectangle<8, 8>, basic_lake<>, right_padding(1)>;
 using dameo             = turkish;
 
-}       // namespace tabula::draughts
+}       // namespace draughts
+}       // namespace tabula

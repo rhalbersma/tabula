@@ -56,4 +56,6 @@ struct padding
         return padding(0, r, 0, 0);
 }
 
+inline constexpr auto mailbox_padding = padding(2, 1);
+
 }       // namespace tabula

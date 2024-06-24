@@ -14,7 +14,7 @@ using namespace tabula;
 
 BOOST_AUTO_TEST_SUITE(Compass)
 
-using grid_types = boost::mp11::mp_list
+using GridTypes = boost::mp11::mp_list
 <       basic_rectangle<1, 1>
 ,       basic_rectangle<1, 2>
 ,       basic_rectangle<2, 1>
@@ -50,7 +50,7 @@ using grid_types = boost::mp11::mp_list
 ,       basic_chequered<5, 3, 1>
 >;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, Grid, grid_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, Grid, GridTypes)
 {
         auto computed 
                 = Grid::directions 
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, Grid, grid_types)
         BOOST_CHECK(std::ranges::equal(computed, expected));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreIsOrdinal, Grid, grid_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreIsOrdinal, Grid, GridTypes)
 {
         auto computed 
                 = Grid::directions 
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreIsOrdinal, Grid, grid_types)
         BOOST_CHECK(std::ranges::equal(computed, expected));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, Grid, grid_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, Grid, GridTypes)
 {
         for (auto d : Grid::directions) {
                 auto const r = d.reverse();

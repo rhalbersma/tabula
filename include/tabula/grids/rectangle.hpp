@@ -6,7 +6,6 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
-#include <tabula/lake.hpp>              // basic_lake
 #include <tabula/padding.hpp>           // padding
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/type_traits.hpp>       // flipped, flopped, swapped, padded
@@ -16,17 +15,15 @@
 
 namespace tabula {
 
-template<int Width, int Height, class Lake = basic_lake<>>
+template<int Width, int Height>
         requires (0 < Width && 0 < Height)
-class basic_rectangle
+struct basic_rectangle
 {
-public:
         static constexpr auto width  = Width;
         static constexpr auto height = Height;
         static constexpr auto size   = Width * Height;
 
-        using lake_type = Lake;
-        using      type = basic_rectangle<Width, Height, Lake>;
+        using type = basic_rectangle<Width, Height>;
 
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
 
@@ -44,7 +41,10 @@ public:
 
         [[nodiscard]] static constexpr auto is_valid(basic_square<type> square) noexcept
         {
-                return is_within(square) && !is_lake(square);
+                return
+                        0 <= square.file && square.file < Width &&
+                        0 <= square.rank && square.rank < Height
+                ;        
         }
 
         [[nodiscard]] static constexpr auto index(auto coordinates) noexcept
@@ -61,49 +61,34 @@ public:
 
         [[nodiscard]] static constexpr auto flip() noexcept -> flipped_t<type> { return {}; }
         [[nodiscard]] static constexpr auto flop() noexcept -> flopped_t<type> { return {}; }
-        [[nodiscard]] static constexpr auto swap() noexcept -> swapped_t<type> { return {}; }  
-
-private:
-        [[nodiscard]] static constexpr auto is_within(basic_square<type> square) noexcept
-        {
-                return
-                        0 <= square.file && square.file < Width &&
-                        0 <= square.rank && square.rank < Height
-                ;
-        }
-
-        [[nodiscard]] static constexpr auto is_lake(basic_square<type> square) noexcept
-        {
-                return Lake()(square);
-        }
+        [[nodiscard]] static constexpr auto swap() noexcept -> swapped_t<type> { return {}; }
 };
 
-template<int Width, int Height, class Lake>
-struct flipped<basic_rectangle<Width, Height, Lake>>
+template<int Width, int Height>
+struct flipped<basic_rectangle<Width, Height>>
 {
-        using type = basic_rectangle<Width, Height, compose_<Lake, flip_>>;
+        using type = basic_rectangle<Width, Height>;
 };
 
-template<int Width, int Height, class Lake>
-struct flopped<basic_rectangle<Width, Height, Lake>>
+template<int Width, int Height>
+struct flopped<basic_rectangle<Width, Height>>
 {
-        using type = basic_rectangle<Width, Height, compose_<Lake, flop_>>;
+        using type = basic_rectangle<Width, Height>;
 };
 
-template<int Width, int Height, class Lake>
-struct swapped<basic_rectangle<Width, Height, Lake>>
+template<int Width, int Height>
+struct swapped<basic_rectangle<Width, Height>>
 {
-        using type = basic_rectangle<Height, Width, compose_<Lake, swap_>>;
+        using type = basic_rectangle<Height, Width>;
 };
 
-template<int Width, int Height, class Lake, padding Padding>
-struct padded<basic_rectangle<Width, Height, Lake>, Padding>
+template<int Width, int Height, padding Padding>
+struct padded<basic_rectangle<Width, Height>, Padding>
 {
         using type = basic_rectangle
         <
                 Width  + Padding.left + Padding.right,
-                Height + Padding.top  + Padding.bottom,
-                Lake
+                Height + Padding.top  + Padding.bottom
         >;
 };
 

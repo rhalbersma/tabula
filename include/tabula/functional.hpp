@@ -17,18 +17,8 @@ constexpr auto operator*(auto&& f, auto&& g) noexcept
         return [f_ = FWD(f), g_ = FWD(g)](auto&&... args) { return f_(g_(FWD(args)...)); };
 }
 
-template<class... Fs>
-inline constexpr auto compose = [](auto&&... args) { return (Fs() * ... * std::identity())(FWD(args)...); };
-
-template<class... Fs>
-using compose_ = decltype(compose<Fs...>);
-
 inline constexpr auto flip = [](auto&& arg) { return FWD(arg).flip(); };
 inline constexpr auto flop = [](auto&& arg) { return FWD(arg).flop(); };
 inline constexpr auto swap = [](auto&& arg) { return FWD(arg).swap(); };
-
-using flip_ = decltype(flip);
-using flop_ = decltype(flop);
-using swap_ = decltype(swap);
 
 }       // namespace tabula

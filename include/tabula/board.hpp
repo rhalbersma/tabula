@@ -21,7 +21,7 @@
 
 namespace tabula {
 
-inline constexpr auto orientations = std::tuple
+inline constexpr auto actions = std::tuple
 (
         std::identity(),        // origin at bottom-left,  left-to-right, bottom-to-top
         swap,                   // origin at bottom-left,  bottom-to-top, left-to-right
@@ -33,28 +33,33 @@ inline constexpr auto orientations = std::tuple
         swap * flop * flip      // origin at top-right,    top-to-bottom, right-to-left
 );
 
-template<class Grid, padding Padding>
-class basic_board
+template<class Grid, class Lake, padding Padding>
+struct basic_board
 {
         static constexpr auto min = min_element(
-                transform(orientations, [](auto orientation [[maybe_unused]]) {                        
-                        return basic_embedding<std::remove_cvref_t<decltype(orientation(Grid()))>, Padding>::valid_size;
+                transform(actions, [](auto orientation [[maybe_unused]]) {                        
+                        return basic_embedding<std::remove_cvref_t<decltype(orientation(Grid()))>, Lake, Padding>::valid_size;
                 })
         );        
-        static constexpr auto orientation = std::get<min>(orientations);
-        using embedding = basic_embedding<std::remove_cvref_t<decltype(orientation(Grid()))>, Padding>;
+        static constexpr auto orientation = std::get<min>(actions);
+        using embedding = basic_embedding<std::remove_cvref_t<decltype(orientation(Grid()))>, Lake, Padding>;
 
-        using    padded_type = padded_t<typename embedding::grid_type, Padding>;
+        using padded_type = padded_t<typename embedding::grid_type, Padding>;
 
         [[nodiscard]] static constexpr auto pad(auto coordinates) noexcept
         {
                 return embedding::pad(orientation(coordinates));
         }
 
+        static constexpr auto is_valid(basic_square<Grid> square) noexcept
+        {
+                return Grid::is_valid(square) && !Lake()(square);
+        }
+
         static constexpr auto embedding_table = []() {
                 auto table = std::array<std::optional<int>, Grid::size>{};
                 for (auto index : std::views::iota(0, Grid::size)) {
-                        if (auto const square = Grid::square(index); square.is_valid()) {
+                        if (auto const square = Grid::square(index); is_valid(square)) {
                                 table[static_cast<std::size_t>(index)] = pad(square).index();
                         }
                 }
@@ -87,6 +92,8 @@ public:
         {
                 return padded_type::parity;
         }
+
+
 
         static constexpr auto square(int file, int rank) noexcept
                 -> basic_square<Grid>
