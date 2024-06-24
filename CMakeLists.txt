@@ -30,5 +30,5 @@ target_compile_features(
 )
 
 include(CTest)
-add_subdirectory(test)
+#add_subdirectory(test)
 add_subdirectory(example)

@@ -5,20 +5,19 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/padding.hpp>           // padding
-#include <tabula/type_traits.hpp>       // flipped_t, flopped_t, swapped_t, add_padding_t
-#include <tabula/vector.hpp>            // basic_vector
-#include <utility>                      // pair
+#include <tabula/padding.hpp>   // padding
+#include <tabula/vector.hpp>    // basic_vector
+#include <utility>              // pair
 
 namespace tabula {
 
-template<class Grid>
+template<auto Grid>
 struct basic_square
 {
         int file;
         int rank;
 
-        using grid_type = Grid;
+        static constexpr auto grid = Grid;
 
         constexpr basic_square(int f, int r) noexcept
         :
@@ -49,60 +48,60 @@ struct basic_square
         }
 
         [[nodiscard]] constexpr auto flip() const noexcept
-                -> basic_square<flipped_t<Grid>>
+                -> basic_square<Grid.flip()>
         {
-                return { file, Grid::height - 1 - rank };
+                return { file, Grid.height - 1 - rank };
         }
 
         [[nodiscard]] constexpr auto flop() const noexcept
-                -> basic_square<flopped_t<Grid>>
+                -> basic_square<Grid.flop()>
         {
-                return { Grid::width - 1 - file, rank };
+                return { Grid.width - 1 - file, rank };
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept
-                -> basic_square<swapped_t<Grid>>
+                -> basic_square<Grid.swap()>
         {
                 return { rank, file };
         }
 
         template<padding Padding>
         [[nodiscard]] constexpr auto pad() const noexcept
-                -> basic_square<padded_t<Grid, Padding>>
+                -> basic_square<Grid.template pad<Padding>()>
         {
                 return { file + Padding.left, rank + Padding.bottom };
         }
 
         [[nodiscard]] constexpr auto is_valid() const noexcept
         {
-                return Grid::is_valid(*this);
+                return Grid.is_valid(*this);
         }
 
         [[nodiscard]] constexpr auto index() const noexcept
         {
-                return Grid::index(*this);
+                return Grid.index(*this);
         }
 };
 
-template<class Grid>
+template<auto Grid>
 [[nodiscard]] constexpr auto operator+(basic_square<Grid> s, basic_vector<Grid> v) noexcept
 {
         auto nrv = s; nrv += v; return nrv;
 }
 
-template<class Grid>
+template<auto Grid>
 [[nodiscard]] constexpr auto operator+(basic_vector<Grid> v, basic_square<Grid> s) noexcept
 {
         auto nrv = s; nrv += v; return nrv;
 }
 
-template<class Grid>
+template<auto Grid>
 [[nodiscard]] constexpr auto operator-(basic_square<Grid> s, basic_vector<Grid> v) noexcept
 {
         auto nrv = s; nrv -= v; return nrv;
 }
 
-template<class Grid>
+template<auto Grid>
 [[nodiscard]] constexpr auto operator-(basic_square<Grid> lhs, basic_square<Grid> rhs) noexcept
         -> basic_vector<Grid>
 {

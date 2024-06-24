@@ -22,4 +22,6 @@ inline constexpr auto flip = [](auto&& arg) { return FWD(arg).flip(); };
 inline constexpr auto flop = [](auto&& arg) { return FWD(arg).flop(); };
 inline constexpr auto swap = [](auto&& arg) { return FWD(arg).swap(); };
 
+#undef FWD
+
 }       // namespace tabula

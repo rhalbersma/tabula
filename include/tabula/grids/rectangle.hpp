@@ -5,103 +5,92 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/compass.hpp>           // basic_compass
-#include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
-#include <tabula/padding.hpp>           // padding
-#include <tabula/type_traits.hpp>       // flipped, flopped, swapped, padded
-#include <tabula/vector.hpp>            // basic_vector
-#include <array>                        // array
-#include <utility>                      // pair
+#include <tabula/compass.hpp>   // basic_compass
+#include <tabula/padding.hpp>   // padding
+#include <tabula/vector.hpp>    // basic_vector
+#include <array>                // array
+#include <utility>              // pair
 
 namespace tabula {
 
-template<int Width, int Height>
-        requires (0 < Width && 0 < Height)
 struct basic_rectangle
 {
-        static constexpr auto width  = Width;
-        static constexpr auto height = Height;
+        int width;
+        int height;
         
-        [[nodiscard]] static constexpr auto size() noexcept
+        [[nodiscard]] constexpr auto size() const noexcept
         {
                 return width * height;
         }
 
-        using type = basic_rectangle<Width, Height>;
-
-        friend bool operator==(type, type) = default;
+        bool operator==(const basic_rectangle&) const = default;
         
-        [[nodiscard]] static constexpr auto is_valid(auto coordinates) noexcept
+        [[nodiscard]] constexpr auto is_valid(auto coordinates) const noexcept
         {
                 auto const [ file, rank ] = coordinates;
                 return
-                        0 <= file && file < Width &&
-                        0 <= rank && rank < Height
+                        0 <= file && file < width &&
+                        0 <= rank && rank < height
                 ;        
         }
 
-        [[nodiscard]] static constexpr auto index(auto coordinates) noexcept
+        [[nodiscard]] constexpr auto index(auto coordinates) const noexcept
         {
                 auto const [ file, rank ] = coordinates;
-                return file + rank * Width;
+                return file + rank * width;
         }
 
-        [[nodiscard]] static constexpr auto coordinates(int index) noexcept
+        [[nodiscard]] constexpr auto coordinates(int index) const noexcept
                 -> std::pair<int, int>
         {
-                return { index % Width, index / Width };
+                return { index % width, index / width };
         }       
 
-        [[nodiscard]] static constexpr auto flip() noexcept -> flipped_t<type> { return {}; }
-        [[nodiscard]] static constexpr auto flop() noexcept -> flopped_t<type> { return {}; }
-        [[nodiscard]] static constexpr auto swap() noexcept -> swapped_t<type> { return {}; }
+        [[nodiscard]] constexpr auto flip() const noexcept 
+                -> basic_rectangle
+        { 
+                return { width, height }; 
+        }
+
+        [[nodiscard]] constexpr auto flop() const noexcept 
+                -> basic_rectangle
+        { 
+                return { width, height }; 
+        }
+
+        [[nodiscard]] constexpr auto swap() const noexcept 
+                -> basic_rectangle
+        { 
+                return { height, width }; 
+        }
+
+        template<padding Padding>
+        [[nodiscard]] constexpr auto pad() const noexcept
+                -> basic_rectangle
+        {
+                return 
+                {
+                        width  + Padding.left + Padding.right,
+                        height + Padding.top  + Padding.bottom
+                };
+        }
 };
 
-template<int Width, int Height>
-struct flipped<basic_rectangle<Width, Height>>
+template<basic_rectangle Grid>
+struct basic_compass<Grid>
 {
-        using type = basic_rectangle<Width, Height>;
-};
-
-template<int Width, int Height>
-struct flopped<basic_rectangle<Width, Height>>
-{
-        using type = basic_rectangle<Width, Height>;
-};
-
-template<int Width, int Height>
-struct swapped<basic_rectangle<Width, Height>>
-{
-        using type = basic_rectangle<Height, Width>;
-};
-
-template<int Width, int Height, padding Padding>
-struct padded<basic_rectangle<Width, Height>, Padding>
-{
-        using type = basic_rectangle
-        <
-                Width  + Padding.left + Padding.right,
-                Height + Padding.top  + Padding.bottom
-        >;
-};
-
-template<int Width, int Height>
-struct basic_compass<basic_rectangle<Width, Height>>
-{
-        using type = basic_rectangle<Width, Height>;
-
+        static constexpr auto grid = Grid;
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
-
         static constexpr auto directions = std::array
         {
-                basic_vector<type>{  0,  1 },   // N
-                basic_vector<type>{  1,  1 },   // NE
-                basic_vector<type>{  1,  0 },   // E
-                basic_vector<type>{  1, -1 },   // SE
-                basic_vector<type>{  0, -1 },   // S
-                basic_vector<type>{ -1, -1 },   // SW
-                basic_vector<type>{ -1,  0 },   // W
-                basic_vector<type>{ -1,  1 }    // NW
+                basic_vector<Grid>{  0,  1 },   // N
+                basic_vector<Grid>{  1,  1 },   // NE
+                basic_vector<Grid>{  1,  0 },   // E
+                basic_vector<Grid>{  1, -1 },   // SE
+                basic_vector<Grid>{  0, -1 },   // S
+                basic_vector<Grid>{ -1, -1 },   // SW
+                basic_vector<Grid>{ -1,  0 },   // W
+                basic_vector<Grid>{ -1,  1 }    // NW
         };
 };
 

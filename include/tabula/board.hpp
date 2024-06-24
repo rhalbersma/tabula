@@ -23,18 +23,18 @@
 
 namespace tabula {
 
-template<class Grid, class Lake, padding Padding>
+template<auto Grid, class Lake, padding Padding>
 struct basic_board
 {
         static constexpr auto min = min_element(
-                transform(dihedral, [](auto orientation [[maybe_unused]]) {                        
-                        return basic_embedding<std::remove_cvref_t<decltype(orientation(Grid()))>, Lake, Padding>::valid_size;
+                transform(dihedral, [](auto orientation) {                        
+                        return basic_embedding<orientation(Grid), Lake, Padding>::valid_size;
                 })
         );        
         static constexpr auto orientation = std::get<min>(dihedral);
-        using embedding = basic_embedding<std::remove_cvref_t<decltype(orientation(Grid()))>, Lake, Padding>;
+        using embedding = basic_embedding<orientation(Grid), Lake, Padding>;
 
-        using padded_type = padded_t<typename embedding::grid_type, Padding>;
+        static constexpr auto padded_grid = embedding::grid.template pad<Padding>();
 
         [[nodiscard]] static constexpr auto pad(auto coordinates) noexcept
         {
@@ -43,13 +43,13 @@ struct basic_board
 
         static constexpr auto is_valid(basic_square<Grid> square) noexcept
         {
-                return Grid::is_valid(square) && !Lake()(square);
+                return Grid.is_valid(square) && !Lake()(square);
         }
 
         static constexpr auto embedding_table = []() {
-                auto table = std::array<std::optional<int>, Grid::size()>{};
-                for (auto index : std::views::iota(0, Grid::size())) {
-                        if (auto const square = basic_square<Grid>(Grid::coordinates(index)); is_valid(square)) {
+                auto table = std::array<std::optional<int>, Grid.size()>{};
+                for (auto index : std::views::iota(0, Grid.size())) {
+                        if (auto const square = basic_square<Grid>(Grid.coordinates(index)); is_valid(square)) {
                                 table[static_cast<std::size_t>(index)] = pad(square).index();
                         }
                 }
@@ -57,15 +57,15 @@ struct basic_board
         }();
 
 public:
-        using    grid_type = Grid;
+        static constexpr auto grid = Grid;
 
-        static constexpr auto width  = Grid::width;
-        static constexpr auto height = Grid::height;
-        static constexpr auto size   = Grid::size();
+        static constexpr auto width  = Grid.width;
+        static constexpr auto height = Grid.height;
+        static constexpr auto size   = Grid.size();
 
-        static constexpr auto padded_width  = padded_type::width;
-        static constexpr auto padded_height = padded_type::height;
-        static constexpr auto padded_size   = padded_type::size();
+        static constexpr auto padded_width  = padded_grid.width;
+        static constexpr auto padded_height = padded_grid.height;
+        static constexpr auto padded_size   = padded_grid.size();
 
         static constexpr auto valid_size = embedding::valid_size;
 
@@ -74,13 +74,13 @@ public:
         static constexpr auto parity() noexcept
                 requires is_chequered
         {
-                return Grid::parity;
+                return Grid.parity;
         }
 
         static constexpr auto padded_parity() noexcept
                 requires is_chequered
         {
-                return padded_type::parity;
+                return padded_grid.parity;
         }
 
         static constexpr auto square(int file, int rank) noexcept
@@ -106,8 +106,9 @@ public:
         }
 
         static constexpr auto strides = []() {
-                std::array<int, basic_compass<Grid>::directions.size()> table;
-                for (auto index = std::size_t(0); auto direction : basic_compass<Grid>::directions) {
+                using compass = basic_compass<Grid>;
+                std::array<int, compass::directions.size()> table;
+                for (auto index = std::size_t(0); auto direction : compass::directions) {
                         table[index++] = pad(direction).stride();
                 }
                 return table;

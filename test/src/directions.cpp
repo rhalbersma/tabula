@@ -80,7 +80,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreIsOrdinal, Grid, GridTypes)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, Grid, GridTypes)
 {
-        for (auto d : basic_compass<Grid>::directions) {
+        using compass = basic_compass<Grid>;
+        for (auto d : compass::directions) {
                 auto const r = d.reverse();
                 BOOST_CHECK((d != r));
                 BOOST_CHECK_EQUAL(d.is_left() ,  r.is_right());

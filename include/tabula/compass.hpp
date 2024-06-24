@@ -7,6 +7,7 @@
 
 namespace tabula {
 
-template<class> struct basic_compass;
+template<auto Grid> 
+struct basic_compass;
 
 }       // namespace tabula

@@ -9,10 +9,10 @@
 
 namespace tabula {
 
-template<class Grid>
+template<auto Grid>
 concept chequered = requires
 {
-        { Grid::parity } -> std::convertible_to<bool>;
+        { Grid.parity } -> std::convertible_to<bool>;
 };
 
 }       // namespace tabula

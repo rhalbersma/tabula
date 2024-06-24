@@ -12,19 +12,19 @@
 
 namespace tabula {
 
-template<class Grid, class Lake, padding Padding>
+template<auto Grid, class Lake, padding Padding>
 class basic_embedding
 {
         [[nodiscard]] static constexpr auto is_valid(auto square) noexcept
         {
-                return Grid::is_valid(square) && !Lake()(square);
+                return Grid.is_valid(square) && !Lake()(square);
         }
 
         [[nodiscard]] static constexpr auto first_valid() noexcept
                 -> std::optional<int>
         {
-                for (auto index : std::views::iota(0, Grid::size())) {
-                        if (auto const square = basic_square<Grid>(Grid::coordinates(index)); is_valid(square) ) {
+                for (auto index : std::views::iota(0, Grid.size())) {
+                        if (auto const square = basic_square<Grid>(Grid.coordinates(index)); is_valid(square) ) {
                                 return pad(square).index();
                         }
                 }
@@ -34,8 +34,8 @@ class basic_embedding
         [[nodiscard]] static constexpr auto last_valid() noexcept
                 -> std::optional<int>
         {
-                for (auto index : std::views::iota(0, Grid::size()) | std::views::reverse) {
-                        if (auto const square = basic_square<Grid>(Grid::coordinates(index)); is_valid(square)) {
+                for (auto index : std::views::iota(0, Grid.size()) | std::views::reverse) {
+                        if (auto const square = basic_square<Grid>(Grid.coordinates(index)); is_valid(square)) {
                                 return pad(square).index();
                         }
                 }
@@ -43,7 +43,7 @@ class basic_embedding
         }
 
 public:
-        using grid_type = Grid;
+        static constexpr auto grid = Grid;
         using lake_type = Lake;
 
         [[nodiscard]] static constexpr auto pad(auto coordinates) noexcept

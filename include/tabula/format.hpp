@@ -12,7 +12,7 @@
 #include <format>               // formater, format_to
 #include <ranges>               // iota, reverse
 
-template<class Grid, class Lake, tabula::padding Padding>
+template<auto Grid, class Lake, tabula::padding Padding>
 struct std::formatter<tabula::basic_board<Grid, Lake, Padding>>
 {
         constexpr auto parse(auto& ctx)
