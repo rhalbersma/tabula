@@ -21,7 +21,11 @@ struct basic_rectangle
 {
         static constexpr auto width  = Width;
         static constexpr auto height = Height;
-        static constexpr auto size   = Width * Height;
+        
+        [[nodiscard]] static constexpr auto size() noexcept
+        {
+                return width * height;
+        }
 
         using type = basic_rectangle<Width, Height>;
 

@@ -21,7 +21,11 @@ struct basic_chequered
         static constexpr auto width  = Width;
         static constexpr auto height = Height;
         static constexpr auto parity = Parity;
-        static constexpr auto size   = (Width * Height + !Parity) / 2;
+
+        [[nodiscard]] static constexpr auto size() noexcept
+        {
+                return (width * height + !parity) / 2;
+        }
 
         using type = basic_chequered<Width, Height, Parity>;
 

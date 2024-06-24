@@ -56,7 +56,7 @@ using GridTypes = boost::mp11::mp_list
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(IndexIsInvertible, Grid, GridTypes)
 {
-        for (auto index : std::views::iota(0, Grid::size)) {
+        for (auto index : std::views::iota(0, Grid::size())) {
                 BOOST_CHECK_EQUAL(index, Grid::index(Grid::coordinates(index)));
         }
 }

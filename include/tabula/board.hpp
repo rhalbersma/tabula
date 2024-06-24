@@ -47,8 +47,8 @@ struct basic_board
         }
 
         static constexpr auto embedding_table = []() {
-                auto table = std::array<std::optional<int>, Grid::size>{};
-                for (auto index : std::views::iota(0, Grid::size)) {
+                auto table = std::array<std::optional<int>, Grid::size()>{};
+                for (auto index : std::views::iota(0, Grid::size())) {
                         if (auto const square = basic_square<Grid>(Grid::coordinates(index)); is_valid(square)) {
                                 table[static_cast<std::size_t>(index)] = pad(square).index();
                         }
@@ -61,11 +61,11 @@ public:
 
         static constexpr auto width  = Grid::width;
         static constexpr auto height = Grid::height;
-        static constexpr auto size   = Grid::size;
+        static constexpr auto size   = Grid::size();
 
         static constexpr auto padded_width  = padded_type::width;
         static constexpr auto padded_height = padded_type::height;
-        static constexpr auto padded_size   = padded_type::size;
+        static constexpr auto padded_size   = padded_type::size();
 
         static constexpr auto valid_size = embedding::valid_size;
 
