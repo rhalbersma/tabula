@@ -57,7 +57,7 @@ using GridTypes = boost::mp11::mp_list
 BOOST_AUTO_TEST_CASE_TEMPLATE(IndexIsInvertible, Grid, GridTypes)
 {
         for (auto index : std::views::iota(0, Grid::size)) {
-                BOOST_CHECK_EQUAL(index, Grid::index(Grid::square(index)));
+                BOOST_CHECK_EQUAL(index, Grid::index(Grid::coordinates(index)));
         }
 }
 
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(SquareIsInvertible, Grid, GridTypes)
         for (auto rank : std::views::iota(0, Grid::height)) {
                 for (auto file : std::views::iota(0, Grid::width)) {
                         if (auto const square = basic_square<Grid>{file, rank}; square.is_valid()) {
-                                BOOST_CHECK(square == Grid::square(Grid::index(square)));
+                                BOOST_CHECK(square == Grid::coordinates(Grid::index(square)));
                         }
                 }
         }

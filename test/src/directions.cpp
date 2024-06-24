@@ -52,33 +52,35 @@ using GridTypes = boost::mp11::mp_list
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, Grid, GridTypes)
 {
+        using compass = basic_compass<Grid>;
         auto computed 
-                = Grid::directions 
+                = compass::directions 
                 | std::views::filter([](auto d) { return d.is_cardinal(); })
         ;
         auto expected 
-                = std::array{ Grid::N, Grid::E, Grid::S, Grid::W } 
-                | std::views::transform([](auto d) { return Grid::directions[d]; })
+                = std::array{ compass::N, compass::E, compass::S, compass::W } 
+                | std::views::transform([](auto d) { return compass::directions[d]; })
         ;
         BOOST_CHECK(std::ranges::equal(computed, expected));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreIsOrdinal, Grid, GridTypes)
 {
+        using compass = basic_compass<Grid>;
         auto computed 
-                = Grid::directions 
+                = compass::directions 
                 | std::views::filter([](auto d) { return d.is_ordinal(); })
         ;
         auto expected 
-                = std::array{ Grid::NE, Grid::SE, Grid::SW, Grid::NW } 
-                | std::views::transform([](auto d) { return Grid::directions[d]; })
+                = std::array{ compass::NE, compass::SE, compass::SW, compass::NW } 
+                | std::views::transform([](auto d) { return compass::directions[d]; })
         ;
         BOOST_CHECK(std::ranges::equal(computed, expected));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, Grid, GridTypes)
 {
-        for (auto d : Grid::directions) {
+        for (auto d : basic_compass<Grid>::directions) {
                 auto const r = d.reverse();
                 BOOST_CHECK((d != r));
                 BOOST_CHECK_EQUAL(d.is_left() ,  r.is_right());

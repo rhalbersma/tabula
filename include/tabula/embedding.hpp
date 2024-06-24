@@ -6,6 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/padding.hpp>   // padding
+#include <tabula/square.hpp>
 #include <optional>             // nullopt, optional
 #include <ranges>               // iota, reverse
 
@@ -23,7 +24,7 @@ class basic_embedding
                 -> std::optional<int>
         {
                 for (auto index : std::views::iota(0, Grid::size)) {
-                        if (auto const square = Grid::square(index); is_valid(square) ) {
+                        if (basic_square<Grid> const square = Grid::coordinates(index); is_valid(square) ) {
                                 return pad(square).index();
                         }
                 }
@@ -34,7 +35,7 @@ class basic_embedding
                 -> std::optional<int>
         {
                 for (auto index : std::views::iota(0, Grid::size) | std::views::reverse) {
-                        if (auto const square = Grid::square(index); is_valid(square)) {
+                        if (basic_square<Grid> const square = Grid::coordinates(index); is_valid(square)) {
                                 return pad(square).index();
                         }
                 }

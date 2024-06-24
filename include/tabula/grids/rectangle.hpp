@@ -5,6 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <tabula/compass.hpp>           // basic_compass
 #include <tabula/functional.hpp>        // compose_, flip_, flop_, swap_
 #include <tabula/padding.hpp>           // padding
 #include <tabula/square.hpp>            // basic_square
@@ -27,25 +28,12 @@ struct basic_rectangle
 
         friend bool operator==(type, type) = default;
         
-        enum : unsigned { N, NE, E, SE, S, SW, W, NW };
-
-        static constexpr auto directions = std::array
+        [[nodiscard]] static constexpr auto is_valid(auto coordinates) noexcept
         {
-                basic_vector<type>{  0,  1 },   // N
-                basic_vector<type>{  1,  1 },   // NE
-                basic_vector<type>{  1,  0 },   // E
-                basic_vector<type>{  1, -1 },   // SE
-                basic_vector<type>{  0, -1 },   // S
-                basic_vector<type>{ -1, -1 },   // SW
-                basic_vector<type>{ -1,  0 },   // W
-                basic_vector<type>{ -1,  1 }    // NW
-        };
-
-        [[nodiscard]] static constexpr auto is_valid(basic_square<type> square) noexcept
-        {
+                auto const [ file, rank ] = coordinates;
                 return
-                        0 <= square.file && square.file < Width &&
-                        0 <= square.rank && square.rank < Height
+                        0 <= file && file < Width &&
+                        0 <= rank && rank < Height
                 ;        
         }
 
@@ -55,7 +43,7 @@ struct basic_rectangle
                 return file + rank * Width;
         }
 
-        [[nodiscard]] static constexpr auto square(int index) noexcept
+        [[nodiscard]] static constexpr auto coordinates(int index) noexcept
                 -> basic_square<type>
         {
                 return { index % Width, index / Width };
@@ -92,6 +80,26 @@ struct padded<basic_rectangle<Width, Height>, Padding>
                 Width  + Padding.left + Padding.right,
                 Height + Padding.top  + Padding.bottom
         >;
+};
+
+template<int Width, int Height>
+struct basic_compass<basic_rectangle<Width, Height>>
+{
+        using type = basic_rectangle<Width, Height>;
+
+        enum : unsigned { N, NE, E, SE, S, SW, W, NW };
+
+        static constexpr auto directions = std::array
+        {
+                basic_vector<type>{  0,  1 },   // N
+                basic_vector<type>{  1,  1 },   // NE
+                basic_vector<type>{  1,  0 },   // E
+                basic_vector<type>{  1, -1 },   // SE
+                basic_vector<type>{  0, -1 },   // S
+                basic_vector<type>{ -1, -1 },   // SW
+                basic_vector<type>{ -1,  0 },   // W
+                basic_vector<type>{ -1,  1 }    // NW
+        };
 };
 
 }       // namespace tabula

@@ -5,6 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <tabula/compass.hpp>           // basic_compass
 #include <tabula/concepts.hpp>          // chequered
 #include <tabula/dihedral.hpp>
 #include <tabula/embedding.hpp>         // basic_embedding
@@ -48,7 +49,7 @@ struct basic_board
         static constexpr auto embedding_table = []() {
                 auto table = std::array<std::optional<int>, Grid::size>{};
                 for (auto index : std::views::iota(0, Grid::size)) {
-                        if (auto const square = Grid::square(index); is_valid(square)) {
+                        if (auto const square = Grid::coordinates(index); is_valid(square)) {
                                 table[static_cast<std::size_t>(index)] = pad(square).index();
                         }
                 }
@@ -105,8 +106,8 @@ public:
         }
 
         static constexpr auto strides = []() {
-                std::array<int, Grid::directions.size()> table;
-                for (auto index = std::size_t(0); auto direction : Grid::directions) {
+                std::array<int, basic_compass<Grid>::directions.size()> table;
+                for (auto index = std::size_t(0); auto direction : basic_compass<Grid>::directions) {
                         table[index++] = pad(direction).stride();
                 }
                 return table;
