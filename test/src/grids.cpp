@@ -3,20 +3,17 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-#define BOOST_MPL_LIMIT_VECTOR_SIZE 50
-
 #include <tabula/grids.hpp>             // basic_chequered, basic_rectangle
 #include <tabula/square.hpp>            // basic_square
-#include <ranges>                       // iota
-#include <boost/mpl/vector.hpp>         // vector
+#include <boost/mp11/list.hpp>          // mp_list
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
+#include <ranges>                       // iota
 
 using namespace tabula;
 
 BOOST_AUTO_TEST_SUITE(Compass)
 
-using grid_types = boost::mpl::vector
+using grid_types = boost::mp11::mp_list
 <       basic_rectangle<1, 1>
 ,       basic_rectangle<1, 2>
 ,       basic_rectangle<2, 1>

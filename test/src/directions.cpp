@@ -3,21 +3,18 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#define BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS
-#define BOOST_MPL_LIMIT_VECTOR_SIZE 50
-
 #include <tabula/grids.hpp>             // basic_chequered, basic_rectangle 
+#include <boost/mp11/list.hpp>          // mp_list
+#include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
 #include <algorithm>                    // equal
 #include <array>                        // array
 #include <ranges>                       // filter, transform
-#include <boost/mpl/vector.hpp>         // vector
-#include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
 
 using namespace tabula;
 
 BOOST_AUTO_TEST_SUITE(Compass)
 
-using grid_types = boost::mpl::vector
+using grid_types = boost::mp11::mp_list
 <       basic_rectangle<1, 1>
 ,       basic_rectangle<1, 2>
 ,       basic_rectangle<2, 1>
@@ -55,26 +52,26 @@ using grid_types = boost::mpl::vector
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, Grid, grid_types)
 {
-        auto computed =
-                Grid::directions |
-                std::views::filter([](auto d) { return d.is_cardinal(); })
+        auto computed 
+                = Grid::directions 
+                | std::views::filter([](auto d) { return d.is_cardinal(); })
         ;
-        auto expected =
-                std::array{ Grid::N, Grid::E, Grid::S, Grid::W } |
-                std::views::transform([](auto d) { return Grid::directions[d]; })
+        auto expected 
+                = std::array{ Grid::N, Grid::E, Grid::S, Grid::W } 
+                | std::views::transform([](auto d) { return Grid::directions[d]; })
         ;
         BOOST_CHECK(std::ranges::equal(computed, expected));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreIsOrdinal, Grid, grid_types)
 {
-        auto computed =
-                Grid::directions |
-                std::views::filter([](auto d) { return d.is_ordinal(); })
+        auto computed 
+                = Grid::directions 
+                | std::views::filter([](auto d) { return d.is_ordinal(); })
         ;
-        auto expected =
-                std::array{ Grid::NE, Grid::SE, Grid::SW, Grid::NW } |
-                std::views::transform([](auto d) { return Grid::directions[d]; })
+        auto expected 
+                = std::array{ Grid::NE, Grid::SE, Grid::SW, Grid::NW } 
+                | std::views::transform([](auto d) { return Grid::directions[d]; })
         ;
         BOOST_CHECK(std::ranges::equal(computed, expected));
 }
