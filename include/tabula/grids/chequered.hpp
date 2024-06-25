@@ -17,9 +17,9 @@ struct basic_chequered
 {
         int width;
         int height;
-        int parity = 0;
+        int parity;
 
-        friend bool operator==(basic_chequered, basic_chequered) = default;
+        [[nodiscard]] constexpr auto operator==(basic_chequered const&) const noexcept -> bool = default;
 
         [[nodiscard]] constexpr auto size() const noexcept
         {
@@ -68,14 +68,14 @@ struct basic_chequered
                 return { height, width, parity }; 
         }
 
-        [[nodiscard]] constexpr auto pad(padding Padding) const noexcept 
+        [[nodiscard]] constexpr auto pad(padding p) const noexcept 
                 -> basic_chequered
         { 
                 return 
                 {
-                        width  + Padding.left + Padding.right + !((width + Padding.left + Padding.right) % 2),
-                        height + Padding.top  + Padding.bottom,
-                        parity ^ (Padding.left % 2) ^ (Padding.bottom % 2)
+                        width  + p.left + p.right + !((width + p.left + p.right) % 2),
+                        height + p.top  + p.bottom,
+                        parity ^ (p.left % 2) ^ (p.bottom % 2)
                 }; 
         }
 };
@@ -85,17 +85,17 @@ struct basic_compass<Grid>
 {       
         static constexpr auto grid = Grid;
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
-        static constexpr auto directions = std::array
-        {
-                basic_vector<Grid>{  0,  2 },   // N
-                basic_vector<Grid>{  1,  1 },   // NE
-                basic_vector<Grid>{  2,  0 },   // E
-                basic_vector<Grid>{  1, -1 },   // SE
-                basic_vector<Grid>{  0, -2 },   // S
-                basic_vector<Grid>{ -1, -1 },   // SW
-                basic_vector<Grid>{ -2,  0 },   // W
-                basic_vector<Grid>{ -1,  1 }    // NW
-        };
+        static constexpr auto directions = std::array<basic_vector<Grid>, 8>
+        {{
+                {  0,  2 },     // N
+                {  1,  1 },     // NE
+                {  2,  0 },     // E
+                {  1, -1 },     // SE
+                {  0, -2 },     // S
+                { -1, -1 },     // SW
+                { -2,  0 },     // W
+                { -1,  1 }      // NW
+        }};
 };
 
 }       // namespace tabula

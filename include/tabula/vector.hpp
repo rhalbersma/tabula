@@ -15,9 +15,9 @@ struct basic_vector
         int file;
         int rank;
 
-        static constexpr auto grid = Grid;
+        static constexpr auto grid = Grid;  
 
-        friend bool operator==(basic_vector, basic_vector) = default;
+        [[nodiscard]] constexpr auto operator==(basic_vector const&) const noexcept -> bool = default;
 
         [[nodiscard]] constexpr auto& operator+=(basic_vector other) noexcept
         {

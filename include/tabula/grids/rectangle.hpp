@@ -18,7 +18,7 @@ struct basic_rectangle
         int width;
         int height;
 
-        friend bool operator==(basic_rectangle, basic_rectangle) = default;
+        [[nodiscard]] constexpr auto operator==(basic_rectangle const&) const noexcept -> bool = default;
         
         [[nodiscard]] constexpr auto size() const noexcept
         {
@@ -80,17 +80,17 @@ struct basic_compass<Grid>
 {
         static constexpr auto grid = Grid;
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
-        static constexpr auto directions = std::array
-        {
-                basic_vector<Grid>{  0,  1 },   // N
-                basic_vector<Grid>{  1,  1 },   // NE
-                basic_vector<Grid>{  1,  0 },   // E
-                basic_vector<Grid>{  1, -1 },   // SE
-                basic_vector<Grid>{  0, -1 },   // S
-                basic_vector<Grid>{ -1, -1 },   // SW
-                basic_vector<Grid>{ -1,  0 },   // W
-                basic_vector<Grid>{ -1,  1 }    // NW
-        };
+        static constexpr auto directions = std::array<basic_vector<Grid>, 8>
+        {{
+                {  0,  1 },     // N
+                {  1,  1 },     // NE
+                {  1,  0 },     // E
+                {  1, -1 },     // SE
+                {  0, -1 },     // S
+                { -1, -1 },     // SW
+                { -1,  0 },     // W
+                { -1,  1 }      // NW
+        }};
 };
 
 }       // namespace tabula

@@ -6,7 +6,7 @@
 #include <tabula/board.hpp>     // basic_board
 #include <tabula/format.hpp>    // print
 #include <tabula/games.hpp>     // chess, draughts, stratego
-#include <tabula/padding.hpp>   // padding, right_padding
+#include <tabula/padding.hpp>   // padding, pad_right
 #include <tabula/tuple.hpp>     // for_each
 #include <fmt/format.h>
 #include <fmt/ranges.h>
@@ -31,7 +31,7 @@ int main()
                 draughts::ktar<10, 11>(),
                 draughts::ktar<10, 12>(),
                 basic_draughts<19, 10>(),
-                basic_draughts<10, 10, 0, basic_lake<>, right_padding(9)>(),
+                basic_draughts<10, 10, 0, basic_lake<>, pad_right(9)>(),
 
                 // chequered boards with irregular shapes
                 draughts::mertens_cut_j10(),
@@ -44,7 +44,7 @@ int main()
                 basic_draughts<10, 10, 0, basic_lake<>, padding(1, 1, 1, 0)>(),
 
                 // 10x10 draughts with 19x10 vector representation
-                basic_draughts<10, 10, 0, basic_lake<>, right_padding(9)>(),
+                basic_draughts<10, 10, 0, basic_lake<>, pad_right(9)>(),
 
                 // stratego variants
                 stratego::l_attaque(),

@@ -63,11 +63,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(IndexIsInvertible, Index, Indices)
         }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(CoordinatesAreInvertible, Index, Indices)
+BOOST_AUTO_TEST_CASE_TEMPLATE(CoordinatesOfValidSquaresAreInvertible, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
         for (auto coordinates : std::views::cartesian_product(std::views::iota(0, grid.width), std::views::iota(0, grid.height))) {
-                BOOST_CHECK(grid.coordinates(grid.index(coordinates)) == coordinates);
+                if (auto const [ file, rank ] = coordinates; basic_square<grid>(file, rank).is_valid()) {
+                        BOOST_CHECK(grid.coordinates(grid.index(coordinates)) == coordinates);
+                }
         }
 }
 

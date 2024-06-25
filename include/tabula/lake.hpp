@@ -9,8 +9,6 @@
 
 namespace tabula {
 
-// Only works for gcc 12 and above.
-// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97930
 using square_ = std::pair<int, int>;
 
 template<square_... Squares>
@@ -18,7 +16,7 @@ struct basic_lake
 {
         [[nodiscard]] constexpr auto operator()(auto square [[maybe_unused]]) const noexcept
         {
-                return (... || (square == decltype(square){ std::get<0>(Squares), std::get<1>(Squares) }));
+                return (... || (square == decltype(square)(std::get<0>(Squares), std::get<1>(Squares))));
         }
 };
 

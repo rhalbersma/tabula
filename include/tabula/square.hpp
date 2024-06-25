@@ -7,7 +7,6 @@
 
 #include <tabula/padding.hpp>   // padding
 #include <tabula/vector.hpp>    // basic_vector
-#include <utility>              // pair
 
 namespace tabula {
 
@@ -17,21 +16,9 @@ struct basic_square
         int file;
         int rank;
 
-        static constexpr auto grid = Grid;
+        static constexpr auto grid = Grid;  
 
-        [[nodiscard]] constexpr basic_square(int f, int r) noexcept
-        :
-                file(f),
-                rank(r)
-        {}
-
-        [[nodiscard]] constexpr explicit basic_square(std::pair<int, int> p) noexcept
-        :
-                file(p.first),
-                rank(p.second)
-        {}
-
-        friend bool operator==(basic_square, basic_square) = default;
+        [[nodiscard]] constexpr auto operator==(basic_square const&) const noexcept -> bool = default;
 
         [[nodiscard]] constexpr auto& operator+=(basic_vector<Grid> v) noexcept
         {

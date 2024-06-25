@@ -11,51 +11,22 @@ namespace tabula {
 
 struct padding
 {
-        int top         = 0;
-        int right       = 0;
-        int bottom      = 0;
-        int left        = 0;
+        int top;
+        int right;
+        int bottom;
+        int left;
 
-        padding() = default;
-
-        [[nodiscard]] constexpr padding(int trbl) noexcept
-        :
-                top(trbl),
-                right(trbl),
-                bottom(trbl),
-                left(trbl)
-        {}
-
-        [[nodiscard]] constexpr padding(int tb, int rl) noexcept
-        :
-                top(tb),
-                right(rl),
-                bottom(tb),
-                left(rl)
-        {}
-
-        [[nodiscard]] constexpr padding(int t, int rl, int b) noexcept
-        :
-                top(t),
-                right(rl),
-                bottom(b),
-                left(rl)
-        {}
-
-        [[nodiscard]] constexpr padding(int t, int r, int b, int l) noexcept
-        :
-                top(t),
-                right(r),
-                bottom(b),
-                left(l)
-        {}
+        [[nodiscard]] constexpr auto operator==(padding const&) const noexcept -> bool = default;
 };
 
-[[nodiscard]] inline constexpr auto right_padding(int r) noexcept
+[[nodiscard]] inline constexpr auto pad_right(int r) noexcept
 {
         return padding(0, r, 0, 0);
 }
 
-inline constexpr auto mailbox_padding = padding(2, 1);
+[[nodiscard]] inline constexpr auto mailbox(int tb, int rl) noexcept
+{
+        return padding(tb, rl, tb, rl);
+}
 
 }       // namespace tabula
