@@ -12,7 +12,7 @@ This single-header library has no other dependencies than the C++ Standard Libra
 | Platform | Compiler   | Versions     | Build |
 | :------- | :-------   | :-------     | :---- |
 | Linux    | GCC        | $\geq$ 14    | CI currently being ported to GitHub Actions |
-| Linux    | Clang      | $\geq$ 17    | CI currently being ported to GitHub Actions |
+| Linux    | Clang      | $\geq$ 18    | CI currently being ported to GitHub Actions |
 | Windows  | Visual C++ | $\geq$ 17.10 | CI currently being ported to GitHub Actions |
 
 Note that the unit tests depend on [Boost](https://www.boost.io/).

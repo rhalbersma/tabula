@@ -4,55 +4,59 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/grids.hpp>             // basic_chequered, basic_rectangle 
-#include <boost/mp11/list.hpp>          // mp_list
+#include <boost/mp11/algorithm.hpp>     // mp_iota_c
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
 #include <algorithm>                    // equal
 #include <array>                        // array
 #include <ranges>                       // filter, transform
+#include <tuple>                        // get, tuple, tuple_size_v
 
 using namespace tabula;
 
 BOOST_AUTO_TEST_SUITE(Compass)
 
-using GridTypes = boost::mp11::mp_list
-<       basic_rectangle<1, 1>
-,       basic_rectangle<1, 2>
-,       basic_rectangle<2, 1>
-,       basic_rectangle<2, 2>
-,       basic_rectangle<2, 3>
-,       basic_rectangle<3, 2>
-,       basic_rectangle<2, 4>
-,       basic_rectangle<4, 2>
-,       basic_rectangle<3, 3>
-,       basic_rectangle<3, 5>
-,       basic_rectangle<5, 3>
-,       basic_chequered<1, 1, 0>
-,       basic_chequered<1, 2, 0>
-,       basic_chequered<2, 1, 0>
-,       basic_chequered<2, 2, 0>
-,       basic_chequered<2, 3, 0>
-,       basic_chequered<3, 2, 0>
-,       basic_chequered<2, 4, 0>
-,       basic_chequered<4, 2, 0>
-,       basic_chequered<3, 3, 0>
-,       basic_chequered<3, 5, 0>
-,       basic_chequered<5, 3, 0>
-,       basic_chequered<1, 1, 1>
-,       basic_chequered<1, 2, 1>
-,       basic_chequered<2, 1, 1>
-,       basic_chequered<2, 2, 1>
-,       basic_chequered<2, 3, 1>
-,       basic_chequered<3, 2, 1>
-,       basic_chequered<2, 4, 1>
-,       basic_chequered<4, 2, 1>
-,       basic_chequered<3, 3, 1>
-,       basic_chequered<3, 5, 1>
-,       basic_chequered<5, 3, 1>
->;
+constexpr auto grids = std::tuple
+(       basic_rectangle(1, 1)
+,       basic_rectangle(1, 2)
+,       basic_rectangle(2, 1)
+,       basic_rectangle(2, 2)
+,       basic_rectangle(2, 3)
+,       basic_rectangle(3, 2)
+,       basic_rectangle(2, 4)
+,       basic_rectangle(4, 2)
+,       basic_rectangle(3, 3)
+,       basic_rectangle(3, 5)
+,       basic_rectangle(5, 3)
+,       basic_chequered(1, 1, 0)
+,       basic_chequered(1, 2, 0)
+,       basic_chequered(2, 1, 0)
+,       basic_chequered(2, 2, 0)
+,       basic_chequered(2, 3, 0)
+,       basic_chequered(3, 2, 0)
+,       basic_chequered(2, 4, 0)
+,       basic_chequered(4, 2, 0)
+,       basic_chequered(3, 3, 0)
+,       basic_chequered(3, 5, 0)
+,       basic_chequered(5, 3, 0)
+,       basic_chequered(1, 1, 1)
+,       basic_chequered(1, 2, 1)
+,       basic_chequered(2, 1, 1)
+,       basic_chequered(2, 2, 1)
+,       basic_chequered(2, 3, 1)
+,       basic_chequered(3, 2, 1)
+,       basic_chequered(2, 4, 1)
+,       basic_chequered(4, 2, 1)
+,       basic_chequered(3, 3, 1)
+,       basic_chequered(3, 5, 1)
+,       basic_chequered(5, 3, 1)
+);
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, Grid, GridTypes)
+using Indices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(grids)>>;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, Index, Indices)
 {
-        using compass = basic_compass<Grid>;
+        constexpr auto grid = std::get<Index::value>(grids);
+        using compass = basic_compass<grid>;
         auto computed 
                 = compass::directions 
                 | std::views::filter([](auto d) { return d.is_cardinal(); })
@@ -64,9 +68,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, Grid, GridTypes)
         BOOST_CHECK(std::ranges::equal(computed, expected));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreIsOrdinal, Grid, GridTypes)
+BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreIsOrdinal, Index, Indices)
 {
-        using compass = basic_compass<Grid>;
+        constexpr auto grid = std::get<Index::value>(grids);
+        using compass = basic_compass<grid>;
         auto computed 
                 = compass::directions 
                 | std::views::filter([](auto d) { return d.is_ordinal(); })
@@ -78,9 +83,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreIsOrdinal, Grid, GridTypes)
         BOOST_CHECK(std::ranges::equal(computed, expected));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, Grid, GridTypes)
+BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, Index, Indices)
 {
-        using compass = basic_compass<Grid>;
+        constexpr auto grid = std::get<Index::value>(grids);
+        using compass = basic_compass<grid>;
         for (auto d : compass::directions) {
                 auto const r = d.reverse();
                 BOOST_CHECK((d != r));

@@ -66,7 +66,7 @@ struct basic_vector
 
         template<padding Padding>
         [[nodiscard]] constexpr auto pad() const noexcept
-                -> basic_vector<Grid.template pad<Padding>()>
+                -> basic_vector<Grid.pad(Padding)>
         {
                 return { file, rank };
         }

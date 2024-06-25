@@ -34,7 +34,7 @@ struct basic_board
         static constexpr auto orientation = std::get<min>(dihedral);
         using embedding = basic_embedding<orientation(Grid), Lake, Padding>;
 
-        static constexpr auto padded_grid = embedding::grid.template pad<Padding>();
+        static constexpr auto padded_grid = embedding::grid.pad(Padding);
 
         [[nodiscard]] static constexpr auto pad(auto coordinates) noexcept
         {

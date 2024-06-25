@@ -19,12 +19,12 @@ struct basic_chequered
         int height;
         int parity = 0;
 
+        friend bool operator==(basic_chequered, basic_chequered) = default;
+
         [[nodiscard]] constexpr auto size() const noexcept
         {
                 return (width * height + !parity) / 2;
         }
-
-        bool operator==(const basic_chequered&) const = default;
 
         [[nodiscard]] constexpr auto is_valid(auto coordinates) const noexcept
         {
@@ -68,8 +68,7 @@ struct basic_chequered
                 return { height, width, parity }; 
         }
 
-        template<padding Padding>
-        [[nodiscard]] constexpr auto pad() const noexcept 
+        [[nodiscard]] constexpr auto pad(padding Padding) const noexcept 
                 -> basic_chequered
         { 
                 return 

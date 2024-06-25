@@ -19,13 +19,13 @@ struct basic_square
 
         static constexpr auto grid = Grid;
 
-        constexpr basic_square(int f, int r) noexcept
+        [[nodiscard]] constexpr basic_square(int f, int r) noexcept
         :
                 file(f),
                 rank(r)
         {}
 
-        constexpr basic_square(std::pair<int, int> p) noexcept
+        [[nodiscard]] constexpr explicit basic_square(std::pair<int, int> p) noexcept
         :
                 file(p.first),
                 rank(p.second)
@@ -67,7 +67,7 @@ struct basic_square
 
         template<padding Padding>
         [[nodiscard]] constexpr auto pad() const noexcept
-                -> basic_square<Grid.template pad<Padding>()>
+                -> basic_square<Grid.pad(Padding)>
         {
                 return { file + Padding.left, rank + Padding.bottom };
         }

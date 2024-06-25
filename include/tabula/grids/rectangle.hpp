@@ -17,14 +17,14 @@ struct basic_rectangle
 {
         int width;
         int height;
+
+        friend bool operator==(basic_rectangle, basic_rectangle) = default;
         
         [[nodiscard]] constexpr auto size() const noexcept
         {
                 return width * height;
         }
 
-        bool operator==(const basic_rectangle&) const = default;
-        
         [[nodiscard]] constexpr auto is_valid(auto coordinates) const noexcept
         {
                 auto const [ file, rank ] = coordinates;
@@ -64,14 +64,13 @@ struct basic_rectangle
                 return { height, width }; 
         }
 
-        template<padding Padding>
-        [[nodiscard]] constexpr auto pad() const noexcept
+        [[nodiscard]] constexpr auto pad(padding p) const noexcept
                 -> basic_rectangle
         {
-                return 
+                return  
                 {
-                        width  + Padding.left + Padding.right,
-                        height + Padding.top  + Padding.bottom
+                        width  + p.left + p.right,
+                        height + p.top  + p.bottom
                 };
         }
 };
