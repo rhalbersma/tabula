@@ -55,7 +55,7 @@ constexpr auto grids = std::tuple
 
 using Indices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(grids)>>;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(IndexIsInvertible, Index, Indices)
+BOOST_AUTO_TEST_CASE_TEMPLATE(IndicesAreInvertible, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
         for (auto index : std::views::iota(0, grid.size())) {
@@ -73,20 +73,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(CoordinatesOfValidSquaresAreInvertible, Index, Ind
         }
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(GridTransformationsAreIdempotent, Index, Indices)
+BOOST_AUTO_TEST_CASE_TEMPLATE(DihedralGroupActionIsRealizedOnGrids, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
         static_assert(is_realized(dihedral, grid));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(SquareTransformationsAreIdempotent, Index, Indices)
+BOOST_AUTO_TEST_CASE_TEMPLATE(DihedralGroupActionIsRealizedOnGridSquares, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
-        for (auto rank : std::views::iota(0, grid.height)) {
-                for (auto file : std::views::iota(0, grid.width)) {
-                        auto const square = basic_square<grid>(file, rank);
-                        BOOST_CHECK(is_realized(dihedral, square));
-                }
+        for (auto const [ file, rank ] : std::views::cartesian_product(std::views::iota(0, grid.width), std::views::iota(0, grid.height))) {
+                auto const square = basic_square<grid>(file, rank);
+                BOOST_CHECK(is_realized(dihedral, square));
         }
 }
 
