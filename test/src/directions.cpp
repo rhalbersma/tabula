@@ -16,39 +16,39 @@ using namespace tabula;
 BOOST_AUTO_TEST_SUITE(Compass)
 
 constexpr auto grids = std::tuple
-(       basic_rectangle(1, 1)
-,       basic_rectangle(1, 2)
-,       basic_rectangle(2, 1)
-,       basic_rectangle(2, 2)
-,       basic_rectangle(2, 3)
-,       basic_rectangle(3, 2)
-,       basic_rectangle(2, 4)
-,       basic_rectangle(4, 2)
-,       basic_rectangle(3, 3)
-,       basic_rectangle(3, 5)
-,       basic_rectangle(5, 3)
-,       basic_chequered(1, 1, 0)
-,       basic_chequered(1, 2, 0)
-,       basic_chequered(2, 1, 0)
-,       basic_chequered(2, 2, 0)
-,       basic_chequered(2, 3, 0)
-,       basic_chequered(3, 2, 0)
-,       basic_chequered(2, 4, 0)
-,       basic_chequered(4, 2, 0)
-,       basic_chequered(3, 3, 0)
-,       basic_chequered(3, 5, 0)
-,       basic_chequered(5, 3, 0)
-,       basic_chequered(1, 1, 1)
-,       basic_chequered(1, 2, 1)
-,       basic_chequered(2, 1, 1)
-,       basic_chequered(2, 2, 1)
-,       basic_chequered(2, 3, 1)
-,       basic_chequered(3, 2, 1)
-,       basic_chequered(2, 4, 1)
-,       basic_chequered(4, 2, 1)
-,       basic_chequered(3, 3, 1)
-,       basic_chequered(3, 5, 1)
-,       basic_chequered(5, 3, 1)
+(       basic_rectangle{1, 1}
+,       basic_rectangle{1, 2}
+,       basic_rectangle{2, 1}
+,       basic_rectangle{2, 2}
+,       basic_rectangle{2, 3}
+,       basic_rectangle{3, 2}
+,       basic_rectangle{2, 4}
+,       basic_rectangle{4, 2}
+,       basic_rectangle{3, 3}
+,       basic_rectangle{3, 5}
+,       basic_rectangle{5, 3}
+,       basic_chequered{1, 1, 0}
+,       basic_chequered{1, 2, 0}
+,       basic_chequered{2, 1, 0}
+,       basic_chequered{2, 2, 0}
+,       basic_chequered{2, 3, 0}
+,       basic_chequered{3, 2, 0}
+,       basic_chequered{2, 4, 0}
+,       basic_chequered{4, 2, 0}
+,       basic_chequered{3, 3, 0}
+,       basic_chequered{3, 5, 0}
+,       basic_chequered{5, 3, 0}
+,       basic_chequered{1, 1, 1}
+,       basic_chequered{1, 2, 1}
+,       basic_chequered{2, 1, 1}
+,       basic_chequered{2, 2, 1}
+,       basic_chequered{2, 3, 1}
+,       basic_chequered{3, 2, 1}
+,       basic_chequered{2, 4, 1}
+,       basic_chequered{4, 2, 1}
+,       basic_chequered{3, 3, 1}
+,       basic_chequered{3, 5, 1}
+,       basic_chequered{5, 3, 1}
 );
 
 using Indices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(grids)>>;

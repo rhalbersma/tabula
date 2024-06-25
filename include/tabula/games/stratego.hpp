@@ -13,7 +13,7 @@
 namespace tabula {
 
 template<int Width, int Height, class Lake, padding Padding = pad_right(1)>
-using basic_stratego = basic_board<basic_rectangle(Width, Height), Lake, Padding>;
+using basic_stratego = basic_board<basic_rectangle{Width, Height}, Lake, Padding>;
 
 namespace stratego {
 

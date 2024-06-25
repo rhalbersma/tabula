@@ -17,7 +17,7 @@ struct basic_chequered
 {
         int width;
         int height;
-        int parity;
+        bool parity;
 
         [[nodiscard]] constexpr auto operator==(basic_chequered const&) const noexcept -> bool = default;
 
@@ -53,13 +53,13 @@ struct basic_chequered
         [[nodiscard]] constexpr auto flip() const noexcept 
                 -> basic_chequered
         { 
-                return { width, height, parity ^ !(height % 2) }; 
+                return { width, height, parity != !(height % 2) }; 
         }
         
         [[nodiscard]] constexpr auto flop() const noexcept 
                 -> basic_chequered
         { 
-                return { width, height, parity ^ !(width  % 2) }; 
+                return { width, height, parity != !(width  % 2) }; 
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept 
@@ -75,7 +75,7 @@ struct basic_chequered
                 {
                         width  + p.left + p.right + !((width + p.left + p.right) % 2),
                         height + p.top  + p.bottom,
-                        parity ^ (p.left % 2) ^ (p.bottom % 2)
+                        parity != ((p.left % 2) != (p.bottom % 2))
                 }; 
         }
 };

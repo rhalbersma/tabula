@@ -7,7 +7,7 @@
 
 #include <tabula/compass.hpp>           // basic_compass
 #include <tabula/concepts.hpp>          // chequered
-#include <tabula/dihedral.hpp>
+#include <tabula/dihedral.hpp>          // dihedral
 #include <tabula/embedding.hpp>         // basic_embedding
 #include <tabula/functional.hpp>        // operator*, flip, flop, swap
 #include <tabula/padding.hpp>           // padding
@@ -108,7 +108,7 @@ public:
 
         static constexpr auto strides = []() {
                 using compass = basic_compass<Grid>;
-                std::array<int, compass::directions.size()> table;
+                std::array<int, std::size(compass::directions)> table;
                 for (auto index = std::size_t(0); auto direction : compass::directions) {
                         table[index++] = pad(direction).stride();
                 }
