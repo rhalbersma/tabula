@@ -6,14 +6,14 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/board.hpp>     // basic_board
-#include <tabula/grids.hpp>     // basic_rectangle
+#include <tabula/grids.hpp>     // rectangle
 #include <tabula/lake.hpp>      // basic_lake, algebraic_
 #include <tabula/padding.hpp>   // pad_right
 
 namespace tabula {
 
 template<int Width, int Height, class Lake, padding Padding = pad_right(1)>
-using basic_stratego = basic_board<basic_rectangle{Width, Height}, Lake, Padding>;
+using basic_stratego = basic_board<rectangle{Width, Height}, Lake, Padding>;
 
 namespace stratego {
 

@@ -4,7 +4,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/dihedral.hpp>          // dihedral, is_realized
-#include <tabula/grids.hpp>             // basic_chequered, basic_rectangle
+#include <tabula/grids.hpp>             // chequer, rectangle
 #include <tabula/functional.hpp>        // operator*, flip, flop, swap
 #include <tabula/square.hpp>            // basic_square
 #include <boost/mp11/algorithm.hpp>     // mp_iota_c
@@ -18,39 +18,39 @@ using namespace tabula;
 BOOST_AUTO_TEST_SUITE(Compass)
 
 constexpr auto grids = std::tuple
-(       basic_rectangle{1, 1}
-,       basic_rectangle{1, 2}
-,       basic_rectangle{2, 1}
-,       basic_rectangle{2, 2}
-,       basic_rectangle{2, 3}
-,       basic_rectangle{3, 2}
-,       basic_rectangle{2, 4}
-,       basic_rectangle{4, 2}
-,       basic_rectangle{3, 3}
-,       basic_rectangle{3, 5}
-,       basic_rectangle{5, 3}
-,       basic_chequered{1, 1, 0}
-,       basic_chequered{1, 2, 0}
-,       basic_chequered{2, 1, 0}
-,       basic_chequered{2, 2, 0}
-,       basic_chequered{2, 3, 0}
-,       basic_chequered{3, 2, 0}
-,       basic_chequered{2, 4, 0}
-,       basic_chequered{4, 2, 0}
-,       basic_chequered{3, 3, 0}
-,       basic_chequered{3, 5, 0}
-,       basic_chequered{5, 3, 0}
-,       basic_chequered{1, 1, 1}
-,       basic_chequered{1, 2, 1}
-,       basic_chequered{2, 1, 1}
-,       basic_chequered{2, 2, 1}
-,       basic_chequered{2, 3, 1}
-,       basic_chequered{3, 2, 1}
-,       basic_chequered{2, 4, 1}
-,       basic_chequered{4, 2, 1}
-,       basic_chequered{3, 3, 1}
-,       basic_chequered{3, 5, 1}
-,       basic_chequered{5, 3, 1}
+(       rectangle{1, 1}
+,       rectangle{1, 2}
+,       rectangle{2, 1}
+,       rectangle{2, 2}
+,       rectangle{2, 3}
+,       rectangle{3, 2}
+,       rectangle{2, 4}
+,       rectangle{4, 2}
+,       rectangle{3, 3}
+,       rectangle{3, 5}
+,       rectangle{5, 3}
+,       chequer{1, 1, 0}
+,       chequer{1, 2, 0}
+,       chequer{2, 1, 0}
+,       chequer{2, 2, 0}
+,       chequer{2, 3, 0}
+,       chequer{3, 2, 0}
+,       chequer{2, 4, 0}
+,       chequer{4, 2, 0}
+,       chequer{3, 3, 0}
+,       chequer{3, 5, 0}
+,       chequer{5, 3, 0}
+,       chequer{1, 1, 1}
+,       chequer{1, 2, 1}
+,       chequer{2, 1, 1}
+,       chequer{2, 2, 1}
+,       chequer{2, 3, 1}
+,       chequer{3, 2, 1}
+,       chequer{2, 4, 1}
+,       chequer{4, 2, 1}
+,       chequer{3, 3, 1}
+,       chequer{3, 5, 1}
+,       chequer{5, 3, 1}
 );
 
 using Indices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(grids)>>;

@@ -6,6 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/compass.hpp>   // basic_compass
+#include <tabula/concepts.hpp>  // chequered
 #include <tabula/padding.hpp>   // padding
 #include <tabula/vector.hpp>    // basic_vector
 #include <array>                // array
@@ -13,13 +14,13 @@
 
 namespace tabula {
 
-struct basic_chequered
+struct chequer
 {
         int width;
         int height;
         bool parity;
 
-        [[nodiscard]] constexpr auto operator==(basic_chequered const&) const noexcept -> bool = default;
+        [[nodiscard]] constexpr auto operator==(chequer const&) const noexcept -> bool = default;
 
         [[nodiscard]] constexpr auto size() const noexcept
         {
@@ -51,25 +52,25 @@ struct basic_chequered
         }
 
         [[nodiscard]] constexpr auto flip() const noexcept 
-                -> basic_chequered
+                -> chequer
         { 
                 return { width, height, parity != !(height % 2) }; 
         }
         
         [[nodiscard]] constexpr auto flop() const noexcept 
-                -> basic_chequered
+                -> chequer
         { 
-                return { width, height, parity != !(width  % 2) }; 
+                return { width, height, parity != !(width % 2) }; 
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept 
-                -> basic_chequered
+                -> chequer
         { 
                 return { height, width, parity }; 
         }
 
         [[nodiscard]] constexpr auto pad(padding p) const noexcept 
-                -> basic_chequered
+                -> chequer
         { 
                 return 
                 {
@@ -80,7 +81,8 @@ struct basic_chequered
         }
 };
 
-template<basic_chequered Grid>
+template<auto Grid>
+        requires chequered<Grid>
 struct basic_compass<Grid>
 {       
         static constexpr auto grid = Grid;

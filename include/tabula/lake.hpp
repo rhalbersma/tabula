@@ -16,7 +16,7 @@ struct basic_lake
 {
         [[nodiscard]] constexpr auto operator()(auto square [[maybe_unused]]) const noexcept
         {
-                return (... || (square == decltype(square)(std::get<0>(Squares), std::get<1>(Squares))));
+                return (... || (square == decltype(square){std::get<0>(Squares), std::get<1>(Squares)}));
         }
 };
 

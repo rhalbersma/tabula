@@ -6,7 +6,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/padding.hpp>   // padding
-#include <tabula/square.hpp>
+#include <tabula/square.hpp>    // basic_square
+#include <tabula/vector.hpp>    // basic_vector
 #include <optional>             // nullopt, optional
 #include <ranges>               // iota, reverse
 
@@ -48,9 +49,14 @@ public:
         static constexpr auto grid = Grid;
         using lake_type = Lake;
 
-        [[nodiscard]] static constexpr auto pad(auto coordinates) noexcept
+        [[nodiscard]] static constexpr auto pad(basic_square<Grid> s) noexcept
         {
-                return coordinates.template pad<Padding>();
+                return s.template pad<Padding>();
+        }
+
+        [[nodiscard]] static constexpr auto pad(basic_vector<Grid> v) noexcept
+        {
+                return v.template pad<Padding>();
         }
 
         static constexpr auto valid_size = []() {

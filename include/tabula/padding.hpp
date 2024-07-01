@@ -7,8 +7,6 @@
 
 namespace tabula {
 
-// CSS padding Property: https://www.w3schools.com/cssref/pr_padding.asp
-
 struct padding
 {
         int top;
@@ -20,13 +18,15 @@ struct padding
 };
 
 [[nodiscard]] inline constexpr auto pad_right(int r) noexcept
+        -> padding
 {
-        return padding(0, r, 0, 0);
+        return { 0, r, 0, 0 };
 }
 
-[[nodiscard]] inline constexpr auto mailbox(int tb, int rl) noexcept
+[[nodiscard]] inline constexpr auto pad_boxed(int tb, int rl) noexcept
+        -> padding
 {
-        return padding(tb, rl, tb, rl);
+        return { tb, rl, tb, rl };
 }
 
 }       // namespace tabula

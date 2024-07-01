@@ -13,6 +13,7 @@
 #include <tabula/padding.hpp>           // padding
 #include <tabula/square.hpp>            // basic_square
 #include <tabula/tuple.hpp>             // min_index, transform
+#include <tabula/vector.hpp>            // basic_vector
 #include <array>                        // array
 #include <cassert>                      // assert
 #include <cstddef>                      // size_t
@@ -36,12 +37,17 @@ struct basic_board
 
         static constexpr auto padded_grid = embedding::grid.pad(Padding);
 
-        [[nodiscard]] static constexpr auto pad(auto coordinates) noexcept
+        [[nodiscard]] static constexpr auto pad(basic_square<Grid> s) noexcept
         {
-                return embedding::pad(orientation(coordinates));
+                return embedding::pad(orientation(s));
         }
 
-        static constexpr auto is_valid(basic_square<Grid> square) noexcept
+        [[nodiscard]] static constexpr auto pad(basic_vector<Grid> v) noexcept
+        {
+                return embedding::pad(orientation(v));
+        }
+
+        [[nodiscard]] static constexpr auto is_valid(basic_square<Grid> square) noexcept
         {
                 return Grid.is_valid(square) && !Lake()(square);
         }
@@ -73,13 +79,13 @@ public:
         static constexpr auto is_chequered = chequered<Grid>;
 
         static constexpr auto parity() noexcept
-                requires is_chequered
+                requires chequered<grid>
         {
                 return Grid.parity;
         }
 
         static constexpr auto padded_parity() noexcept
-                requires is_chequered
+                requires chequered<padded_grid>
         {
                 return padded_grid.parity;
         }

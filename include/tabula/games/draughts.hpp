@@ -6,14 +6,14 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/board.hpp>     // basic_board
-#include <tabula/grids.hpp>     // basic_chequered, basic_rectangle
+#include <tabula/grids.hpp>     // chequered, rectangle
 #include <tabula/lake.hpp>      // basic_lake, algebraic_
 #include <tabula/padding.hpp>   // padding, pad_right
 
 namespace tabula {
 
 template<int Width, int Height, bool Parity = false, class Lake = basic_lake<>, padding Padding = pad_right(1)>
-using basic_draughts = basic_board<basic_chequered{Width, Height, Parity}, Lake, Padding>;
+using basic_draughts = basic_board<chequer{Width, Height, Parity}, Lake, Padding>;
 
 namespace draughts {
 
@@ -50,7 +50,7 @@ using ktar              = basic_draughts<Width, Height, 1>;
 using mertens_cut_j10   = basic_draughts<10, 10, 0, basic_lake<algebraic('j',10)>>;
 using mertens_add_k9    = basic_draughts<11, 10, 0, basic_lake<algebraic('k',7), algebraic('k',5), algebraic('k',3), algebraic('k',1)>>;
 
-using turkish           = basic_board<basic_rectangle{8, 8}, basic_lake<>, pad_right(1)>;
+using turkish           = basic_board<rectangle{8, 8}, basic_lake<>, pad_right(1)>;
 using dameo             = turkish;
 
 }       // namespace draughts

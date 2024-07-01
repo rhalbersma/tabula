@@ -40,8 +40,8 @@ int main()
                 // draughts variant played on a non-chequered board
                 draughts::turkish(),
 
-                // 10x10 draughts with 11x12 mailbox representation
-                basic_draughts<10, 10, 0, basic_lake<>, padding(1, 1, 1, 0)>(),
+                // 10x10 draughts with 11x12 pad_boxed representation
+                basic_draughts<10, 10, 0, basic_lake<>, padding{1, 1, 1, 0}>(),
 
                 // 10x10 draughts with 19x10 vector representation
                 basic_draughts<10, 10, 0, basic_lake<>, pad_right(9)>(),

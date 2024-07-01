@@ -27,42 +27,45 @@ constexpr auto for_each(auto tup, auto fun) noexcept
         }, tup);
 }
 
-constexpr auto transform(auto tup, auto fun) noexcept
+[[nodiscard]] constexpr auto transform(auto tup, auto fun) noexcept
 {
         return std::apply([=](auto... args) {
                 return std::tuple(fun(args)...);
         }, tup);
 }
 
-constexpr auto accumulate(auto tup) noexcept
+[[nodiscard]] constexpr auto accumulate(auto tup) noexcept
 {
         return std::apply([](auto... args) {
                 return (... + args);
         }, tup);
 }
 
-constexpr auto all_of(auto tup, auto pred) noexcept
+[[nodiscard]] constexpr auto all_of(auto tup, auto pred) noexcept
+        -> bool
 {
         return std::apply([=](auto... args) {
                 return (... && pred(args));
         }, tup);
 }
 
-constexpr auto any_of(auto tup, auto pred) noexcept
+[[nodiscard]] constexpr auto any_of(auto tup, auto pred) noexcept
+        -> bool
 {
         return std::apply([=](auto... args) {
                 return (... || pred(args));
         }, tup);
 }
 
-constexpr auto any_of_all(auto tup, auto pred) noexcept
+[[nodiscard]] constexpr auto any_of_all(auto tup, auto pred) noexcept
+        -> bool
 {
         return std::apply([=](auto... args) {
                 return (... | pred(args));
         }, tup);
 }
 
-constexpr auto remove_if(auto tup, auto pred) noexcept
+[[nodiscard]] constexpr auto remove_if(auto tup, auto pred) noexcept
 {
         return std::apply([=](auto... args) {
                 return std::tuple_cat(
@@ -76,7 +79,8 @@ constexpr auto remove_if(auto tup, auto pred) noexcept
 }
 
 template<class Compare = std::less<>>
-constexpr auto min_element(auto tup, Compare cmp = Compare()) noexcept
+[[nodiscard]] constexpr auto min_element(auto tup, Compare cmp = Compare()) noexcept
+        -> int
 {
         return std::apply([=](auto head, auto... tail) {
                 auto min = head;

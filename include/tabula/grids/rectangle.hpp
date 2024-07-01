@@ -13,12 +13,12 @@
 
 namespace tabula {
 
-struct basic_rectangle
+struct rectangle
 {
         int width;
         int height;
 
-        [[nodiscard]] constexpr auto operator==(basic_rectangle const&) const noexcept -> bool = default;
+        [[nodiscard]] constexpr auto operator==(rectangle const&) const noexcept -> bool = default;
         
         [[nodiscard]] constexpr auto size() const noexcept
         {
@@ -47,25 +47,25 @@ struct basic_rectangle
         }       
 
         [[nodiscard]] constexpr auto flip() const noexcept 
-                -> basic_rectangle
+                -> rectangle
         { 
                 return { width, height }; 
         }
 
         [[nodiscard]] constexpr auto flop() const noexcept 
-                -> basic_rectangle
+                -> rectangle
         { 
                 return { width, height }; 
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept 
-                -> basic_rectangle
+                -> rectangle
         { 
                 return { height, width }; 
         }
 
         [[nodiscard]] constexpr auto pad(padding p) const noexcept
-                -> basic_rectangle
+                -> rectangle
         {
                 return  
                 {
@@ -75,7 +75,7 @@ struct basic_rectangle
         }
 };
 
-template<basic_rectangle Grid>
+template<rectangle Grid>
 struct basic_compass<Grid>
 {
         static constexpr auto grid = Grid;
