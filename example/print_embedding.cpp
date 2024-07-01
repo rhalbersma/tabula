@@ -76,7 +76,7 @@ int main()
                         std::print(", P = {}", b.padded_parity());
                 }
                 std::println(", size = {} ({})", b.padded_size, b.valid_size);
-                fmt::println("directional strides: {}", b.strides);
+                fmt::println("directional strides: {}", b.strides);     // std::println for libstdc++ does not yet support printing ranges
                 std::println("{:->40}", "");
         });
 }

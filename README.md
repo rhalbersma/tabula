@@ -15,7 +15,19 @@ This single-header library has no other dependencies than the C++ Standard Libra
 | Linux    | Clang      | $\geq$ 18    | CI currently being ported to GitHub Actions |
 | Windows  | Visual C++ | $\geq$ 17.10 | CI currently being ported to GitHub Actions |
 
-Note that the unit tests depend on [Boost](https://www.boost.io/).
+Note that the unit tests depend on [Boost](https://www.boost.io/) and [fmtlib](https://fmt.dev/latest/index.html).
+
+## Installation
+
+    # Setup the project
+    mkdir projects && cd ~/projects/
+    git clone https://github.com/rhalbersma/tabula.git
+    cd tabula && mkdir build && cd build
+
+    # Build the project
+    cmake .. && cmake --build .
+    ctest                       # run the unit tests
+    example/print_embeddings    # print out all the predefined boards
 
 ## Acknowledgments
 

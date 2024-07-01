@@ -7,8 +7,6 @@
 
 #include <tabula/board.hpp>     // basic_board
 #include <tabula/padding.hpp>   // padding
-#include <fmt/color.h>
-#include <fmt/format.h>
 #include <format>               // formater, format_to
 #include <ranges>               // iota, reverse
 
@@ -25,9 +23,9 @@ struct std::formatter<tabula::basic_board<Grid, Lake, Padding>>
                 for (auto rank : std::views::iota(0, board.height) | std::views::reverse) {
                         for (auto file : std::views::iota(0, board.width)) {
                                 if (auto const square = board.square(file, rank); board.is_valid(square)) {
-                                        fmt::format_to(ctx.out(), "{:>4}", board.embedded(square));
+                                        std::format_to(ctx.out(), "{:>4}", board.embedded(square));
                                 } else {
-                                        fmt::format_to(ctx.out(), "{:>4}", "");
+                                        std::format_to(ctx.out(), "{:>4}", "");
                                 }
                                 if (file == board.width - 1) {
                                         std::format_to(ctx.out(), "\n");
