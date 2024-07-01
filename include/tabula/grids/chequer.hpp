@@ -33,7 +33,7 @@ struct chequer
                 return
                         0 <= file && file < width &&
                         0 <= rank && rank < height &&
-                        !((file ^ rank ^ parity) % 2)
+                        !(((file % 2) != (rank % 2)) != parity)
                 ;
         }
 
@@ -47,7 +47,7 @@ struct chequer
                 -> std::pair<int, int>
         {
                 index *= 2;
-                index += (width % 2) ? parity : parity ^ ((index / width) % 2);
+                index += (width % 2) ? parity : parity != ((index / width) % 2 == 1);
                 return { index % width, index / width };
         }
 
