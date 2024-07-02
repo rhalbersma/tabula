@@ -3,4 +3,6 @@
 /.project
 /.settings
 /.vscode/
+/.vs/
+/out/
 *.info
