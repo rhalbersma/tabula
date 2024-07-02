@@ -81,9 +81,8 @@ struct chequer
         }
 };
 
-template<auto Grid>
-        requires chequered<Grid>
-struct basic_compass<Grid>
+template<chequer Grid>
+struct basic_compass<chequer, Grid>
 {       
         static constexpr auto grid = Grid;
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };

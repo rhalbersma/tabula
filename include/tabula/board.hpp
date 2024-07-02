@@ -113,7 +113,7 @@ public:
         }
 
         static constexpr auto strides = []() {
-                using compass = basic_compass<Grid>;
+                using compass = basic_compass<std::remove_cvref_t<decltype(Grid)>, Grid>;
                 std::array<int, std::size(compass::directions)> table;
                 for (auto index = std::size_t(0); auto direction : compass::directions) {
                         table[index++] = pad(direction).stride();

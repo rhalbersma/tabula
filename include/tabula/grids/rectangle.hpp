@@ -76,9 +76,8 @@ struct rectangle
         }
 };
 
-template<auto Grid>
-        requires rectangular<Grid>
-struct basic_compass<Grid>
+template<rectangle Grid>
+struct basic_compass<rectangle, Grid>
 {
         static constexpr auto grid = Grid;
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
