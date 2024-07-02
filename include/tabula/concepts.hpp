@@ -10,7 +10,14 @@
 namespace tabula {
 
 template<auto Grid>
-concept chequered = requires
+concept rectangular = requires
+{
+        { Grid.width  } -> std::convertible_to<int>;
+        { Grid.height } -> std::convertible_to<int>;
+};
+
+template<auto Grid>
+concept chequered = rectangular<Grid> && requires
 {
         { Grid.parity } -> std::convertible_to<bool>;
 };
