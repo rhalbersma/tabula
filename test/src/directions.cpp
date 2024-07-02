@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, Index, Indices)
         BOOST_CHECK(std::ranges::equal(computed, expected));
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreIsOrdinal, Index, Indices)
+BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreOrdinal, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
         using compass = basic_compass<grid>;
