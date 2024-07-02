@@ -5,14 +5,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/functional.hpp>        // id, flip, flop, swap
+#include <tabula/functional.hpp>        // operator*, id, flip, flop, swap
 #include <tabula/tuple.hpp>             // all_of
 #include <tuple>                        // get, tuple
 
 namespace tabula {
 
 inline constexpr auto dihedral = std::tuple
-(
+{
         id,                     // origin bottom-left, numbering left-to-right, bottom-to-top
         flip,                   // mirror vertically
         flop,                   // mirror horizontally
@@ -21,7 +21,7 @@ inline constexpr auto dihedral = std::tuple
         flop * flip,            // rotate 180 degrees 
         swap * flip,            // rotate 90 degrees counterclockwise
         swap * flop             // rotate 90 degrees clockwise
-);
+};
 
 [[nodiscard]] constexpr auto is_identity(auto group, auto element) noexcept
 {

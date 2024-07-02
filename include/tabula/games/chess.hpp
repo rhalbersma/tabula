@@ -8,7 +8,7 @@
 #include <tabula/board.hpp>     // basic_board
 #include <tabula/grids.hpp>     // rectangle
 #include <tabula/lake.hpp>      // basic_lake
-#include <tabula/padding.hpp>   // pad_boxed, padding, pad_right
+#include <tabula/padding.hpp>   // padding, pad_boxed, pad_right
 
 namespace tabula {
 

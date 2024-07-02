@@ -26,4 +26,10 @@ struct basic_lake
         return { file - 'a',  rank - 1 };
 }
 
+[[nodiscard]] inline constexpr auto algebraic(int file, int rank) noexcept
+        -> square_
+{
+        return { file - 1,  rank - 1 };
+}
+
 }       // namespace tabula

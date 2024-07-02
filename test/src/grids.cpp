@@ -10,7 +10,7 @@
 #include <boost/mp11/algorithm.hpp>     // mp_iota_c
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
 #include <concepts>                     // same_as
-#include <ranges>                       // iota
+#include <ranges>                       // cartesian_product iota
 #include <tuple>                        // get, tuple, tuple_size_v
 
 using namespace tabula;
@@ -18,7 +18,7 @@ using namespace tabula;
 BOOST_AUTO_TEST_SUITE(Compass)
 
 constexpr auto grids = std::tuple
-(       rectangle{1, 1}
+{       rectangle{1, 1}
 ,       rectangle{1, 2}
 ,       rectangle{2, 1}
 ,       rectangle{2, 2}
@@ -51,7 +51,7 @@ constexpr auto grids = std::tuple
 ,       chequer{3, 3, 1}
 ,       chequer{3, 5, 1}
 ,       chequer{5, 3, 1}
-);
+};
 
 using Indices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(grids)>>;
 
@@ -66,8 +66,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(IndicesAreInvertible, Index, Indices)
 BOOST_AUTO_TEST_CASE_TEMPLATE(CoordinatesOfValidSquaresAreInvertible, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
-        for (auto coordinates : std::views::cartesian_product(std::views::iota(0, grid.width), std::views::iota(0, grid.height))) {
-                if (auto const [ file, rank ] = coordinates; basic_square<grid>(file, rank).is_valid()) {
+        for (auto coordinates : std::views::cartesian_product(
+                std::views::iota(0, grid.width), 
+                std::views::iota(0, grid.height)
+        )) {
+                if (auto const [ file, rank ] = coordinates; basic_square<grid>{file, rank}.is_valid()) {
                         BOOST_CHECK(grid.coordinates(grid.index(coordinates)) == coordinates);
                 }
         }
@@ -82,8 +85,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(DihedralGroupActionIsRealizedOnGrids, Index, Indic
 BOOST_AUTO_TEST_CASE_TEMPLATE(DihedralGroupActionIsRealizedOnGridSquares, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
-        for (auto const [ file, rank ] : std::views::cartesian_product(std::views::iota(0, grid.width), std::views::iota(0, grid.height))) {
-                auto const square = basic_square<grid>(file, rank);
+        for (auto const [ file, rank ] : std::views::cartesian_product(
+                std::views::iota(0, grid.width), 
+                std::views::iota(0, grid.height)
+        )) {
+                auto const square = basic_square<grid>{file, rank};
                 BOOST_CHECK(is_realized(dihedral, square));
         }
 }

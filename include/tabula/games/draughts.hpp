@@ -6,7 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/board.hpp>     // basic_board
-#include <tabula/grids.hpp>     // chequered, rectangle
+#include <tabula/grids.hpp>     // chequer, rectangle
 #include <tabula/lake.hpp>      // basic_lake, algebraic_
 #include <tabula/padding.hpp>   // padding, pad_right
 

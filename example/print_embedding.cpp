@@ -16,53 +16,42 @@
 int main()
 {
         using namespace tabula;
-        constexpr auto boards = std::tuple(
-                // draughts variants played on chequered boards
-                draughts::nano(),
-                draughts::micro(),
-                draughts::checkers(),
-                draughts::latin(),
-                draughts::international(),
-                draughts::frisian(),
-                draughts::canadian(),
-                draughts::sri_lankan(),
-                draughts::dumm(),
-                draughts::spantsiretti(),
-                draughts::ktar<10, 11>(),
-                draughts::ktar<10, 12>(),
-                basic_draughts<19, 10>(),
-                basic_draughts<10, 10, 0, basic_lake<>, pad_right(9)>(),
+        constexpr auto boards = std::tuple
+        {       draughts::nano{}
+        ,       draughts::micro{}
+        ,       draughts::checkers{}
+        ,       draughts::latin{}
+        ,       draughts::international{}
+        ,       draughts::frisian{}
+        ,       draughts::canadian{}
+        ,       draughts::sri_lankan{}
+        ,       draughts::dumm{}
+        ,       draughts::spantsiretti{}
+        ,       draughts::ktar<10, 11>{}
+        ,       draughts::ktar<10, 12>{}
+        ,       basic_draughts<19, 10>{}
+        ,       basic_draughts<10, 10, 0, basic_lake<>, pad_right(9)>{}
+        ,       draughts::mertens_cut_j10{}
+        ,       draughts::mertens_add_k9{}
+        ,       draughts::turkish{}
+        ,       basic_draughts<10, 10, 0, basic_lake<>, padding{1, 1, 1, 0}>{}
+        ,       basic_draughts<10, 10, 0, basic_lake<>, pad_right(9)>{}
 
-                // chequered boards with irregular shapes
-                draughts::mertens_cut_j10(),
-                draughts::mertens_add_k9(),
+        ,       stratego::l_attaque{}
+        ,       stratego::classic{}
+        ,       stratego::quick_arena{}
 
-                // draughts variant played on a non-chequered board
-                draughts::turkish(),
-
-                // 10x10 draughts with 11x12 pad_boxed representation
-                basic_draughts<10, 10, 0, basic_lake<>, padding{1, 1, 1, 0}>(),
-
-                // 10x10 draughts with 19x10 vector representation
-                basic_draughts<10, 10, 0, basic_lake<>, pad_right(9)>(),
-
-                // stratego variants
-                stratego::l_attaque(),
-                stratego::classic(),
-                stratego::quick_arena(),
-
-                // chess board representations
-                chess::board(),
-                chess::board_10x12(),
-                chess::board_15x12_33(),
-                chess::board_15x12_34(),
-                chess::board_15x15(),
-                chess::board_16x08(),
-                chess::board_16x12(),
-                chess::board_16x16(),
-                chess::capablanca(),
-                chess::grand()
-        );
+        ,       chess::board{}
+        ,       chess::board_10x12{}
+        ,       chess::board_15x12_33{}
+        ,       chess::board_15x12_34{}
+        ,       chess::board_15x15{}
+        ,       chess::board_16x08{}
+        ,       chess::board_16x12{}
+        ,       chess::board_16x16{}
+        ,       chess::capablanca{}
+        ,       chess::grand{}
+        };
 
         for_each(boards, [](auto b) {
                 std::println("{}\n", b);

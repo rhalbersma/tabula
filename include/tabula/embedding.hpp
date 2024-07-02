@@ -26,7 +26,7 @@ class basic_embedding
         {
                 for (auto index : std::views::iota(0, Grid.size())) {
                         auto const [ file, rank ] = Grid.coordinates(index);
-                        if (auto const square = basic_square<Grid>(file, rank); is_valid(square) ) {
+                        if (auto const square = basic_square<Grid>{file, rank}; is_valid(square) ) {
                                 return pad(square).index();
                         }
                 }
@@ -38,7 +38,7 @@ class basic_embedding
         {
                 for (auto index : std::views::iota(0, Grid.size()) | std::views::reverse) {
                         auto const [ file, rank ] = Grid.coordinates(index);
-                        if (auto const square = basic_square<Grid>(file, rank); is_valid(square)) {
+                        if (auto const square = basic_square<Grid>{file, rank}; is_valid(square)) {
                                 return pad(square).index();
                         }
                 }

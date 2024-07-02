@@ -16,7 +16,7 @@ using namespace tabula;
 BOOST_AUTO_TEST_SUITE(Compass)
 
 constexpr auto grids = std::tuple
-(       rectangle{1, 1}
+{       rectangle{1, 1}
 ,       rectangle{1, 2}
 ,       rectangle{2, 1}
 ,       rectangle{2, 2}
@@ -49,7 +49,7 @@ constexpr auto grids = std::tuple
 ,       chequer{3, 3, 1}
 ,       chequer{3, 5, 1}
 ,       chequer{5, 3, 1}
-);
+};
 
 using Indices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(grids)>>;
 
