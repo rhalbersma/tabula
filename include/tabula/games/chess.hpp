@@ -12,7 +12,7 @@
 
 namespace tabula {
 
-template<int Width, int Height, class Lake = basic_lake<>, padding Padding = pad_right(0)>
+template<int Width, int Height, class Lake = basic_lake<>, padding Padding = padding{}>
 using basic_chess = basic_board<rectangle{Width, Height}, Lake, Padding>;
 
 namespace chess {
