@@ -56,7 +56,7 @@ using Indices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(grids)>>;
 BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
-        using compass = basic_compass<std::remove_cvref_t<decltype(grid)>, grid>;
+        using compass = basic_compass<grid>;
         auto computed 
                 = compass::directions 
                 | std::views::filter([](auto d) { return d.is_cardinal(); })
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(CardinalDirectionsAreCardinal, Index, Indices)
 BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreOrdinal, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
-        using compass = basic_compass<std::remove_cvref_t<decltype(grid)>, grid>;
+        using compass = basic_compass<grid>;
         auto computed 
                 = compass::directions 
                 | std::views::filter([](auto d) { return d.is_ordinal(); })
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(OrdinalDirectionsAreOrdinal, Index, Indices)
 BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
-        using compass = basic_compass<std::remove_cvref_t<decltype(grid)>, grid>;
+        using compass = basic_compass<grid>;
         for (auto d : compass::directions) {
                 auto const r = d.reverse();
                 BOOST_CHECK((d != r));

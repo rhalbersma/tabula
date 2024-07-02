@@ -77,7 +77,7 @@ struct rectangle
 };
 
 template<rectangle Grid>
-struct basic_compass<rectangle, Grid>
+struct basic_compass<Grid>
 {
         static constexpr auto grid = Grid;
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };

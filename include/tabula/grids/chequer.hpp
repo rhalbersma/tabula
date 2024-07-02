@@ -33,7 +33,7 @@ struct chequer
                 return
                         0 <= file && file < width &&
                         0 <= rank && rank < height &&
-                        !(((file % 2) != (rank % 2)) != parity)
+                        (file + rank) % 2 == parity
                 ;
         }
 
@@ -47,20 +47,20 @@ struct chequer
                 -> std::pair<int, int>
         {
                 index *= 2;
-                index += (width % 2) ? parity : parity != ((index / width) % 2 == 1);
+                index += (width % 2) ? parity : parity != (index / width) % 2;
                 return { index % width, index / width };
         }
 
         [[nodiscard]] constexpr auto flip() const noexcept 
                 -> chequer
         { 
-                return { width, height, parity != !(height % 2) }; 
+                return { width, height, parity == height % 2 }; 
         }
         
         [[nodiscard]] constexpr auto flop() const noexcept 
                 -> chequer
         { 
-                return { width, height, parity != !(width % 2) }; 
+                return { width, height, parity == width % 2 }; 
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept 
@@ -74,15 +74,15 @@ struct chequer
         { 
                 return 
                 {
-                        width  + p.left + p.right + !((width + p.left + p.right) % 2),
+                        width  + p.left + p.right + (width + p.left + p.right + 1) % 2,
                         height + p.top  + p.bottom,
-                        parity != ((p.left % 2) != (p.bottom % 2))
+                        parity != (p.left + p.bottom) % 2
                 }; 
         }
 };
 
 template<chequer Grid>
-struct basic_compass<chequer, Grid>
+struct basic_compass<Grid>
 {       
         static constexpr auto grid = Grid;
         enum : unsigned { N, NE, E, SE, S, SW, W, NW };
