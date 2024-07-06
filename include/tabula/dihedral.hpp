@@ -5,41 +5,89 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/functional.hpp>        // operator*, id, flip, flop, swap
+#include <tabula/functional.hpp>        // operator*, keep, flip, flop, swap
 #include <tabula/tuple.hpp>             // all_of
 #include <tuple>                        // get, tuple
 
-namespace tabula {
+namespace tabula::group {
 
-inline constexpr auto dihedral = std::tuple
+// Symmetry group of squares (N x N) or odd-sized chequered squares (2N+1 x 2N+1).
+inline constexpr auto d4 = std::tuple
 {
-        id,                     // origin bottom-left, numbering left-to-right, bottom-to-top
-        flip,                   // mirror vertically
-        flop,                   // mirror horizontally
-        swap,                   // mirror diagonally
-        swap * flop * flip,     // mirror counterdiagonally
-        flop * flip,            // rotate 180 degrees 
-        swap * flip,            // rotate 90 degrees counterclockwise
-        swap * flop             // rotate 90 degrees clockwise
+        idem,                   // e
+        swap * flip,            // a   : rotate 90 degrees anticlockwise
+        flop * flip,            // a^2 : rotate 180 degrees 
+        swap * flop,            // a^3 : rotate 90 degrees clockwise        
+        swap,                   // b   : mirror diagonally
+        flip,                   // ba  : mirror vertically
+        swap * flop * flip,     // ba^2: mirror antidiagonally
+        flop,                    // ba^3: mirror horizontally
 };
 
-[[nodiscard]] constexpr auto is_identity(auto group, auto element) noexcept
+inline constexpr auto z4 = std::tuple
 {
-        return std::get<0>(group)(element) == element;
-}
+        idem,                   // e
+        swap * flip,            // a   : rotate 90 degrees anticlockwise
+        flop * flip,            // a^2 : rotate 180 degrees 
+        swap * flop             // a^3 : rotate 90 degrees clockwise   
+};
 
-[[nodiscard]] constexpr auto is_compatibility(auto group, auto element) noexcept
+// Symmetry group of even-sized chequered squares (2N x 2N).
+inline constexpr auto d2o = std::tuple
 {
-        return all_of(group, [=](auto a) {
-                return all_of(group, [=](auto b){
-                        return (a * b)(element) == a(b(element));
-                });
+        idem,                   // e
+        flop * flip,            // a^2 : rotate 180 degrees 
+        swap,                   // b   : mirror diagonally
+        swap * flop * flip,     // ba^2: mirror antidiagonally
+};
+
+// Symmetry group of rectangles (W x H) or odd-sized chequered rectangles (2W+1 x 2H+1).
+inline constexpr auto d2c = std::tuple
+{
+        idem,                   // e
+        flop * flip,            // a^2 : rotate 180 degrees 
+        flip,                   // ba  : mirror vertically
+        flop,                   // ba^3: mirror horizontally
+};
+
+inline constexpr auto z2d = std::tuple
+{
+        idem,                   // e
+        swap,                   // b   : mirror diagonally
+};
+
+inline constexpr auto z2a = std::tuple
+{
+        idem,                   // e
+        swap * flop * flip,     // ba^2: mirror antidiagonally
+};
+
+// Symmetry grouop of even-sized chequered rectangles (2W x 2H).
+inline constexpr auto d1r = std::tuple
+{
+        idem,                   // e
+        flop * flip,            // a^2 : rotate 180 degrees 
+};
+
+// Symmetry group of chequered rectangles with even width and odd height (2W x 2H+1).
+inline constexpr auto d1v = std::tuple
+{
+        idem,                   // e
+        flip,                   // ba  : mirror vertically
+};
+
+// Symmetry group of chequered rectangles with odd width and even height (2W+1 x 2H).
+inline constexpr auto d1h = std::tuple
+{
+        idem,                   // e
+        flop,                   // ba^3: mirror horizontally
+};
+
+[[nodiscard]] constexpr auto is_invariant(auto X, auto G) noexcept
+{
+        return all_of(G, [=](auto g) {
+                return g(X) == X;
         });
 }
 
-[[nodiscard]] constexpr auto is_realized(auto group, auto element) noexcept
-{
-        return is_identity(group, element) && is_compatibility(group, element);
-}
-
-}       // tabula
+}       // tabula::group
