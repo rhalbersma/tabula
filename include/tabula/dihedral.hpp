@@ -5,7 +5,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/functional.hpp>        // operator*, keep, flip, flop, swap
+#include <tabula/functional.hpp>        // operator*, idem, flip, flop, swap
 #include <tabula/tuple.hpp>             // all_of
 #include <tuple>                        // get, tuple
 
