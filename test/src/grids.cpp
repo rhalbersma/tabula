@@ -3,7 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/dihedral.hpp>          // d4, is_realized
+#include <tabula/dihedral.hpp>          // d8, is_realized
 #include <tabula/grids.hpp>             // chequer, rectangle
 #include <tabula/functional.hpp>        // operator*, flip, flop, swap
 #include <tabula/square.hpp>            // basic_square
@@ -76,7 +76,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(CoordinatesOfValidSquaresAreInvertible, Index, Ind
         }
 }
 
-constexpr auto d4_grids = std::tuple
+// Squares (N x N) and odd-sized chequered squares (2N+1 x 2N+1).
+constexpr auto d8_grids = std::tuple
 {       rectangle{1, 1}
 ,       rectangle{2, 2}
 ,       rectangle{3, 3}
@@ -95,50 +96,24 @@ constexpr auto d4_grids = std::tuple
 ,       chequer{7, 7, 1}
 };
 
-using D4Indices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(d4_grids)>>;
+using D8Indices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(d8_grids)>>;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(D4GridsAreInvariantUnderD4, Index, D4Indices)
+BOOST_AUTO_TEST_CASE_TEMPLATE(D8GridsAreInvariantUnderD8, Index, D8Indices)
 {
-        constexpr auto grid = std::get<Index::value>(d4_grids);
-        static_assert(group::is_invariant(grid, group::d4));
-        static_assert(group::is_invariant(grid, group::z4));
-        static_assert(group::is_invariant(grid, group::d2o));
-        static_assert(group::is_invariant(grid, group::d2c));
-        static_assert(group::is_invariant(grid, group::z2d));
-        static_assert(group::is_invariant(grid, group::z2a));
-        static_assert(group::is_invariant(grid, group::d1r));
-        static_assert(group::is_invariant(grid, group::d1v));
-        static_assert(group::is_invariant(grid, group::d1h));
+        constexpr auto grid = std::get<Index::value>(d8_grids);
+        static_assert(group::is_invariant(grid, group::d8));
+        static_assert(group::is_invariant(grid, group::d4c));
+        static_assert(group::is_invariant(grid, group::c4));
+        static_assert(group::is_invariant(grid, group::d4o));
+        static_assert(group::is_invariant(grid, group::d2v));
+        static_assert(group::is_invariant(grid, group::d2h));
+        static_assert(group::is_invariant(grid, group::d2r));
+        static_assert(group::is_invariant(grid, group::c2d));
+        static_assert(group::is_invariant(grid, group::c2a));
 }
 
-constexpr auto d2o_grids = std::tuple
-{       chequer{2, 2, 0}
-,       chequer{2, 2, 1}
-,       chequer{4, 4, 0}
-,       chequer{4, 4, 1}
-,       chequer{6, 6, 0}
-,       chequer{6, 6, 1}
-,       chequer{8, 8, 0}
-,       chequer{8, 8, 1}
-};
-
-using D2OIndices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(d2o_grids)>>;
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(D2OGridsAreInvariantUnderD2O, Index, D2OIndices)
-{
-        constexpr auto grid = std::get<Index::value>(d2o_grids);
-        static_assert(not group::is_invariant(grid, group::d4));
-        static_assert(not group::is_invariant(grid, group::z4));
-        static_assert(    group::is_invariant(grid, group::d2o));
-        static_assert(not group::is_invariant(grid, group::d2c));
-        static_assert(    group::is_invariant(grid, group::z2d));
-        static_assert(    group::is_invariant(grid, group::z2a));
-        static_assert(    group::is_invariant(grid, group::d1r));
-        static_assert(not group::is_invariant(grid, group::d1v));
-        static_assert(not group::is_invariant(grid, group::d1h));
-}
-
-constexpr auto d2c_grids = std::tuple
+// Rectangles (W x H) and odd-sized chequered rectangles (2W+1 x 2H+1).
+constexpr auto d4c_grids = std::tuple
 {       rectangle{1, 2}
 ,       rectangle{1, 2}
 ,       rectangle{1, 3}
@@ -157,50 +132,52 @@ constexpr auto d2c_grids = std::tuple
 ,       chequer{3, 5, 1}
 };
 
-using D2CIndices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(d2c_grids)>>;
+using D4CIndices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(d4c_grids)>>;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(D2CGridsAreInvariantUnderD2C, Index, D2CIndices)
+BOOST_AUTO_TEST_CASE_TEMPLATE(D4CGridsAreInvariantUnderD4C, Index, D4CIndices)
 {
-        constexpr auto grid = std::get<Index::value>(d2c_grids);
-        static_assert(not group::is_invariant(grid, group::d4));
-        static_assert(not group::is_invariant(grid, group::z4));
-        static_assert(not group::is_invariant(grid, group::d2o));
-        static_assert(    group::is_invariant(grid, group::d2c));
-        static_assert(not group::is_invariant(grid, group::z2d));
-        static_assert(not group::is_invariant(grid, group::z2a));
-        static_assert(    group::is_invariant(grid, group::d1r));
-        static_assert(    group::is_invariant(grid, group::d1v));
-        static_assert(    group::is_invariant(grid, group::d1h));
+        constexpr auto grid = std::get<Index::value>(d4c_grids);
+        static_assert(not group::is_invariant(grid, group::d8));
+        static_assert(    group::is_invariant(grid, group::d4c));
+        static_assert(not group::is_invariant(grid, group::c4));
+        static_assert(not group::is_invariant(grid, group::d4o));
+        static_assert(    group::is_invariant(grid, group::d2v));
+        static_assert(    group::is_invariant(grid, group::d2h));
+        static_assert(    group::is_invariant(grid, group::d2r));
+        static_assert(not group::is_invariant(grid, group::c2d));
+        static_assert(not group::is_invariant(grid, group::c2a));
 }
 
-constexpr auto d1r_grids = std::tuple
-{       chequer{2, 4, 0}
-,       chequer{2, 4, 1}
-,       chequer{2, 6, 0}
-,       chequer{2, 6, 1}
-,       chequer{4, 2, 0}
-,       chequer{4, 2, 1}
-,       chequer{4, 6, 0}
-,       chequer{4, 6, 1}
+// Even-sized chequered squares (2N x 2N).
+constexpr auto d4o_grids = std::tuple
+{       chequer{2, 2, 0}
+,       chequer{2, 2, 1}
+,       chequer{4, 4, 0}
+,       chequer{4, 4, 1}
+,       chequer{6, 6, 0}
+,       chequer{6, 6, 1}
+,       chequer{8, 8, 0}
+,       chequer{8, 8, 1}
 };
 
-using D1RIndices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(d1r_grids)>>;
+using D4OIndices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(d4o_grids)>>;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(D1RGridsAreInvariantUnderD1R, Index, D1RIndices)
+BOOST_AUTO_TEST_CASE_TEMPLATE(D4OGridsAreInvariantUnderD4O, Index, D4OIndices)
 {
-        constexpr auto grid = std::get<Index::value>(d1r_grids);
-        static_assert(not group::is_invariant(grid, group::d4));
-        static_assert(not group::is_invariant(grid, group::z4));
-        static_assert(not group::is_invariant(grid, group::d2o));
-        static_assert(not group::is_invariant(grid, group::d2c));
-        static_assert(not group::is_invariant(grid, group::z2d));
-        static_assert(not group::is_invariant(grid, group::z2a));
-        static_assert(    group::is_invariant(grid, group::d1r));
-        static_assert(not group::is_invariant(grid, group::d1v));
-        static_assert(not group::is_invariant(grid, group::d1h));
+        constexpr auto grid = std::get<Index::value>(d4o_grids);
+        static_assert(not group::is_invariant(grid, group::d8));
+        static_assert(not group::is_invariant(grid, group::d4c));
+        static_assert(not group::is_invariant(grid, group::c4));
+        static_assert(    group::is_invariant(grid, group::d4o));
+        static_assert(not group::is_invariant(grid, group::d2v));
+        static_assert(not group::is_invariant(grid, group::d2h));
+        static_assert(    group::is_invariant(grid, group::d2r));
+        static_assert(    group::is_invariant(grid, group::c2d));
+        static_assert(    group::is_invariant(grid, group::c2a));
 }
 
-constexpr auto d1v_grids = std::tuple
+// Chequered rectangles with even width and odd height (2W x 2H+1).
+constexpr auto d2v_grids = std::tuple
 {       chequer{2, 1, 0}
 ,       chequer{2, 1, 1}
 ,       chequer{2, 3, 0}
@@ -211,23 +188,24 @@ constexpr auto d1v_grids = std::tuple
 ,       chequer{4, 3, 1}
 };
 
-using D1VIndices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(d1v_grids)>>;
+using D2VIndices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(d2v_grids)>>;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(D1VGridsAreInvariantUnderD1V, Index, D1VIndices)
+BOOST_AUTO_TEST_CASE_TEMPLATE(D2VGridsAreInvariantUnderD2V, Index, D2VIndices)
 {
-        constexpr auto grid = std::get<Index::value>(d1v_grids);
-        static_assert(not group::is_invariant(grid, group::d4));
-        static_assert(not group::is_invariant(grid, group::z4));
-        static_assert(not group::is_invariant(grid, group::d2o));
-        static_assert(not group::is_invariant(grid, group::d2c));
-        static_assert(not group::is_invariant(grid, group::z2d));
-        static_assert(not group::is_invariant(grid, group::z2a));
-        static_assert(not group::is_invariant(grid, group::d1r));
-        static_assert(    group::is_invariant(grid, group::d1v));
-        static_assert(not group::is_invariant(grid, group::d1h));
+        constexpr auto grid = std::get<Index::value>(d2v_grids);
+        static_assert(not group::is_invariant(grid, group::d8));
+        static_assert(not group::is_invariant(grid, group::d4c));
+        static_assert(not group::is_invariant(grid, group::c4));
+        static_assert(not group::is_invariant(grid, group::d4o));
+        static_assert(    group::is_invariant(grid, group::d2v));
+        static_assert(not group::is_invariant(grid, group::d2h));
+        static_assert(not group::is_invariant(grid, group::d2r));
+        static_assert(not group::is_invariant(grid, group::c2d));
+        static_assert(not group::is_invariant(grid, group::c2a));
 }
 
-constexpr auto d1h_grids = std::tuple
+// Chequered rectangles with odd width and even height (2W+1 x 2H).
+constexpr auto d2h_grids = std::tuple
 {       chequer{1, 2, 0}
 ,       chequer{1, 2, 1}
 ,       chequer{1, 4, 0}
@@ -238,20 +216,48 @@ constexpr auto d1h_grids = std::tuple
 ,       chequer{3, 4, 1}
 };
 
-using D1HIndices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(d1h_grids)>>;
+using D2HIndices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(d2h_grids)>>;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(D1HGridsAreInvariantUnderD1H, Index, D1HIndices)
+BOOST_AUTO_TEST_CASE_TEMPLATE(D2HGridsAreInvariantUnderD2H, Index, D2HIndices)
 {
-        constexpr auto grid = std::get<Index::value>(d1h_grids);
-        static_assert(not group::is_invariant(grid, group::d4));
-        static_assert(not group::is_invariant(grid, group::z4));
-        static_assert(not group::is_invariant(grid, group::d2o));
-        static_assert(not group::is_invariant(grid, group::d2c));
-        static_assert(not group::is_invariant(grid, group::z2d));
-        static_assert(not group::is_invariant(grid, group::z2a));
-        static_assert(not group::is_invariant(grid, group::d1r));
-        static_assert(not group::is_invariant(grid, group::d1v));
-        static_assert(    group::is_invariant(grid, group::d1h));
+        constexpr auto grid = std::get<Index::value>(d2h_grids);
+        static_assert(not group::is_invariant(grid, group::d8));
+        static_assert(not group::is_invariant(grid, group::d4c));
+        static_assert(not group::is_invariant(grid, group::c4));
+        static_assert(not group::is_invariant(grid, group::d4o));
+        static_assert(not group::is_invariant(grid, group::d2v));
+        static_assert(    group::is_invariant(grid, group::d2h));
+        static_assert(not group::is_invariant(grid, group::d2r));
+        static_assert(not group::is_invariant(grid, group::c2d));
+        static_assert(not group::is_invariant(grid, group::c2a));
+}
+
+// Even-sized chequered rectangles (2W x 2H).
+constexpr auto d2r_grids = std::tuple
+{       chequer{2, 4, 0}
+,       chequer{2, 4, 1}
+,       chequer{2, 6, 0}
+,       chequer{2, 6, 1}
+,       chequer{4, 2, 0}
+,       chequer{4, 2, 1}
+,       chequer{4, 6, 0}
+,       chequer{4, 6, 1}
+};
+
+using D2RIndices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(d2r_grids)>>;
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(D2RGridsAreInvariantUnderD2R, Index, D2RIndices)
+{
+        constexpr auto grid = std::get<Index::value>(d2r_grids);
+        static_assert(not group::is_invariant(grid, group::d8));
+        static_assert(not group::is_invariant(grid, group::d4c));
+        static_assert(not group::is_invariant(grid, group::c4));
+        static_assert(not group::is_invariant(grid, group::d4o));
+        static_assert(not group::is_invariant(grid, group::d2v));
+        static_assert(not group::is_invariant(grid, group::d2h));
+        static_assert(    group::is_invariant(grid, group::d2r));
+        static_assert(not group::is_invariant(grid, group::c2d));
+        static_assert(not group::is_invariant(grid, group::c2a));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

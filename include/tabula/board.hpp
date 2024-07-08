@@ -7,7 +7,7 @@
 
 #include <tabula/compass.hpp>           // basic_compass
 #include <tabula/concepts.hpp>          // chequered
-#include <tabula/dihedral.hpp>          // d4
+#include <tabula/dihedral.hpp>          // d8
 #include <tabula/embedding.hpp>         // basic_embedding
 #include <tabula/functional.hpp>        // operator*, flip, flop, swap
 #include <tabula/padding.hpp>           // padding
@@ -28,11 +28,11 @@ template<auto Grid, class Lake, padding Padding>
 struct basic_board
 {
         static constexpr auto min = min_element(
-                transform(group::d4, [](auto orientation) {                        
+                transform(group::d8, [](auto orientation) {                        
                         return basic_embedding<orientation(Grid), Lake, Padding>::valid_size;
                 })
         );        
-        static constexpr auto orientation = std::get<min>(group::d4);
+        static constexpr auto orientation = std::get<min>(group::d8);
         using embedding = basic_embedding<orientation(Grid), Lake, Padding>;
 
         static constexpr auto padded_grid = embedding::grid.pad(Padding);
