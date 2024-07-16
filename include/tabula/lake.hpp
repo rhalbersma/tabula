@@ -5,6 +5,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+#include <charconv>     // from_chars
+#include <cstddef>      // size_t
 #include <utility>      // get, pair
 
 namespace tabula {
@@ -32,4 +34,18 @@ struct basic_lake
         return { file - 1,  rank - 1 };
 }
 
+inline namespace literals {
+inline namespace square_literals {
+
+[[nodiscard]] constexpr auto operator""_sq(const char* str, std::size_t n) noexcept
+        -> square_
+{
+        auto file = str[0];
+        auto rank = 0;
+        std::from_chars(str + 1, str + n, rank);
+        return { file - 'a',  rank - 1 };
+}
+
+}       // namespace square_literals
+}       // namespace literals
 }       // namespace tabula

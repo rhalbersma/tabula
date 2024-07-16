@@ -32,7 +32,7 @@ struct basic_board
                         return basic_embedding<orientation(Grid), Lake, Padding>::valid_size;
                 })
         );        
-        static constexpr auto orientation = std::get<min>(group::d8);
+        static constexpr auto orientation = std::get<0>(group::d8);
         using embedding = basic_embedding<orientation(Grid), Lake, Padding>;
 
         static constexpr auto padded_grid = embedding::grid.pad(Padding);
