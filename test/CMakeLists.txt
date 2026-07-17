@@ -75,11 +75,6 @@ target_compile_options(
     $<$<AND:$<BOOL:${TABULA_WARNINGS_AS_ERRORS}>,$<CXX_COMPILER_ID:MSVC>>:/WX>
     $<$<AND:$<BOOL:${TABULA_WARNINGS_AS_ERRORS}>,$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>>:-Werror>
 )
-target_include_directories(
-    tabula_test_options INTERFACE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
 # Each public header is compiled as its own translation unit (linked against
 # the same warning flags as the unit tests), proving it is self-sufficient.
 set(public_header_dir ${PROJECT_SOURCE_DIR}/include)

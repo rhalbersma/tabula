@@ -154,7 +154,7 @@ jobs:
         if: matrix.trunk
         env:
           VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-        run: vcpkg install fmt --triplet x64-linux
+        run: vcpkg install --triplet x64-linux
 
       - name: Configure (stable)
         if: "!matrix.trunk"
