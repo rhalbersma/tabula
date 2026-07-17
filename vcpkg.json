@@ -1,0 +1,19 @@
+{
+  "name": "tabula",
+  "version-string": "0.1.0",
+  "description": "Board game utilities",
+  "homepage": "https://github.com/rhalbersma/tabula",
+  "license": "BSL-1.0",
+  "default-features": [
+    "test"
+  ],
+  "features": {
+    "test": {
+      "description": "Build the Boost.Test-based unit tests",
+      "dependencies": [
+        "boost-test",
+        "fmt"
+      ]
+    }
+  }
+}
