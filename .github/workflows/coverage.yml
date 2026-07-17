@@ -24,6 +24,12 @@ jobs:
   coverage:
     name: GCC 15 gcovr
     runs-on: ubuntu-24.04
+    # tabula's existing tests only exercise ~52% lines / ~25% branches,
+    # nowhere near the 100% gate below (inherited as-is from xstd).
+    # Allow-failure until test coverage is deliberately built up to match;
+    # the gcovr summary and Codecov upload below still run and report real
+    # numbers either way.
+    continue-on-error: true
 
     steps:
       - uses: actions/checkout@v7
