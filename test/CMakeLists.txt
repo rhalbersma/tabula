@@ -40,6 +40,7 @@ set(cxx_compile_options_warnings
         -Wno-padded
         -Wno-unsafe-buffer-usage
         -Wno-nrvo                           # constexpr IIFE table init: no runtime cost either way
+        -Wno-c2y-extensions                 # triggered by Boost.Test's use of __COUNTER__
         -Wno-disabled-macro-expansion       # triggered by Boost.Test
         -Wno-global-constructors            # triggered by Boost.Test
         -Wno-used-but-marked-unused         # triggered by Boost.Test
