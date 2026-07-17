@@ -29,6 +29,11 @@ jobs:
     # Just the two stable Xcode generations, one per macOS runner image.
     name: AppleClang ${{ matrix.label }}
     runs-on: ${{ matrix.os }}
+    # format.hpp uses std::views::cartesian_product (C++23), which Apple's
+    # libc++ fork still doesn't implement as of Xcode 16.4 and 26.5 alike
+    # (unlike upstream LLVM libc++). Allow-failure until Apple ships it,
+    # so the rest of this workflow's signal isn't lost in the meantime.
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:

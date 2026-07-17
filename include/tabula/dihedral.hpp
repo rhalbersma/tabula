@@ -12,35 +12,35 @@
 namespace tabula::group {
 
 inline constexpr auto d8 = std::tuple{
-        idem,             // e
-        swap* flip,       // a   : rotate 90 degrees anticlockwise
-        flop* flip,       // a^2 : rotate 180 degrees
-        swap* flop,       // a^3 : rotate 90 degrees clockwise
-        swap,             // b   : mirror diagonally
-        flip,             // ba  : mirror vertically
-        swap* flop* flip, // ba^2: mirror antidiagonally
-        flop,             // ba^3: mirror horizontally
+        idem,               // e
+        swap * flip,        // a   : rotate 90 degrees anticlockwise
+        flop * flip,        // a^2 : rotate 180 degrees
+        swap * flop,        // a^3 : rotate 90 degrees clockwise
+        swap,               // b   : mirror diagonally
+        flip,               // ba  : mirror vertically
+        swap * flop * flip, // ba^2: mirror antidiagonally
+        flop,               // ba^3: mirror horizontally
 };
 
 inline constexpr auto d4c = std::tuple{
-        idem,       // e
-        flop* flip, // a^2 : rotate 180 degrees
-        flip,       // ba  : mirror vertically
-        flop,       // ba^3: mirror horizontally
+        idem,        // e
+        flop * flip, // a^2 : rotate 180 degrees
+        flip,        // ba  : mirror vertically
+        flop,        // ba^3: mirror horizontally
 };
 
 inline constexpr auto c4 = std::tuple{
-        idem,       // e
-        swap* flip, // a   : rotate 90 degrees anticlockwise
-        flop* flip, // a^2 : rotate 180 degrees
-        swap* flop, // a^3 : rotate 90 degrees clockwise
+        idem,        // e
+        swap * flip, // a   : rotate 90 degrees anticlockwise
+        flop * flip, // a^2 : rotate 180 degrees
+        swap * flop, // a^3 : rotate 90 degrees clockwise
 };
 
 inline constexpr auto d4o = std::tuple{
-        idem,             // e
-        flop* flip,       // a^2 : rotate 180 degrees
-        swap,             // b   : mirror diagonally
-        swap* flop* flip, // ba^2: mirror antidiagonally
+        idem,               // e
+        flop * flip,        // a^2 : rotate 180 degrees
+        swap,               // b   : mirror diagonally
+        swap * flop * flip, // ba^2: mirror antidiagonally
 };
 
 inline constexpr auto d2v = std::tuple{
@@ -54,8 +54,8 @@ inline constexpr auto d2h = std::tuple{
 };
 
 inline constexpr auto d2r = std::tuple{
-        idem,       // e
-        flop* flip, // a^2 : rotate 180 degrees
+        idem,        // e
+        flop * flip, // a^2 : rotate 180 degrees
 };
 
 inline constexpr auto c2d = std::tuple{
@@ -64,8 +64,8 @@ inline constexpr auto c2d = std::tuple{
 };
 
 inline constexpr auto c2a = std::tuple{
-        idem,             // e
-        swap* flop* flip, // ba^2: mirror antidiagonally
+        idem,               // e
+        swap * flop * flip, // ba^2: mirror antidiagonally
 };
 
 [[nodiscard]] constexpr auto is_invariant(auto X, auto G) noexcept

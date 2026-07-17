@@ -25,7 +25,7 @@ struct chequer
 
         [[nodiscard]] constexpr auto size() const noexcept
         {
-                return (width * height + static_cast<int>(!parity)) / 2;
+                return ((width * height) + static_cast<int>(!parity)) / 2;
         }
 
         [[nodiscard]] constexpr auto is_valid(auto coordinates) const noexcept
@@ -53,28 +53,28 @@ struct chequer
         [[nodiscard]] constexpr auto flip() const noexcept
                 -> chequer
         {
-                return {width, height, static_cast<int>(parity) == height % 2};
+                return {.width = width, .height = height, .parity = static_cast<int>(parity) == height % 2};
         }
 
         [[nodiscard]] constexpr auto flop() const noexcept
                 -> chequer
         {
-                return {width, height, static_cast<int>(parity) == width % 2};
+                return {.width = width, .height = height, .parity = static_cast<int>(parity) == width % 2};
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept
                 -> chequer
         {
-                return {height, width, parity};
+                return {.width = height, .height = width, .parity = parity};
         }
 
         [[nodiscard]] constexpr auto pad(padding p) const noexcept
                 -> chequer
         {
                 return {
-                        width + p.left + p.right + (width + p.left + p.right + 1) % 2,
-                        height + p.top + p.bottom,
-                        static_cast<int>(parity) != (p.left + p.bottom) % 2};
+                        .width = width + p.left + p.right + ((width + p.left + p.right + 1) % 2),
+                        .height = height + p.top + p.bottom,
+                        .parity = static_cast<int>(parity) != (p.left + p.bottom) % 2};
         }
 };
 

@@ -27,6 +27,10 @@ foreach(t ${targets})
         ${CMAKE_PROJECT_NAME}
         fmt::fmt
         tabula_test_options
+        # winlibs MinGW splits <print>'s terminal-write internals
+        # (std::__open_terminal, std::__write_to_terminal) into a separate
+        # static lib that isn't pulled in automatically.
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<PLATFORM_ID:Windows>>:stdc++exp>
     )
 
     target_compile_options(

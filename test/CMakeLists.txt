@@ -39,6 +39,7 @@ set(cxx_compile_options_warnings
         -Wno-c++20-extensions
         -Wno-padded
         -Wno-unsafe-buffer-usage
+        -Wno-nrvo                           # constexpr IIFE table init: no runtime cost either way
         -Wno-disabled-macro-expansion       # triggered by Boost.Test
         -Wno-global-constructors            # triggered by Boost.Test
         -Wno-used-but-marked-unused         # triggered by Boost.Test

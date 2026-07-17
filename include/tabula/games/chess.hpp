@@ -13,7 +13,7 @@
 namespace tabula {
 
 template<int Width, int Height, class Lake = basic_lake<>, padding Padding = padding{}>
-using basic_chess = basic_board<rectangle{Width, Height}, Lake, Padding>;
+using basic_chess = basic_board<rectangle{.width = Width, .height = Height}, Lake, Padding>;
 
 namespace chess {
 
@@ -29,9 +29,9 @@ using board_16x08 = basic_chess<8, 8, basic_lake<>, pad_right(8)>;
 using board_0x88 = board_16x08;
 
 // https://www.chessprogramming.org/Vector_Attacks
-using board_15x12_33 = basic_chess<8, 8, basic_lake<>, padding{2, 4, 2, 3}>;
-using board_15x12_34 = basic_chess<8, 8, basic_lake<>, padding{2, 3, 2, 4}>;
-using board_15x15 = basic_chess<8, 8, basic_lake<>, padding{4, 4, 3, 3}>;
+using board_15x12_33 = basic_chess<8, 8, basic_lake<>, padding{.top = 2, .right = 4, .bottom = 2, .left = 3}>;
+using board_15x12_34 = basic_chess<8, 8, basic_lake<>, padding{.top = 2, .right = 3, .bottom = 2, .left = 4}>;
+using board_15x15 = basic_chess<8, 8, basic_lake<>, padding{.top = 4, .right = 4, .bottom = 3, .left = 3}>;
 using board_16x12 = basic_chess<8, 8, basic_lake<>, pad_boxed(2, 4)>;
 using board_16x16 = basic_chess<8, 8, basic_lake<>, pad_boxed(4, 4)>;
 

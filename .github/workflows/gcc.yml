@@ -170,7 +170,7 @@ jobs:
           cmake -S . -B build
           -DCMAKE_C_COMPILER=${{ matrix.cc }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
-          -DCMAKE_PREFIX_PATH="/opt/boost-latest;$VCPKG_INSTALLATION_ROOT/installed/x64-linux"
+          -DCMAKE_PREFIX_PATH="/opt/boost-latest;$GITHUB_WORKSPACE/vcpkg_installed/x64-linux"
           -DBoost_NO_SYSTEM_PATHS=ON
 
       - name: Build

@@ -20,13 +20,13 @@ struct padding
 [[nodiscard]] constexpr auto pad_right(int r) noexcept
         -> padding
 {
-        return {0, r, 0, 0};
+        return {.top = 0, .right = r, .bottom = 0, .left = 0};
 }
 
 [[nodiscard]] constexpr auto pad_boxed(int tb, int rl) noexcept
         -> padding
 {
-        return {tb, rl, tb, rl};
+        return {.top = tb, .right = rl, .bottom = tb, .left = rl};
 }
 
 } // namespace tabula

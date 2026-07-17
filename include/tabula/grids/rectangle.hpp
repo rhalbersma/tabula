@@ -49,27 +49,27 @@ struct rectangle
         [[nodiscard]] constexpr auto flip() const noexcept
                 -> rectangle
         {
-                return {width, height};
+                return {.width = width, .height = height};
         }
 
         [[nodiscard]] constexpr auto flop() const noexcept
                 -> rectangle
         {
-                return {width, height};
+                return {.width = width, .height = height};
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept
                 -> rectangle
         {
-                return {height, width};
+                return {.width = height, .height = width};
         }
 
         [[nodiscard]] constexpr auto pad(padding p) const noexcept
                 -> rectangle
         {
                 return {
-                        width + p.left + p.right,
-                        height + p.top + p.bottom};
+                        .width = width + p.left + p.right,
+                        .height = height + p.top + p.bottom};
         }
 };
 

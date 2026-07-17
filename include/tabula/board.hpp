@@ -114,7 +114,7 @@ struct basic_board
         static constexpr auto strides = []() {
                 using compass = basic_compass<Grid>;
                 std::array<int, std::size(compass::directions)> table;
-                for (auto index = std::size_t(0); auto direction : compass::directions) {
+                for (auto index = static_cast<std::size_t>(0); auto direction : compass::directions) {
                         table[index++] = pad(direction).stride();
                 }
                 return table;
