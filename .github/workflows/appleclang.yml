@@ -1,0 +1,83 @@
+#          Copyright Rein Halbersma 2019-2025.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
+
+name: AppleClang
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    # There's no open-source trunk/nightly AppleClang the way GCC/Clang
+    # have (Apple doesn't publish dev snapshots the way LLVM does), and the
+    # newest-available-Xcode leg this used to have wasn't a distinct
+    # compiler often enough to be worth a separate row - same reasoning as
+    # why the Clang-CL workflow only has one leg per Visual Studio version.
+    # Just the two stable Xcode generations, one per macOS runner image.
+    name: AppleClang ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
+    # format.hpp uses std::views::cartesian_product (C++23), which libc++
+    # still doesn't implement as of Xcode 16.4 and 26.5 alike - not an
+    # Apple-specific gap, upstream LLVM libc++ 22 is missing it too (see
+    # clang.yml's "22 libc++" leg). Allow-failure until it ships, so the
+    # rest of this workflow's signal isn't lost in the meantime.
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: Xcode 16.4
+            os: macos-15
+          - label: Xcode 26.5
+            os: macos-26
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Report toolchain version
+        run: |
+          xcodebuild -version
+          clang++ --version
+
+      # Export the two env vars vcpkg's "x-gha" binary source needs to talk
+      # to the GitHub Actions cache service, so built packages are reused
+      # across runs instead of recompiled from scratch every time.
+      - name: Export GitHub Actions cache environment variables
+        uses: actions/github-script@v9
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
+      # GitHub-hosted macOS runners are arm64 since macos-14; vcpkg's
+      # arm64-osx triplet builds Boost.Test/fmt with the runner's default
+      # Xcode, so its libc++ ABI always matches the compiler under test.
+      - name: Install Boost.Test and fmt
+        env:
+          VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+        run: vcpkg install --triplet arm64-osx
+
+      - name: Configure
+        run: >
+          cmake -S . -B build
+          -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
+          -DVCPKG_TARGET_TRIPLET=arm64-osx
+
+      - name: Build
+        run: cmake --build build -v
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure

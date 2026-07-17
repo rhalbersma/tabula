@@ -7,7 +7,7 @@
 
 namespace tabula {
 
-inline constexpr auto idem = [](auto arg) { return arg;        };
+inline constexpr auto idem = [](auto arg) { return arg; };
 inline constexpr auto flip = [](auto arg) { return arg.flip(); };
 inline constexpr auto flop = [](auto arg) { return arg.flop(); };
 inline constexpr auto swap = [](auto arg) { return arg.swap(); };
@@ -17,4 +17,4 @@ inline constexpr auto swap = [](auto arg) { return arg.swap(); };
         return [=](auto arg) { return f(g(arg)); };
 }
 
-}       // namespace tabula
+} // namespace tabula

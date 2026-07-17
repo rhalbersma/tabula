@@ -1,0 +1,141 @@
+#          Copyright Rein Halbersma 2019-2025.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
+
+name: Clang
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Clang ${{ matrix.label }}
+    runs-on: ubuntu-24.04
+    continue-on-error: ${{ matrix.allow_failure }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: "21"
+            version: 21
+            cc: clang-21
+            cxx: clang++-21
+            stdlib: libstdc++
+            triplet: x64-linux
+            cxxflags: ""
+            allow_failure: false
+          - label: "22"
+            version: 22
+            cc: clang-22
+            cxx: clang++-22
+            stdlib: libstdc++
+            triplet: x64-linux
+            cxxflags: ""
+            allow_failure: false
+          # The MSVC STL and libstdc++ are covered by the other workflows;
+          # this leg adds the third mainstream standard library. Boost.Test
+          # and fmt are rebuilt against libc++ through the overlay triplet in
+          # .github/vcpkg (a libstdc++ build would not link).
+          #
+          # Allow-failure: format.hpp uses std::views::cartesian_product
+          # (C++23), which libc++ still doesn't implement as of version 22
+          # (verified: not even behind -fexperimental-library), unlike
+          # libstdc++ which the other legs use. Same gap as AppleClang's
+          # libc++ fork, just upstream this time.
+          - label: 22 libc++
+            version: 22
+            cc: clang-22
+            cxx: clang++-22
+            stdlib: libc++
+            triplet: x64-linux-libcxx
+            cxxflags: "-stdlib=libc++"
+            allow_failure: true
+          - label: 23-SVN
+            version: 23
+            cc: clang-23
+            cxx: clang++-23
+            stdlib: libstdc++
+            triplet: x64-linux
+            cxxflags: ""
+            allow_failure: false
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install Clang ${{ matrix.version }}
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh ${{ matrix.version }}
+
+      - name: Install libc++ ${{ matrix.version }}
+        if: matrix.stdlib == 'libc++'
+        run: sudo apt-get install -y libc++-${{ matrix.version }}-dev libc++abi-${{ matrix.version }}-dev
+
+      # tabula/format.hpp's basic_board formatter needs C++23 <format>,
+      # which needs a recent libstdc++ regardless of what the runner image's
+      # default GCC ships. Clang doesn't bundle its own standard library for
+      # -stdlib=libstdc++; it auto-selects the newest GCC installation's
+      # headers/runtime it can find, so this is enough - no --gcc-toolchain
+      # flag needed. Matches gcc.yml's own fix for the same underlying
+      # problem.
+      - name: Install a <format>-capable libstdc++
+        if: matrix.stdlib == 'libstdc++'
+        run: |
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install -y g++-15
+
+      # Export the two env vars vcpkg's "x-gha" binary source needs to talk
+      # to the GitHub Actions cache service, so built packages are reused
+      # across runs instead of recompiled from scratch every time.
+      - name: Export GitHub Actions cache environment variables
+        uses: actions/github-script@v9
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
+      # vcpkg is used instead of the distro's boost package so tabula tracks
+      # recent Boost releases regardless of what the OS bundles.
+      # apt.llvm.org's Clang packages (including the dev/SVN build) link
+      # against the system libstdc++ like every other apt-installed compiler
+      # on the runner - no separate bundled runtime, so no ABI mismatch with
+      # vcpkg's Boost.Test/fmt either. The libc++ leg instead selects the
+      # overlay triplet, which rebuilds Boost.Test/fmt with Clang against
+      # libc++.
+      - name: Install Boost.Test and fmt
+        env:
+          VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
+        run: >
+          vcpkg install
+          --triplet ${{ matrix.triplet }}
+          --overlay-triplets "$GITHUB_WORKSPACE/.github/vcpkg/triplets"
+
+      - name: Configure
+        run: >
+          cmake -S . -B build
+          -DCMAKE_C_COMPILER=${{ matrix.cc }}
+          -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
+          "-DCMAKE_CXX_FLAGS=${{ matrix.cxxflags }}"
+          -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
+          -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}
+          -DVCPKG_OVERLAY_TRIPLETS=$GITHUB_WORKSPACE/.github/vcpkg/triplets
+
+      - name: Build
+        run: cmake --build build -v
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure

@@ -5,11 +5,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/padding.hpp>   // padding
-#include <tabula/square.hpp>    // basic_square
-#include <tabula/vector.hpp>    // basic_vector
-#include <optional>             // nullopt, optional
-#include <ranges>               // iota, reverse
+#include <tabula/padding.hpp> // padding
+#include <tabula/square.hpp>  // basic_square
+#include <tabula/vector.hpp>  // basic_vector
+#include <optional>           // nullopt, optional
+#include <ranges>             // iota, reverse
 
 namespace tabula {
 
@@ -25,8 +25,8 @@ class basic_embedding
                 -> std::optional<int>
         {
                 for (auto index : std::views::iota(0, Grid.size())) {
-                        auto const [ file, rank ] = Grid.coordinates(index);
-                        if (auto const square = basic_square<Grid>{file, rank}; is_valid(square) ) {
+                        auto const [file, rank] = Grid.coordinates(index);
+                        if (auto const square = basic_square<Grid>{file, rank}; is_valid(square)) {
                                 return pad(square).index();
                         }
                 }
@@ -37,7 +37,7 @@ class basic_embedding
                 -> std::optional<int>
         {
                 for (auto index : std::views::iota(0, Grid.size()) | std::views::reverse) {
-                        auto const [ file, rank ] = Grid.coordinates(index);
+                        auto const [file, rank] = Grid.coordinates(index);
                         if (auto const square = basic_square<Grid>{file, rank}; is_valid(square)) {
                                 return pad(square).index();
                         }
@@ -45,7 +45,7 @@ class basic_embedding
                 return std::nullopt;
         }
 
-public:
+      public:
         static constexpr auto grid = Grid;
         using lake_type = Lake;
 
@@ -66,4 +66,4 @@ public:
         }();
 };
 
-}   // namespace tabula
+} // namespace tabula
