@@ -5,22 +5,22 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/compass.hpp>    // basic_compass
-#include <tabula/concepts.hpp>   // chequered
-#include <tabula/dihedral.hpp>   // d8
-#include <tabula/embedding.hpp>  // basic_embedding
-#include <tabula/functional.hpp> // operator*, flip, flop, swap
-#include <tabula/padding.hpp>    // padding
-#include <tabula/square.hpp>     // basic_square
-#include <tabula/tuple.hpp>      // min_index, transform
-#include <tabula/vector.hpp>     // basic_vector
-#include <array>                 // array
-#include <cassert>               // assert
-#include <cstddef>               // size_t
-#include <functional>            // identity
-#include <optional>              // optional
-#include <ranges>                // views
-#include <tuple>                 // get
+#include <tabula/compass.hpp>           // basic_compass
+#include <tabula/concepts.hpp>          // chequered
+#include <tabula/dihedral.hpp>          // d8
+#include <tabula/embedding.hpp>         // basic_embedding
+#include <tabula/functional.hpp>        // operator*, flip, flop, swap
+#include <tabula/padding.hpp>           // padding
+#include <tabula/square.hpp>            // basic_square
+#include <tabula/tuple.hpp>             // min_index, transform
+#include <tabula/vector.hpp>            // basic_vector
+#include <array>                        // array
+#include <cassert>                      // assert
+#include <cstddef>                      // size_t
+#include <functional>                   // identity
+#include <optional>                     // optional
+#include <ranges>                       // views
+#include <tuple>                        // get
 
 namespace tabula {
 
@@ -28,9 +28,10 @@ template<auto Grid, class Lake, padding Padding>
 struct basic_board
 {
         static constexpr auto min = min_element(
-                transform(group::d8, [](auto orientation) {
+                transform(group::d8, [](auto orientation) {                        
                         return basic_embedding<orientation(Grid), Lake, Padding>::valid_size;
-                }));
+                })
+        );        
         static constexpr auto orientation = std::get<0>(group::d8);
         using embedding = basic_embedding<orientation(Grid), Lake, Padding>;
 
@@ -54,7 +55,7 @@ struct basic_board
         static constexpr auto embedding_table = []() {
                 auto table = std::array<std::optional<int>, Grid.size()>{};
                 for (auto index : std::views::iota(0, Grid.size())) {
-                        auto const [file, rank] = Grid.coordinates(index);
+                        auto const [ file, rank ] = Grid.coordinates(index);
                         if (auto const square = basic_square<Grid>(file, rank); is_valid(square)) {
                                 table[static_cast<std::size_t>(index)] = pad(square).index();
                         }
@@ -62,16 +63,16 @@ struct basic_board
                 return table;
         }();
 
-      public:
+public:
         static constexpr auto grid = Grid;
 
-        static constexpr auto width = Grid.width;
+        static constexpr auto width  = Grid.width;
         static constexpr auto height = Grid.height;
-        static constexpr auto size = Grid.size();
+        static constexpr auto size   = Grid.size();
 
-        static constexpr auto padded_width = padded_grid.width;
+        static constexpr auto padded_width  = padded_grid.width;
         static constexpr auto padded_height = padded_grid.height;
-        static constexpr auto padded_size = padded_grid.size();
+        static constexpr auto padded_size   = padded_grid.size();
 
         static constexpr auto valid_size = embedding::valid_size;
 
@@ -92,7 +93,7 @@ struct basic_board
         static constexpr auto square(int file, int rank) noexcept
                 -> basic_square<Grid>
         {
-                return {file, rank};
+                return { file, rank };
         }
 
         static constexpr auto sequential0(basic_square<Grid> square) noexcept
@@ -114,11 +115,11 @@ struct basic_board
         static constexpr auto strides = []() {
                 using compass = basic_compass<Grid>;
                 std::array<int, std::size(compass::directions)> table;
-                for (auto index = static_cast<std::size_t>(0); auto direction : compass::directions) {
+                for (auto index = std::size_t(0); auto direction : compass::directions) {
                         table[index++] = pad(direction).stride();
                 }
                 return table;
         }();
 };
 
-} // namespace tabula
+}   // namespace tabula
