@@ -10,6 +10,7 @@
 #include <tabula/padding.hpp>   // padding
 #include <tabula/vector.hpp>    // basic_vector
 #include <array>                // array
+#include <cstdint>              // uint8_t
 #include <utility>              // pair
 
 namespace tabula {
@@ -50,28 +51,28 @@ struct rectangle
         [[nodiscard]] constexpr auto flip() const noexcept 
                 -> rectangle
         { 
-                return { width, height }; 
+                return { .width = width, .height = height };
         }
 
         [[nodiscard]] constexpr auto flop() const noexcept 
                 -> rectangle
         { 
-                return { width, height }; 
+                return { .width = width, .height = height };
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept 
                 -> rectangle
         { 
-                return { height, width }; 
+                return { .width = height, .height = width };
         }
 
         [[nodiscard]] constexpr auto pad(padding p) const noexcept
                 -> rectangle
         {
-                return  
+                return
                 {
-                        width  + p.left + p.right,
-                        height + p.top  + p.bottom
+                        .width  = width  + p.left + p.right,
+                        .height = height + p.top  + p.bottom
                 };
         }
 };
@@ -80,7 +81,7 @@ template<rectangle Grid>
 struct basic_compass<Grid>
 {
         static constexpr auto grid = Grid;
-        enum : unsigned { N, NE, E, SE, S, SW, W, NW };
+        enum : std::uint8_t { N, NE, E, SE, S, SW, W, NW };
         static constexpr auto directions = std::array<basic_vector<Grid>, 8>
         {{
                 {  0,  1 },     // N

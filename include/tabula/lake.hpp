@@ -22,13 +22,13 @@ struct basic_lake
         }
 };
 
-[[nodiscard]] inline constexpr auto algebraic(char file, int rank) noexcept
+[[nodiscard]] constexpr auto algebraic(char file, int rank) noexcept
         -> square_
 {
         return { file - 'a',  rank - 1 };
 }
 
-[[nodiscard]] inline constexpr auto algebraic(int file, int rank) noexcept
+[[nodiscard]] constexpr auto algebraic(int file, int rank) noexcept
         -> square_
 {
         return { file - 1,  rank - 1 };

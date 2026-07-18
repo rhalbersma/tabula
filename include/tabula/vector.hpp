@@ -73,12 +73,12 @@ struct basic_vector
 
         [[nodiscard]] constexpr auto is_cardinal() const noexcept
         {
-                return !file ^ !rank;
+                return (file == 0) != (rank == 0);
         }
 
         [[nodiscard]] constexpr auto is_ordinal() const noexcept
         {
-                return !(file - rank) ^ !(file + rank);
+                return (file == rank) != (file == -rank);
         }
 
         [[nodiscard]] constexpr auto is_left() const noexcept
