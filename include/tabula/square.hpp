@@ -18,7 +18,7 @@ struct basic_square
 
         static constexpr auto grid = Grid;  
 
-        [[nodiscard]] constexpr auto operator==(basic_square const&) const noexcept -> bool = default;
+        [[nodiscard]] friend constexpr auto operator==(basic_square const&, basic_square const&) noexcept -> bool = default;
 
         [[nodiscard]] constexpr auto& operator+=(basic_vector<Grid> v) noexcept
         {
