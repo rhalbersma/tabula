@@ -25,7 +25,7 @@ struct chequer
 
         [[nodiscard]] constexpr auto size() const noexcept
         {
-                return (width * height + !parity) / 2;
+                return ((width * height) + !parity) / 2;
         }
 
         [[nodiscard]] constexpr auto is_valid(auto coordinates) const noexcept
@@ -75,7 +75,7 @@ struct chequer
         { 
                 return 
                 {
-                        width  + p.left + p.right + (width + p.left + p.right + 1) % 2,
+                        width  + p.left + p.right + ((width + p.left + p.right + 1) % 2),
                         height + p.top  + p.bottom,
                         parity != (p.left + p.bottom) % 2
                 }; 
