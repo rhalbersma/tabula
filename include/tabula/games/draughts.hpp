@@ -12,7 +12,7 @@
 
 namespace tabula {
 
-template<int Width, int Height, bool Parity = false, class Lake = basic_lake<>, padding Padding = pad_right(1)>
+template<int Width, int Height, int Parity = 0, class Lake = basic_lake<>, padding Padding = pad_right(1)>
 using basic_draughts = basic_board<chequer{.width = Width, .height = Height, .parity = Parity}, Lake, Padding>;
 
 namespace draughts {

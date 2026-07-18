@@ -19,13 +19,13 @@ struct chequer
 {
         int width;
         int height;
-        bool parity;
+        int parity;     // 0 or 1: which square color the origin belongs to
 
         [[nodiscard]] constexpr auto operator==(chequer const&) const noexcept -> bool = default;
 
         [[nodiscard]] constexpr auto size() const noexcept
         {
-                return ((width * height) + !parity) / 2;
+                return ((width * height) + (1 - parity)) / 2;
         }
 
         [[nodiscard]] constexpr auto is_valid(auto coordinates) const noexcept
@@ -48,20 +48,20 @@ struct chequer
                 -> std::pair<int, int>
         {
                 index *= 2;
-                index += (width % 2) ? parity : parity != (index / width) % 2;
+                index += (width % 2 != 0) ? parity : ((index / width) % 2 != parity ? 1 : 0);
                 return { index % width, index / width };
         }
 
         [[nodiscard]] constexpr auto flip() const noexcept 
                 -> chequer
         { 
-                return { .width = width, .height = height, .parity = parity == height % 2 };
+                return { .width = width, .height = height, .parity = (parity == height % 2 ? 1 : 0) };
         }
         
         [[nodiscard]] constexpr auto flop() const noexcept 
                 -> chequer
         { 
-                return { .width = width, .height = height, .parity = parity == width % 2 };
+                return { .width = width, .height = height, .parity = (parity == width % 2 ? 1 : 0) };
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept 
@@ -77,7 +77,7 @@ struct chequer
                 {
                         .width  = width  + p.left + p.right + ((width + p.left + p.right + 1) % 2),
                         .height = height + p.top  + p.bottom,
-                        .parity = parity != (p.left + p.bottom) % 2
+                        .parity = ((p.left + p.bottom) % 2 != parity ? 1 : 0)
                 };
         }
 };
