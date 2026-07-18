@@ -9,7 +9,7 @@
 [![AppleClang](https://github.com/rhalbersma/tabula/actions/workflows/appleclang.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/appleclang.yml)
 [![Clang-CL](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml)
 [![MSVC](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml)
-[![Coverage](https://codecov.io/gh/rhalbersma/tabula/branch/master/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula)
+[![Coverage](https://codecov.io/gh/rhalbersma/tabula/branch/main/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula)
 
 ## Requirements
 
