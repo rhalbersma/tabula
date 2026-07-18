@@ -50,14 +50,17 @@ jobs:
           # .github/vcpkg (a libstdc++ build would not link).
           #
           # Allow-failure: format.hpp uses std::views::cartesian_product
-          # (C++23), which libc++ still doesn't implement as of version 22
-          # (verified: not even behind -fexperimental-library), unlike
-          # libstdc++ which the other legs use. Same gap as AppleClang's
-          # libc++ fork, just upstream this time.
-          - label: 22 libc++
-            version: 22
-            cc: clang-22
-            cxx: clang++-22
+          # (C++23), which libc++ doesn't implement yet. The implementation
+          # (llvm/llvm-project#111215) is still open against main as of
+          # 2026-07-18, so it'll land in clang 23 at the earliest, not a
+          # backport to the already-cut 22 branch - hence this leg tracks
+          # 23-SVN rather than 22, so it starts passing as soon as that PR
+          # merges instead of waiting on a version bump. Same underlying gap
+          # as AppleClang's libc++ fork, just upstream this time.
+          - label: 23-SVN libc++
+            version: 23
+            cc: clang-23
+            cxx: clang++-23
             stdlib: libc++
             triplet: x64-linux-libcxx
             cxxflags: "-stdlib=libc++"
