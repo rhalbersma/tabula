@@ -13,7 +13,7 @@
 namespace tabula {
 
 template<int Width, int Height, bool Parity = false, class Lake = basic_lake<>, padding Padding = pad_right(1)>
-using basic_draughts = basic_board<chequer{Width, Height, Parity}, Lake, Padding>;
+using basic_draughts = basic_board<chequer{.width = Width, .height = Height, .parity = Parity}, Lake, Padding>;
 
 namespace draughts {
 
@@ -51,7 +51,7 @@ using namespace tabula::square_literals;
 using mertens_cut_j10   = basic_draughts<10, 10, 0, basic_lake<"j10"_sq>>;
 using mertens_add_k9    = basic_draughts<11, 10, 0, basic_lake<"k7"_sq, "k5"_sq, "k3"_sq, "k1"_sq>>;
 
-using turkish           = basic_board<rectangle{8, 8}, basic_lake<>, pad_right(1)>;
+using turkish           = basic_board<rectangle{.width = 8, .height = 8}, basic_lake<>, pad_right(1)>;
 using dameo             = turkish;
 
 }       // namespace draughts

@@ -55,30 +55,30 @@ struct chequer
         [[nodiscard]] constexpr auto flip() const noexcept 
                 -> chequer
         { 
-                return { width, height, parity == height % 2 }; 
+                return { .width = width, .height = height, .parity = parity == height % 2 };
         }
         
         [[nodiscard]] constexpr auto flop() const noexcept 
                 -> chequer
         { 
-                return { width, height, parity == width % 2 }; 
+                return { .width = width, .height = height, .parity = parity == width % 2 };
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept 
                 -> chequer
         { 
-                return { height, width, parity }; 
+                return { .width = height, .height = width, .parity = parity };
         }
 
         [[nodiscard]] constexpr auto pad(padding p) const noexcept 
                 -> chequer
         { 
-                return 
+                return
                 {
-                        width  + p.left + p.right + ((width + p.left + p.right + 1) % 2),
-                        height + p.top  + p.bottom,
-                        parity != (p.left + p.bottom) % 2
-                }; 
+                        .width  = width  + p.left + p.right + ((width + p.left + p.right + 1) % 2),
+                        .height = height + p.top  + p.bottom,
+                        .parity = parity != (p.left + p.bottom) % 2
+                };
         }
 };
 
