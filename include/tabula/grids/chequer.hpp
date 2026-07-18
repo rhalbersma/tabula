@@ -48,20 +48,20 @@ struct chequer
                 -> std::pair<int, int>
         {
                 index *= 2;
-                index += (width % 2 != 0) ? parity : ((index / width) % 2 != parity ? 1 : 0);
+                index += (width % 2 != 0) ? parity : (parity ^ ((index / width) % 2));
                 return { index % width, index / width };
         }
 
         [[nodiscard]] constexpr auto flip() const noexcept 
                 -> chequer
         { 
-                return { .width = width, .height = height, .parity = (parity == height % 2 ? 1 : 0) };
+                return { .width = width, .height = height, .parity = 1 ^ parity ^ (height % 2) };
         }
         
         [[nodiscard]] constexpr auto flop() const noexcept 
                 -> chequer
         { 
-                return { .width = width, .height = height, .parity = (parity == width % 2 ? 1 : 0) };
+                return { .width = width, .height = height, .parity = 1 ^ parity ^ (width % 2) };
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept 
@@ -77,7 +77,7 @@ struct chequer
                 {
                         .width  = width  + p.left + p.right + ((width + p.left + p.right + 1) % 2),
                         .height = height + p.top  + p.bottom,
-                        .parity = ((p.left + p.bottom) % 2 != parity ? 1 : 0)
+                        .parity = parity ^ ((p.left + p.bottom) % 2)
                 };
         }
 };
