@@ -20,7 +20,7 @@ struct rectangle
         int width;
         int height;
 
-        [[nodiscard]] constexpr auto operator==(rectangle const&) const noexcept -> bool = default;
+        [[nodiscard]] friend constexpr auto operator==(rectangle const&, rectangle const&) noexcept -> bool = default;
         
         [[nodiscard]] constexpr auto size() const noexcept
         {

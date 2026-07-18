@@ -21,7 +21,7 @@ struct chequer
         int height;
         int parity;     // 0 or 1: complement of the square color the origin belongs to
 
-        [[nodiscard]] constexpr auto operator==(chequer const&) const noexcept -> bool = default;
+        [[nodiscard]] friend constexpr auto operator==(chequer const&, chequer const&) noexcept -> bool = default;
 
         [[nodiscard]] constexpr auto size() const noexcept
         {

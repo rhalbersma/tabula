@@ -14,7 +14,7 @@ struct padding
         int bottom;
         int left;
 
-        [[nodiscard]] constexpr auto operator==(padding const&) const noexcept -> bool = default;
+        [[nodiscard]] friend constexpr auto operator==(padding const&, padding const&) noexcept -> bool = default;
 };
 
 [[nodiscard]] constexpr auto pad_right(int r) noexcept
