@@ -55,13 +55,13 @@ struct chequer
         [[nodiscard]] constexpr auto flip() const noexcept 
                 -> chequer
         { 
-                return { .width = width, .height = height, .parity = 1 ^ parity ^ (height % 2) };
+                return { .width = width, .height = height, .parity = parity ^ ((height - 1) % 2) };
         }
 
         [[nodiscard]] constexpr auto flop() const noexcept
                 -> chequer
         {
-                return { .width = width, .height = height, .parity = 1 ^ parity ^ (width % 2) };
+                return { .width = width, .height = height, .parity = parity ^ ((width - 1) % 2) };
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept 
