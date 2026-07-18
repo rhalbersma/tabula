@@ -19,13 +19,13 @@ struct chequer
 {
         int width;
         int height;
-        int parity;     // 0 or 1: which square color the origin belongs to
+        int parity;     // 0 or 1: complement of the square color the origin belongs to
 
         [[nodiscard]] constexpr auto operator==(chequer const&) const noexcept -> bool = default;
 
         [[nodiscard]] constexpr auto size() const noexcept
         {
-                return ((width * height) + (1 - parity)) / 2;
+                return ((width * height) + parity) / 2;
         }
 
         [[nodiscard]] constexpr auto is_valid(auto coordinates) const noexcept
@@ -34,7 +34,7 @@ struct chequer
                 return
                         0 <= file && file < width &&
                         0 <= rank && rank < height &&
-                        (file + rank) % 2 == parity
+                        (file + rank) % 2 != parity
                 ;
         }
 
@@ -48,7 +48,7 @@ struct chequer
                 -> std::pair<int, int>
         {
                 index *= 2;
-                index += (width % 2 != 0) ? parity : (parity ^ ((index / width) % 2));
+                index += (width % 2 != 0) ? (1 ^ parity) : (1 ^ parity ^ ((index / width) % 2));
                 return { index % width, index / width };
         }
 
@@ -57,10 +57,10 @@ struct chequer
         { 
                 return { .width = width, .height = height, .parity = 1 ^ parity ^ (height % 2) };
         }
-        
-        [[nodiscard]] constexpr auto flop() const noexcept 
+
+        [[nodiscard]] constexpr auto flop() const noexcept
                 -> chequer
-        { 
+        {
                 return { .width = width, .height = height, .parity = 1 ^ parity ^ (width % 2) };
         }
 
