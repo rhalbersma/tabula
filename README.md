@@ -10,6 +10,7 @@
 [![Clang-CL](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml)
 [![MSVC](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml)
 [![Coverage](https://codecov.io/gh/rhalbersma/tabula/branch/main/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/rhalbersma/tabula/badge)](https://securityscorecards.dev/viewer/?uri=github.com/rhalbersma/tabula)
 
 ## Requirements
 
