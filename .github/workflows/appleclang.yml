@@ -32,8 +32,10 @@ jobs:
     # format.hpp uses std::views::cartesian_product (C++23), which libc++
     # still doesn't implement as of Xcode 16.4 and 26.5 alike - not an
     # Apple-specific gap, upstream LLVM libc++ is missing it too (see
-    # clang.yml's "23-SVN libc++" leg). Allow-failure until it ships, so the
-    # rest of this workflow's signal isn't lost in the meantime.
+    # clang.yml's "23-SVN libc++" leg: the implementation,
+    # llvm/llvm-project#111215, is still open against main as of
+    # 2026-07-18). Allow-failure until it ships, so the rest of this
+    # workflow's signal isn't lost in the meantime.
     continue-on-error: true
     strategy:
       fail-fast: false
