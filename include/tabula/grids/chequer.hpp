@@ -10,6 +10,7 @@
 #include <tabula/padding.hpp>   // padding
 #include <tabula/vector.hpp>    // basic_vector
 #include <array>                // array
+#include <cstdint>              // uint8_t
 #include <utility>              // pair
 
 namespace tabula {
@@ -85,7 +86,7 @@ template<chequer Grid>
 struct basic_compass<Grid>
 {       
         static constexpr auto grid = Grid;
-        enum : unsigned { N, NE, E, SE, S, SW, W, NW };
+        enum : std::uint8_t { N, NE, E, SE, S, SW, W, NW };
         static constexpr auto directions = std::array<basic_vector<Grid>, 8>
         {{
                 {  0,  2 },     // N
