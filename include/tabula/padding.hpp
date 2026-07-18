@@ -17,16 +17,16 @@ struct padding
         [[nodiscard]] constexpr auto operator==(padding const&) const noexcept -> bool = default;
 };
 
-[[nodiscard]] constexpr auto pad_right(int r) noexcept
+[[nodiscard]] inline constexpr auto pad_right(int r) noexcept
         -> padding
 {
-        return {.top = 0, .right = r, .bottom = 0, .left = 0};
+        return { 0, r, 0, 0 };
 }
 
-[[nodiscard]] constexpr auto pad_boxed(int tb, int rl) noexcept
+[[nodiscard]] inline constexpr auto pad_boxed(int tb, int rl) noexcept
         -> padding
 {
-        return {.top = tb, .right = rl, .bottom = tb, .left = rl};
+        return { tb, rl, tb, rl };
 }
 
-} // namespace tabula
+}       // namespace tabula
