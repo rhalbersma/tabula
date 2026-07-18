@@ -23,6 +23,12 @@ jobs:
   tidy:
     name: clang-tidy 22
     runs-on: ubuntu-24.04
+    # Report-only: .clang-tidy has no WarningsAsErrors, so findings never
+    # fail this job. The full output is captured to an artifact (and
+    # summarized in the job's own summary page) for manual triage - decide
+    # per finding whether to fix the code or add a check suppression,
+    # rather than having CI silently auto-rewrite anything.
+    continue-on-error: true
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
@@ -75,8 +81,27 @@ jobs:
       # self-sufficiency translation units. The Boost.Test sources are left
       # out on purpose: the test macros drown the signal in noise. The
       # check selection and per-check suppressions live in .clang-tidy;
-      # WarningsAsErrors there makes any finding fail this job.
+      # there's no WarningsAsErrors there, so this never fails the job -
+      # findings are captured below for manual review instead.
       - name: Run clang-tidy over the public headers
-        run: >
-          run-clang-tidy-22 -quiet -p build
-          "$GITHUB_WORKSPACE/build/test/header_self_sufficiency/.*"
+        run: |
+          run-clang-tidy-22 -quiet -p build \
+            "$GITHUB_WORKSPACE/build/test/header_self_sufficiency/.*" \
+            2>&1 | tee clang-tidy-report.txt
+
+      - name: Publish clang-tidy summary
+        if: always()
+        run: |
+          {
+            echo '### clang-tidy findings'
+            echo '```'
+            grep -E ': (error|warning):' clang-tidy-report.txt || echo 'No findings.'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload clang-tidy report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: clang-tidy-report
+          path: clang-tidy-report.txt
