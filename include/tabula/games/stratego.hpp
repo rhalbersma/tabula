@@ -7,7 +7,7 @@
 
 #include <tabula/board.hpp>     // basic_board
 #include <tabula/grids.hpp>     // rectangle
-#include <tabula/lake.hpp>      // basic_lake, algebraic_
+#include <tabula/lake.hpp>      // basic_lake, square_literals
 #include <tabula/padding.hpp>   // pad_right
 
 namespace tabula {
