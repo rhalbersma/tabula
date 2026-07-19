@@ -53,7 +53,7 @@ target_sources(
         include/tabula/vector.hpp
 )
 
-# Tests and examples (and their Boost.Test/fmt dependencies) only exist when
+# Tests and examples (and their Boost.Test dependency) only exist when
 # tabula itself is being developed. Consumers vendoring this directory via
 # add_subdirectory or FetchContent get just the header-only target, with no
 # BUILD_TESTING workaround required on their side.

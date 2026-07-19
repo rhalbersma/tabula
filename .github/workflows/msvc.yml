@@ -167,10 +167,10 @@ jobs:
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       # MSVC guarantees binary compatibility across toolset versions since
-      # VS 2015, so vcpkg's Boost/fmt (built with the default/stable
-      # toolset) link fine against code compiled with the preview toolset
-      # too - no need to rebuild either from source for the preview leg.
-      - name: Install Boost.Test and fmt
+      # VS 2015, so vcpkg's Boost (built with the default/stable toolset)
+      # links fine against code compiled with the preview toolset too - no
+      # need to rebuild it from source for the preview leg.
+      - name: Install Boost.Test
         shell: pwsh
         env:
           VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"

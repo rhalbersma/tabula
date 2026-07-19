@@ -10,8 +10,9 @@
 #include <boost/mp11/algorithm.hpp>     // mp_iota_c
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
 #include <concepts>                     // same_as
-#include <ranges>                       // cartesian_product iota
+#include <ranges>                       // iota
 #include <tuple>                        // get, tuple, tuple_cat, tuple_size_v
+#include <utility>                      // pair
 
 using namespace tabula;
 
@@ -223,12 +224,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(IndicesAreInvertible, Index, Indices)
 BOOST_AUTO_TEST_CASE_TEMPLATE(CoordinatesOfValidSquaresAreInvertible, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
-        for (auto coordinates : std::views::cartesian_product(
-                std::views::iota(0, grid.width), 
-                std::views::iota(0, grid.height)
-        )) {
-                if (auto const [ file, rank ] = coordinates; basic_square<grid>{file, rank}.is_valid()) {
-                        BOOST_CHECK(grid.coordinates(grid.index(coordinates)) == coordinates);
+        for (auto file : std::views::iota(0, grid.width)) {
+                for (auto rank : std::views::iota(0, grid.height)) {
+                        if (auto const coordinates = std::pair{ file, rank }; basic_square<grid>{file, rank}.is_valid()) {
+                                BOOST_CHECK(grid.coordinates(grid.index(coordinates)) == coordinates);
+                        }
                 }
         }
 }

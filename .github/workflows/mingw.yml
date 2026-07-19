@@ -142,11 +142,11 @@ jobs:
 
       # vcpkg's x64-mingw-dynamic community triplet builds against whatever
       # gcc/g++ resolve to on PATH - which is now the pinned WinLibs
-      # toolchain added above - so Boost.Test/fmt end up with the same
-      # libstdc++ ABI as the tabula tests they link against. No prebuilt
+      # toolchain added above - so Boost.Test ends up with the same
+      # libstdc++ ABI as the tabula tests it links against. No prebuilt
       # Boost exists for an arbitrary pinned MinGW version, so this is a
       # from-source build, same as the GCC/Clang trunk legs.
-      - name: Install Boost.Test and fmt
+      - name: Install Boost.Test
         if: steps.winlibs.outputs.found == 'true'
         env:
           VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"

@@ -29,17 +29,6 @@ jobs:
     # Just the two stable Xcode generations, one per macOS runner image.
     name: AppleClang ${{ matrix.label }}
     runs-on: ${{ matrix.os }}
-    # format.hpp uses std::views::cartesian_product (C++23), which libc++
-    # still doesn't implement as of Xcode 16.4 and 26.5 alike - not an
-    # Apple-specific gap, upstream LLVM libc++ is missing it too (see
-    # clang.yml's "23-SVN libc++" leg: the implementation,
-    # llvm/llvm-project#111215, is still open against main as of
-    # 2026-07-18).
-    #
-    # Deliberately NOT continue-on-error: this workflow isn't a required
-    # PR status check, so a red badge here is informative rather than
-    # blocking - it should visibly flip green the moment libc++ ships
-    # cartesian_product, instead of being silently masked in the meantime.
     strategy:
       fail-fast: false
       matrix:
@@ -68,9 +57,9 @@ jobs:
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       # GitHub-hosted macOS runners are arm64 since macos-14; vcpkg's
-      # arm64-osx triplet builds Boost.Test/fmt with the runner's default
+      # arm64-osx triplet builds Boost.Test with the runner's default
       # Xcode, so its libc++ ABI always matches the compiler under test.
-      - name: Install Boost.Test and fmt
+      - name: Install Boost.Test
         env:
           VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
         run: vcpkg install --triplet arm64-osx

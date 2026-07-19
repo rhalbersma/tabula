@@ -8,8 +8,6 @@
 #include <tabula/games.hpp>     // chess, draughts, stratego
 #include <tabula/padding.hpp>   // padding, pad_right
 #include <tabula/tuple.hpp>     // for_each
-#include <fmt/format.h>
-#include <fmt/ranges.h>
 #include <print>                // print, println
 #include <tuple>                // tuple
 
@@ -65,7 +63,7 @@ int main()
                         std::print(", P = {}", b.padded_parity());
                 }
                 std::println(", size = {} ({})", b.padded_size, b.valid_size);
-                fmt::println("directional strides: {}", b.strides);     // std::println for libstdc++ does not yet support printing ranges
+                std::println("directional strides: {}", b.strides);
                 std::println("{:->40}", "");
         });
 }

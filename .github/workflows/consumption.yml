@@ -37,7 +37,7 @@ jobs:
       # "15" leg; this workflow only exists to verify the three consumption
       # models documented in the README (find_package, add_subdirectory,
       # FetchContent), so -DBUILD_TESTING=OFF skips tabula's own tests here
-      # and avoids needing vcpkg/Boost.Test/fmt at all. tabula is a pure
+      # and avoids needing vcpkg/Boost.Test at all. tabula is a pure
       # INTERFACE library, so there is nothing to actually build - only
       # configure and install.
       - name: Configure
@@ -89,7 +89,7 @@ jobs:
           cmake_minimum_required(VERSION 3.28)
           project(consumer_add_subdirectory LANGUAGES CXX)
           # no BUILD_TESTING workaround: tabula only builds its tests (and
-          # requires Boost.Test/fmt) when it is the top-level project, which
+          # requires Boost.Test) when it is the top-level project, which
           # this consumer configure would fail on if that gating regressed
           add_subdirectory("$ENV{GITHUB_WORKSPACE}" tabula-build)
           add_executable(main main.cpp)

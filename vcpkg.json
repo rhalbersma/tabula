@@ -11,8 +11,7 @@
     "test": {
       "description": "Build the Boost.Test-based unit tests",
       "dependencies": [
-        "boost-test",
-        "fmt"
+        "boost-test"
       ]
     }
   }

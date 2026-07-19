@@ -63,8 +63,8 @@ jobs:
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       # Only needed so that the test tree (and with it the compile database
-      # entries below) configures; clang-tidy itself never links Boost/fmt.
-      - name: Install Boost.Test and fmt
+      # entries below) configures; clang-tidy itself never links Boost.
+      - name: Install Boost.Test
         env:
           VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
         run: vcpkg install --triplet x64-linux

@@ -97,8 +97,8 @@ jobs:
       # vcpkg is used instead of the distro's boost package so tabula tracks
       # recent Boost releases regardless of what the OS bundles. All
       # apt-installed GCCs share the system libstdc++, so ABI is consistent
-      # regardless of which one built vcpkg's Boost/fmt.
-      - name: Install Boost.Test and fmt (stable)
+      # regardless of which one built vcpkg's Boost.
+      - name: Install Boost.Test (stable)
         if: "!matrix.trunk"
         env:
           VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
@@ -113,9 +113,7 @@ jobs:
       # compiler avoids the mismatch. The Boost version is resolved via the
       # GitHub API so this doesn't go stale; the resulting build is cached
       # (keyed on the exact trunk snapshot + Boost version) since a rebuild
-      # otherwise costs several minutes on every run. fmt is header-only in
-      # its usage here (find_package(fmt REQUIRED) picks up its CMake
-      # config), so vcpkg's prebuilt fmt is reused unchanged.
+      # otherwise costs several minutes on every run.
       - name: Resolve latest Boost version
         if: matrix.trunk
         id: boost-version
@@ -145,17 +143,6 @@ jobs:
           ./bootstrap.sh --prefix=/opt/boost-latest --with-libraries=test
           ./b2 install -j"$(nproc)" --prefix=/opt/boost-latest --user-config=user-config.jam toolset=gcc-trunk variant=release link=static threading=multi
 
-      # fmt has no ABI-fragile pieces this trunk leg would trip over the way
-      # Boost.Test's runtime registration does, so a source build via
-      # apt.llvm.org's usual channels is unnecessary: vcpkg's x64-linux fmt,
-      # installed once on the stable legs, is also installed here so
-      # find_package(fmt REQUIRED) succeeds under the trunk compiler.
-      - name: Install fmt (trunk)
-        if: matrix.trunk
-        env:
-          VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-        run: vcpkg install --triplet x64-linux
-
       - name: Configure (stable)
         if: "!matrix.trunk"
         run: >
@@ -170,7 +157,7 @@ jobs:
           cmake -S . -B build
           -DCMAKE_C_COMPILER=${{ matrix.cc }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
-          -DCMAKE_PREFIX_PATH="/opt/boost-latest;$GITHUB_WORKSPACE/vcpkg_installed/x64-linux"
+          -DCMAKE_PREFIX_PATH="/opt/boost-latest"
           -DBoost_NO_SYSTEM_PATHS=ON
 
       - name: Build
