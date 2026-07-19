@@ -49,22 +49,19 @@ jobs:
           # is rebuilt against libc++ through the overlay triplet in
           # .github/vcpkg (a libstdc++ build would not link).
           #
-          # Allow-failure: format.hpp uses std::views::cartesian_product
-          # (C++23), which libc++ doesn't implement yet. The implementation
-          # (llvm/llvm-project#111215) is still open against main as of
-          # 2026-07-18, so it'll land in clang 23 at the earliest, not a
-          # backport to the already-cut 22 branch - hence this leg tracks
-          # 23-SVN rather than 22, so it starts passing as soon as that PR
-          # merges instead of waiting on a version bump. Same underlying gap
-          # as AppleClang's libc++ fork, just upstream this time.
-          - label: 23-SVN libc++
-            version: 23
-            cc: clang-23
-            cxx: clang++-23
+          # Previously pinned to 23-SVN with allow_failure: true, because
+          # format.hpp's std::views::cartesian_product usage tripped a
+          # libc++ gap (llvm/llvm-project#111215, tracked in #21). tabula
+          # no longer uses cartesian_product (replaced by nested loops), so
+          # this leg is back on a stable version like the others.
+          - label: "22 libc++"
+            version: 22
+            cc: clang-22
+            cxx: clang++-22
             stdlib: libc++
             triplet: x64-linux-libcxx
             cxxflags: "-stdlib=libc++"
-            allow_failure: true
+            allow_failure: false
           - label: 23-SVN
             version: 23
             cc: clang-23
