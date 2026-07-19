@@ -61,7 +61,11 @@ if(PROJECT_IS_TOP_LEVEL)
     include(CTest)
     if(BUILD_TESTING)
         add_subdirectory(test)
-        add_subdirectory(example)
+        # Temporarily disabled: print_embedding.cpp trips the MSVC NTTP
+        # ambiguous-partial-specialization bug documented in msvc.yml,
+        # which otherwise masks whether test/src/format_ranges.cpp itself
+        # builds under MSVC 2026.
+        # add_subdirectory(example)
     endif()
 endif()
 
