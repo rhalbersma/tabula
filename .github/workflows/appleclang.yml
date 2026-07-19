@@ -68,9 +68,9 @@ jobs:
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       # GitHub-hosted macOS runners are arm64 since macos-14; vcpkg's
-      # arm64-osx triplet builds Boost.Test/fmt with the runner's default
+      # arm64-osx triplet builds Boost.Test with the runner's default
       # Xcode, so its libc++ ABI always matches the compiler under test.
-      - name: Install Boost.Test and fmt
+      - name: Install Boost.Test
         env:
           VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
         run: vcpkg install --triplet arm64-osx

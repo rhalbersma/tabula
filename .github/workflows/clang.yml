@@ -46,7 +46,7 @@ jobs:
             allow_failure: false
           # The MSVC STL and libstdc++ are covered by the other workflows;
           # this leg adds the third mainstream standard library. Boost.Test
-          # and fmt are rebuilt against libc++ through the overlay triplet in
+          # is rebuilt against libc++ through the overlay triplet in
           # .github/vcpkg (a libstdc++ build would not link).
           #
           # Allow-failure: format.hpp uses std::views::cartesian_product
@@ -116,10 +116,10 @@ jobs:
       # apt.llvm.org's Clang packages (including the dev/SVN build) link
       # against the system libstdc++ like every other apt-installed compiler
       # on the runner - no separate bundled runtime, so no ABI mismatch with
-      # vcpkg's Boost.Test/fmt either. The libc++ leg instead selects the
-      # overlay triplet, which rebuilds Boost.Test/fmt with Clang against
+      # vcpkg's Boost.Test either. The libc++ leg instead selects the
+      # overlay triplet, which rebuilds Boost.Test with Clang against
       # libc++.
-      - name: Install Boost.Test and fmt
+      - name: Install Boost.Test
         env:
           VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
         run: >

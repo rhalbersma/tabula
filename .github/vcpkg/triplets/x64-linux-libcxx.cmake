@@ -5,7 +5,7 @@
 
 # x64-linux, but built with Clang against libc++ instead of the default
 # compiler against libstdc++. Used by the libc++ leg of the Clang workflow
-# so that vcpkg's Boost.Test/fmt and the tabula tests share one standard
+# so that vcpkg's Boost.Test and the tabula tests share one standard
 # library.
 set(VCPKG_TARGET_ARCHITECTURE x64)
 set(VCPKG_CRT_LINKAGE dynamic)

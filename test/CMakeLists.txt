@@ -114,7 +114,6 @@ find_package(
     Boost CONFIG REQUIRED COMPONENTS
     unit_test_framework
 )
-find_package(fmt REQUIRED)
 
 set(current_source_dir ${CMAKE_CURRENT_SOURCE_DIR}/src)
 file(
@@ -136,7 +135,6 @@ foreach(t ${targets})
         ${target_id} PRIVATE
         ${PROJECT_NAME}::${PROJECT_NAME}
         Boost::unit_test_framework
-        fmt::fmt
         tabula_test_options
     )
 

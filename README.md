@@ -27,7 +27,7 @@ This single-header library has no other dependencies than the C++ Standard Libra
 
 The Clang (libc++) leg currently allows failure on `std::views::cartesian_product`, which libc++ hasn't implemented yet (in progress: [llvm/llvm-project#111215](https://github.com/llvm/llvm-project/pull/111215)); it's the only leg on this list carrying an in-workflow allow-failure. AppleClang currently fails outright on the same gap, and MSVC currently fails outright on an ambiguous partial-specialization bug (`basic_compass<chequer{...}>`), [fixed upstream in VS 18.7.0](https://developercommunity.visualstudio.com/t/VS-2019-164:-Ambiguous-partial-speciali/865810) but not yet present on GitHub Actions' runner image ([actions/runner-images#14130](https://github.com/actions/runner-images/issues/14130) tracks a bump to 18.6.x, still short of the fix). Neither AppleClang nor MSVC is a required PR status check, so these failures are visible but don't block merging.
 
-Note that the unit tests depend on [Boost](https://www.boost.io/) and [fmtlib](https://fmt.dev/latest/index.html).
+Note that the unit tests depend on [Boost](https://www.boost.io/).
 
 ## Installation
 

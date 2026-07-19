@@ -3,8 +3,6 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
-find_package(fmt REQUIRED)
-
 set(cxx_compile_options_debugsym
     $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
         -g
@@ -25,7 +23,6 @@ foreach(t ${targets})
     target_link_libraries(
         ${target_id} PRIVATE
         ${CMAKE_PROJECT_NAME}
-        fmt::fmt
         tabula_test_options
         # winlibs MinGW splits <print>'s terminal-write internals
         # (std::__open_terminal, std::__write_to_terminal) into a separate

@@ -53,7 +53,7 @@ target_sources(
         include/tabula/vector.hpp
 )
 
-# Tests and examples (and their Boost.Test/fmt dependencies) only exist when
+# Tests and examples (and their Boost.Test dependency) only exist when
 # tabula itself is being developed. Consumers vendoring this directory via
 # add_subdirectory or FetchContent get just the header-only target, with no
 # BUILD_TESTING workaround required on their side.
@@ -61,11 +61,7 @@ if(PROJECT_IS_TOP_LEVEL)
     include(CTest)
     if(BUILD_TESTING)
         add_subdirectory(test)
-        # Temporarily disabled: print_embedding.cpp trips the MSVC NTTP
-        # ambiguous-partial-specialization bug documented in msvc.yml,
-        # which otherwise masks whether test/src/format_ranges.cpp itself
-        # builds under MSVC 2026.
-        # add_subdirectory(example)
+        add_subdirectory(example)
     endif()
 endif()
 
