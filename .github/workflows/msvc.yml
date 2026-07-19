@@ -31,13 +31,17 @@ jobs:
     # 2019 (a minimal <auto N> repro, same "more than one partial
     # specialization matches" error):
     # https://developercommunity.visualstudio.com/t/VS-2019-164:-Ambiguous-partial-speciali/865810
-    # That ticket is closed "Fixed In: 18.7.0". As of 2026-07-18, the
-    # windows-2025-vs2026 runner image ships VS 2026 Enterprise 18.5.4
-    # (toolset 14.51.36231 observed in CI logs); actions/runner-images#14130
-    # tracks bumping it to 18.6.x (for unrelated mp-units compiler bugs),
-    # which is still short of 18.7.0 - so this leg is expected to keep
-    # failing until a *later*, currently untracked image bump clears
-    # 18.7.0.
+    # That ticket is closed "Fixed In: 18.7.0", per Microsoft's own tracker -
+    # not independently verified: as of 2026-07-19, Compiler Explorer's
+    # msvc-latest reports _MSC_VER 1951 (the 18.6 line, same toolset family
+    # as this runner's 14.51.36231), so no publicly reachable build yet
+    # reflects 18.7.0 to confirm the fix actually lands as claimed. As of
+    # 2026-07-18, the windows-2025-vs2026 runner image ships VS 2026
+    # Enterprise 18.5.4; actions/runner-images#14130 tracks bumping it to
+    # 18.6.x (for unrelated mp-units compiler bugs), which is still short of
+    # 18.7.0 - so this leg is expected to keep failing until a *later*,
+    # currently untracked image bump clears 18.7.0 (assuming the fix holds
+    # once that ships).
     #
     # No VS2022 leg: VS2022 is the 17.x line, which is in maintenance and
     # will never receive the 18.7.0 fix (that's an 18.x-line fix) - unlike
