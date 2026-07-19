@@ -6,7 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <functional>   // less
-#include <tuple>        // apply, tuple, tuple_cat, tuple_size_v
+#include <tuple>        // apply, tuple, tuple_cat
 #include <type_traits>  // bool_constant, conditional_t, integral_constant
 
 namespace tabula {

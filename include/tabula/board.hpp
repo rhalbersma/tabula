@@ -9,15 +9,14 @@
 #include <tabula/concepts.hpp>          // chequered
 #include <tabula/dihedral.hpp>          // d8
 #include <tabula/embedding.hpp>         // basic_embedding
-#include <tabula/functional.hpp>        // operator*, flip, flop, swap
+#include <tabula/functional.hpp>        //
 #include <tabula/padding.hpp>           // padding
 #include <tabula/square.hpp>            // basic_square
-#include <tabula/tuple.hpp>             // min_index, transform
+#include <tabula/tuple.hpp>             // min_element, transform
 #include <tabula/vector.hpp>            // basic_vector
 #include <array>                        // array
 #include <cassert>                      // assert
 #include <cstddef>                      // size_t
-#include <functional>                   // identity
 #include <optional>                     // optional
 #include <ranges>                       // views
 #include <tuple>                        // get
@@ -115,7 +114,7 @@ public:
         static constexpr auto strides = []() {
                 using compass = basic_compass<Grid>;
                 std::array<int, std::size(compass::directions)> table;
-                for (auto index = 0uz; auto direction : compass::directions) {
+                for (auto index = 0UZ; auto direction : compass::directions) {
                         table[index++] = pad(direction).stride();
                 }
                 return table;
