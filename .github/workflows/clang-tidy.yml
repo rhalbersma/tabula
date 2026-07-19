@@ -23,12 +23,6 @@ jobs:
   tidy:
     name: clang-tidy 22
     runs-on: ubuntu-24.04
-    # Report-only: .clang-tidy has no WarningsAsErrors, so findings never
-    # fail this job. The full output is captured to an artifact (and
-    # summarized in the job's own summary page) for manual triage - decide
-    # per finding whether to fix the code or add a check suppression,
-    # rather than having CI silently auto-rewrite anything.
-    continue-on-error: true
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
@@ -80,9 +74,8 @@ jobs:
       # Analyze the public headers through the generated header
       # self-sufficiency translation units. The Boost.Test sources are left
       # out on purpose: the test macros drown the signal in noise. The
-      # check selection and per-check suppressions live in .clang-tidy;
-      # there's no WarningsAsErrors there, so this never fails the job -
-      # findings are captured below for manual review instead.
+      # check selection and per-check suppressions live in .clang-tidy,
+      # which sets WarningsAsErrors so any finding fails this job.
       - name: Run clang-tidy over the public headers
         run: |
           run-clang-tidy-22 -quiet -p build \
