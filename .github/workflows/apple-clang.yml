@@ -3,13 +3,13 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
-name: AppleClang
+name: Apple Clang
 
 permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow_ref }}-${{ github.ref }}
   cancel-in-progress: true
 
 on:
@@ -18,6 +18,7 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   build:
@@ -27,7 +28,7 @@ jobs:
     # compiler often enough to be worth a separate row - same reasoning as
     # why the Clang-CL workflow only has one leg per Visual Studio version.
     # Just the two stable Xcode generations, one per macOS runner image.
-    name: AppleClang ${{ matrix.label }}
+    name: Apple Clang ${{ matrix.label }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -35,16 +36,22 @@ jobs:
         include:
           - label: Xcode 16.4
             os: macos-15
-          - label: Xcode 26.5
+            developer_dir: /Applications/Xcode_16.4.app/Contents/Developer
+          - label: Xcode 26.6
             os: macos-26
+            developer_dir: /Applications/Xcode_26.6.app/Contents/Developer
+    env:
+      DEVELOPER_DIR: ${{ matrix.developer_dir }}
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
-      - name: Report toolchain version
+      - name: Report toolchain versions
         run: |
           xcodebuild -version
+          clang --version
           clang++ --version
+          cmake --version
 
       # Export the two env vars vcpkg's "x-gha" binary source needs to talk
       # to the GitHub Actions cache service, so built packages are reused
@@ -57,8 +64,8 @@ jobs:
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       # GitHub-hosted macOS runners are arm64 since macos-14; vcpkg's
-      # arm64-osx triplet builds Boost.Test with the runner's default
-      # Xcode, so its libc++ ABI always matches the compiler under test.
+      # arm64-osx triplet builds Boost.Test with the selected Xcode, so its
+      # libc++ ABI always matches the compiler under test.
       - name: Install Boost.Test
         env:
           VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
@@ -67,6 +74,7 @@ jobs:
       - name: Configure
         run: >
           cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=Release
           -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
           -DVCPKG_TARGET_TRIPLET=arm64-osx
 

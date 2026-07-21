@@ -6,7 +6,7 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 
 #include <tabula/compass.hpp>   // basic_compass
-#include <tabula/concepts.hpp>  // rectangular
+#include <tabula/concepts.hpp>  //
 #include <tabula/padding.hpp>   // padding
 #include <tabula/vector.hpp>    // basic_vector
 #include <array>                // array
