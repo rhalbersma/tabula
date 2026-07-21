@@ -6,7 +6,8 @@
 [![GCC](https://github.com/rhalbersma/tabula/actions/workflows/gcc.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/gcc.yml)
 [![MinGW](https://github.com/rhalbersma/tabula/actions/workflows/mingw.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/mingw.yml)
 [![Clang](https://github.com/rhalbersma/tabula/actions/workflows/clang.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang.yml)
-[![AppleClang](https://github.com/rhalbersma/tabula/actions/workflows/appleclang.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/appleclang.yml)
+[![Clang-libc++](https://github.com/rhalbersma/tabula/actions/workflows/clang-libc%2B%2B.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang-libc%2B%2B.yml)
+[![Apple Clang](https://github.com/rhalbersma/tabula/actions/workflows/apple-clang.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/apple-clang.yml)
 [![Clang-CL](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml)
 [![MSVC](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml)
 [![Coverage](https://codecov.io/gh/rhalbersma/tabula/branch/main/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula)
@@ -14,18 +15,19 @@
 
 ## Requirements
 
-This single-header library has no other dependencies than the C++ Standard Library and is continuously being tested with the following conforming [C++23](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/n4950.pdf) compilers, against all three mainstream standard libraries (libstdc++, the MSVC STL, and libc++). Following the model of [apt.llvm.org](https://apt.llvm.org/), we support the latest two stable releases of each compiler, plus its current development branch.
+This single-header library has no other dependencies than the C++ Standard Library and is continuously tested with the following conforming [C++23](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/n4950.pdf) compilers, against all three mainstream standard libraries (libstdc++, the MSVC STL, and libc++). Following the model of [apt.llvm.org](https://apt.llvm.org/), we support the latest two stable releases of each compiler, plus its current development branch. Every table leg is required except the MSVC 2026 and 2026-Preview legs, which are intentionally allowed to fail while the runner image lacks the upstream compiler fix.
 
-| Platform | Compiler | Older stable | Latest stable | Trunk / Preview | Build |
-| :------- | :------- | :------------ | :------------- | :---------------- | :---- |
-| Linux    | GCC      | 15             | 16              | 17-SVN             | [![GCC](https://github.com/rhalbersma/tabula/actions/workflows/gcc.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/gcc.yml) |
-| Linux    | Clang    | 21             | 22 (also libc++) | 23-SVN            | [![Clang](https://github.com/rhalbersma/tabula/actions/workflows/clang.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang.yml) |
-| macOS    | AppleClang | 17.0.0 (Xcode 16.4) | 21.0.0 (Xcode 26.5) | —          | [![AppleClang](https://github.com/rhalbersma/tabula/actions/workflows/appleclang.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/appleclang.yml) |
-| Windows  | MinGW    | 15             | 16              | 17-SVN             | [![MinGW](https://github.com/rhalbersma/tabula/actions/workflows/mingw.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/mingw.yml) |
-| Windows  | Clang-CL | 19.1.5 (VS 2022) | 20.1.8 (VS 2026) | —               | [![Clang-CL](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml) |
-| Windows  | MSVC     | —              | 2026            | 2026-Preview       | [![MSVC](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml) |
+| Platform | Compiler | Standard Library | Older stable | Latest stable | Trunk / Preview | Build |
+| :------- | :------- | :--------------- | :------------ | :------------ | :-------------- | :---- |
+| Linux | GCC | libstdc++ | 15 | 16 | 17-SVN | [![GCC](https://github.com/rhalbersma/tabula/actions/workflows/gcc.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/gcc.yml) |
+| Windows | MinGW | libstdc++ | 15 | 16 | 17-SVN | [![MinGW](https://github.com/rhalbersma/tabula/actions/workflows/mingw.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/mingw.yml) |
+| Linux | Clang | libstdc++ | 21 (libstdc++ 15) | 22 (libstdc++ 16) | 23-SVN (libstdc++ 17-SVN) | [![Clang](https://github.com/rhalbersma/tabula/actions/workflows/clang.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang.yml) |
+| Linux | Clang | libc++ | 21 | 22 | 23-SVN | [![Clang-libc++](https://github.com/rhalbersma/tabula/actions/workflows/clang-libc%2B%2B.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang-libc%2B%2B.yml) |
+| macOS | Apple Clang | libc++ | 17.0.0 (Xcode 16.4) | 21.0.0 (Xcode 26.6) | — | [![Apple Clang](https://github.com/rhalbersma/tabula/actions/workflows/apple-clang.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/apple-clang.yml) |
+| Windows | Clang-CL | MSVC | 19.1.5 (VS 2022) | 20.1.8 (VS 2026) | 20.1.8 (VS 2026-Preview) | [![Clang-CL](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml) |
+| Windows | MSVC | MSVC | — | 2026 | 2026-Preview | [![MSVC](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml) |
 
-MSVC currently fails outright on an ambiguous partial-specialization bug (`basic_compass<chequer{...}>`), [fixed upstream in VS 18.7.0](https://developercommunity.visualstudio.com/t/VS-2019-164:-Ambiguous-partial-speciali/865810) but not yet present on GitHub Actions' runner image ([actions/runner-images#14130](https://github.com/actions/runner-images/issues/14130) tracks a bump to 18.6.x, still short of the fix). MSVC is not a required PR status check, so this failure is visible but doesn't block merging.
+MSVC currently fails outright on an ambiguous partial-specialization bug (`basic_compass<chequer{...}>`), [fixed upstream in VS 18.7.0](https://developercommunity.visualstudio.com/t/VS-2019-164:-Ambiguous-partial-speciali/865810) but not yet present on GitHub Actions' runner image ([actions/runner-images#14130](https://github.com/actions/runner-images/issues/14130) tracks a bump to 18.6.x, still short of the fix). The MSVC workflow is not a required PR status check, so its deliberately red badge remains visible without blocking merging.
 
 Note that the unit tests depend on [Boost](https://www.boost.io/).
 
