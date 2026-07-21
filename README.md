@@ -13,6 +13,37 @@
 [![Coverage](https://codecov.io/gh/rhalbersma/tabula/branch/main/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/rhalbersma/tabula/badge)](https://securityscorecards.dev/viewer/?uri=github.com/rhalbersma/tabula)
 
+## Using tabula
+
+tabula isn't published to a package registry, so the default way to add it is `FetchContent`, which needs no separate install step:
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+    tabula
+    GIT_REPOSITORY https://github.com/rhalbersma/tabula.git
+    GIT_TAG main # or a release tag
+)
+FetchContent_MakeAvailable(tabula)
+target_link_libraries(my_target PRIVATE tabula::tabula)
+```
+
+If you've already installed tabula yourself (e.g. `cmake --install`, or your own package manager integration), use `find_package` instead:
+
+```cmake
+find_package(tabula 0.1.0 CONFIG REQUIRED)
+target_link_libraries(my_target PRIVATE tabula::tabula)
+```
+
+If you vendor the source directly (e.g. a git submodule), use `add_subdirectory` (tabula's own tests and their Boost.Test dependency are only built when tabula is the top-level project, so nothing needs to be disabled):
+
+```cmake
+add_subdirectory(external/tabula)
+target_link_libraries(my_target PRIVATE tabula::tabula)
+```
+
+The target publishes the public headers and requires C++23. You can include individual headers directly, such as `<tabula/board.hpp>` or `<tabula/games/chess.hpp>`.
+
 ## Requirements
 
 This single-header library has no other dependencies than the C++ Standard Library and is continuously tested with the following conforming [C++23](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/n4950.pdf) compilers, against all three mainstream standard libraries (libstdc++, the MSVC STL, and libc++). Following the model of [apt.llvm.org](https://apt.llvm.org/), we support the latest two stable releases of each compiler, plus its current development branch. Every table leg is required except the MSVC 2026 and 2026-Preview legs, which are intentionally allowed to fail while the runner image lacks the upstream compiler fix.
