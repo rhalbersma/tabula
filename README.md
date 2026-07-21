@@ -23,7 +23,7 @@ This single-header library has no other dependencies than the C++ Standard Libra
 | Windows | MinGW | libstdc++ | 15 | 16 | 17-SVN | [![MinGW](https://github.com/rhalbersma/tabula/actions/workflows/mingw.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/mingw.yml) |
 | Linux | Clang | libstdc++ | 21 (libstdc++ 15) | 22 (libstdc++ 16) | 23-SVN (libstdc++ 17-SVN) | [![Clang](https://github.com/rhalbersma/tabula/actions/workflows/clang.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang.yml) |
 | Linux | Clang | libc++ | 21 | 22 | 23-SVN | [![Clang-libc++](https://github.com/rhalbersma/tabula/actions/workflows/clang-libc%2B%2B.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang-libc%2B%2B.yml) |
-| macOS | Apple Clang | libc++ | 17.0.0 (Xcode 16.4) | 21.0.0 (Xcode 26.5) | — | [![Apple Clang](https://github.com/rhalbersma/tabula/actions/workflows/apple-clang.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/apple-clang.yml) |
+| macOS | Apple Clang | libc++ | 17.0.0 (Xcode 16.4) | 21.0.0 (Xcode 26.6) | — | [![Apple Clang](https://github.com/rhalbersma/tabula/actions/workflows/apple-clang.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/apple-clang.yml) |
 | Windows | Clang-CL | MSVC | 19.1.5 (VS 2022) | 20.1.8 (VS 2026) | 20.1.8 (VS 2026-Preview) | [![Clang-CL](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml) |
 | Windows | MSVC | MSVC | — | 2026 | 2026-Preview | [![MSVC](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml) |
 

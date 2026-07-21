@@ -36,8 +36,12 @@ jobs:
         include:
           - label: Xcode 16.4
             os: macos-15
-          - label: Xcode 26.5
+            developer_dir: /Applications/Xcode_16.4.app/Contents/Developer
+          - label: Xcode 26.6
             os: macos-26
+            developer_dir: /Applications/Xcode_26.6.app/Contents/Developer
+    env:
+      DEVELOPER_DIR: ${{ matrix.developer_dir }}
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
@@ -60,8 +64,8 @@ jobs:
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       # GitHub-hosted macOS runners are arm64 since macos-14; vcpkg's
-      # arm64-osx triplet builds Boost.Test with the runner's default
-      # Xcode, so its libc++ ABI always matches the compiler under test.
+      # arm64-osx triplet builds Boost.Test with the selected Xcode, so its
+      # libc++ ABI always matches the compiler under test.
       - name: Install Boost.Test
         env:
           VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
