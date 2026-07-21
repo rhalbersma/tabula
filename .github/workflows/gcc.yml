@@ -21,11 +21,12 @@ on:
 
 jobs:
   build:
-    name: GCC ${{ matrix.label }}
+    name: GCC ${{ matrix.label }} (${{ matrix.build_type }})
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
+        build_type: [Debug, Release]
         include:
           - label: "15"
             version: 15
@@ -147,6 +148,7 @@ jobs:
         if: "!matrix.trunk"
         run: >
           cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DCMAKE_C_COMPILER=${{ matrix.cc }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
           -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
@@ -155,6 +157,7 @@ jobs:
         if: matrix.trunk
         run: >
           cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DCMAKE_C_COMPILER=${{ matrix.cc }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
           -DCMAKE_PREFIX_PATH="/opt/boost-latest"
@@ -171,11 +174,11 @@ jobs:
       # matrix (on the latest stable leg) is enough: the install/consume
       # path is compiler-independent.
       - name: Install (package smoke test)
-        if: matrix.version == 16
+        if: matrix.version == 16 && matrix.build_type == 'Release'
         run: cmake --install build --prefix "$GITHUB_WORKSPACE/tabula-prefix"
 
       - name: Consume installed package
-        if: matrix.version == 16
+        if: matrix.version == 16 && matrix.build_type == 'Release'
         run: |
           mkdir consumer
           cd consumer

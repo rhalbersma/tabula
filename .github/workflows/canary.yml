@@ -1,0 +1,42 @@
+#          Copyright Rein Halbersma 2019-2026.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
+
+name: Canary
+
+permissions:
+  contents: read
+
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  clang-trunk:
+    name: Clang 23-SVN canary
+    runs-on: ubuntu-24.04
+    # This job is an early-warning signal for upstream changes. Stable CI
+    # remains required; a transient trunk regression must not block it.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Install Clang 23-SVN
+        run: |
+          wget --quiet https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 23
+
+      - name: Compile a public-header smoke test
+        run: |
+          cat <<'EOF' | clang++-23 -std=c++23 -Iinclude -x c++ -fsyntax-only -
+          #include <tabula/games.hpp>
+
+          int main()
+          {
+              constexpr auto board = tabula::chess::board{};
+              static_assert(board.width == 8);
+          }
+          EOF

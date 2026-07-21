@@ -21,37 +21,55 @@ on:
 
 jobs:
   build:
-    # clang-cl: Clang's MSVC-compatible driver, using the MSVC STL and linker
-    # rather than libc++. Exercises Clang's diagnostics (this repo builds
-    # with -Weverything -Werror under Clang) against the same code MSVC
-    # builds, using whichever LLVM each Visual Studio version bundles (19.1.5
-    # for VS 2022, 20.1.8 for VS 2026). There's no separate entry for the
-    # VS 2026 Preview channel: "Clang tools for Windows" is a single VS
-    # component shared by the stable and preview MSVC toolsets alike, so it'd
-    # be the exact same clang-cl.exe as the VS 2026 (stable) row - testing it
-    # again there would add no coverage. Both rows are required like every
-    # other leg.
-    name: Clang-CL VS ${{ matrix.vs }}
+    # clang-cl uses the MSVC STL and linker, rather than libc++. Test the
+    # current Visual Studio generation and its Preview toolset; VS 2022 is
+    # intentionally not supported.
+    name: Clang-CL VS ${{ matrix.vs }} (${{ matrix.build_type }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        build_type: [Debug, Release]
         include:
-          - vs: 2022
-            os: windows-2022
-            generator: "Visual Studio 17 2022"
-            toolset: "ClangCL,host=x64"
-            arch: x64
-            triplet: x64-windows
           - vs: 2026
             os: windows-2025
             generator: "Visual Studio 18 2026"
             toolset: "ClangCL,host=x64"
             arch: x64
             triplet: x64-windows
+            preview_channel: false
+          - vs: 2026-Preview
+            os: windows-2025
+            generator: "Visual Studio 18 2026"
+            toolset: "ClangCL,host=x64"
+            arch: x64
+            triplet: x64-windows
+            preview_channel: true
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Install Visual Studio Preview toolset
+        if: matrix.preview_channel
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $instance = & $vswhere -products * -format json | ConvertFrom-Json | Select-Object -First 1
+          if (-not $instance) { throw 'No Visual Studio instance found.' }
+          $setup = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\setup.exe"
+          $proc = Start-Process -FilePath $setup -Wait -PassThru -ArgumentList (
+            'modify', '--quiet', '--norestart',
+            '--installPath', "`"$($instance.installationPath)`"",
+            '--add', 'Microsoft.VisualStudio.Component.VC.Preview.Tools.x86.x64'
+          )
+          if ($proc.ExitCode -ne 0 -and $proc.ExitCode -ne 3010) {
+            throw "Visual Studio Preview installation failed with exit code $($proc.ExitCode)."
+          }
+          $toolset = Get-ChildItem "$($instance.installationPath)\VC\Tools\MSVC" -Directory |
+            Sort-Object { [version]$_.Name } -Descending |
+            Select-Object -First 1 -ExpandProperty Name
+          if (-not $toolset) { throw 'No Preview MSVC toolset found after installation.' }
+          echo "VC_PREVIEW_TOOLSET=$toolset" >> $env:GITHUB_ENV
 
       # Export the two env vars vcpkg's "x-gha" binary source needs to talk
       # to the GitHub Actions cache service, so built packages are reused
@@ -69,7 +87,8 @@ jobs:
           VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
         run: vcpkg install --triplet ${{ matrix.triplet }}
 
-      - name: Configure
+      - name: Configure (stable)
+        if: "!matrix.preview_channel"
         shell: pwsh
         run: >
           cmake -S . -B build
@@ -77,10 +96,19 @@ jobs:
           -T ${{ matrix.toolset }}
           "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
 
+      - name: Configure (Preview)
+        if: matrix.preview_channel
+        shell: pwsh
+        run: >
+          cmake -S . -B build
+          -G "${{ matrix.generator }}" -A ${{ matrix.arch }}
+          -T "ClangCL,version=$env:VC_PREVIEW_TOOLSET,host=x64"
+          "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+
       - name: Build
         shell: pwsh
-        run: cmake --build build --config Release -v
+        run: cmake --build build --config ${{ matrix.build_type }} -v
 
       - name: Test
         shell: pwsh
-        run: ctest --test-dir build -C Release --output-on-failure
+        run: ctest --test-dir build -C ${{ matrix.build_type }} --output-on-failure

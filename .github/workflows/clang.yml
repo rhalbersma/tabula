@@ -21,12 +21,13 @@ on:
 
 jobs:
   build:
-    name: Clang ${{ matrix.label }}
+    name: Clang ${{ matrix.label }} (${{ matrix.build_type }})
     runs-on: ubuntu-24.04
     continue-on-error: ${{ matrix.allow_failure }}
     strategy:
       fail-fast: false
       matrix:
+        build_type: [Debug, Release]
         include:
           - label: "21"
             version: 21
@@ -127,6 +128,7 @@ jobs:
       - name: Configure
         run: >
           cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DCMAKE_C_COMPILER=${{ matrix.cc }}
           -DCMAKE_CXX_COMPILER=${{ matrix.cxx }}
           "-DCMAKE_CXX_FLAGS=${{ matrix.cxxflags }}"

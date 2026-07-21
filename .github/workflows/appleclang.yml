@@ -3,7 +3,7 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
-name: AppleClang
+name: Apple Clang
 
 permissions:
   contents: read
@@ -25,21 +25,27 @@ jobs:
     # have (Apple doesn't publish dev snapshots the way LLVM does), and the
     # newest-available-Xcode leg this used to have wasn't a distinct
     # compiler often enough to be worth a separate row - same reasoning as
-    # why the Clang-CL workflow only has one leg per Visual Studio version.
+    # why there is no Apple Clang preview channel.
     # Just the two stable Xcode generations, one per macOS runner image.
-    name: AppleClang ${{ matrix.label }}
+    name: Apple Clang ${{ matrix.label }} (${{ matrix.build_type }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        build_type: [Debug, Release]
         include:
           - label: Xcode 16.4
             os: macos-15
-          - label: Xcode 26.5
+            xcode: 16.4
+          - label: Xcode 26.6
             os: macos-26
+            xcode: 26.6
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+
+      - name: Select Xcode ${{ matrix.xcode }}
+        run: sudo xcode-select --switch "/Applications/Xcode_${{ matrix.xcode }}.app"
 
       - name: Report toolchain version
         run: |
@@ -67,6 +73,7 @@ jobs:
       - name: Configure
         run: >
           cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
           -DVCPKG_TARGET_TRIPLET=arm64-osx
 
