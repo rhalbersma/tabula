@@ -62,24 +62,12 @@ MSVC currently fails outright on an ambiguous partial-specialization bug (`basic
 
 Note that the unit tests depend on [Boost](https://www.boost.io/).
 
-## Installation
-
-    # Setup the project
-    mkdir projects && cd ~/projects/
-    git clone https://github.com/rhalbersma/tabula.git
-    cd tabula && mkdir build && cd build
-
-    # Build the project
-    cmake .. && cmake --build .
-    ctest                       # run the unit tests
-    example/print_embeddings    # print out all the predefined boards
-
 ## Acknowledgments
 
 Special thanks to Fabien Letouzey for a very fruitful exchange of ideas.
 
 ## License
 
-Copyright Rein Halbersma 2019-2025.
+Copyright Rein Halbersma 2019-2026.
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/users/license.html).
 (See accompanying file LICENSE_1_0.txt or copy at [http://www.boost.org/LICENSE_1_0.txt](http://www.boost.org/LICENSE_1_0.txt))
