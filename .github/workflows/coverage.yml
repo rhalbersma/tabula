@@ -25,7 +25,7 @@ jobs:
     name: GCC 15 gcovr
     runs-on: ubuntu-24.04
     # tabula's existing tests only exercise ~52% lines / ~25% branches,
-    # nowhere near the 100% gate below (inherited as-is from xstd).
+    # nowhere near the 100% gate below (inherited coverage gate).
     # Allow-failure until test coverage is deliberately built up to match;
     # the gcovr summary and Codecov upload below still run and report real
     # numbers either way.
@@ -41,6 +41,12 @@ jobs:
           sudo apt-get install -y g++-15 python3-pip
           python3 -m pip install --user gcovr
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Report toolchain versions
+        run: |
+          gcc-15 --version
+          g++-15 --version
+          cmake --version
 
       # Export the two env vars vcpkg's "x-gha" binary source needs to talk
       # to the GitHub Actions cache service, so built packages are reused
