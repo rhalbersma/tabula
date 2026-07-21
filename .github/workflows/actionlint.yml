@@ -22,14 +22,12 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
-      - name: Install actionlint
-        env:
-          ACTIONLINT_VERSION: 1.7.7
-        run: |
-          curl --fail --location --silent --show-error \
-            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_x86_64.tar.gz" \
-            | tar -xz actionlint
-          sudo install -m 0755 actionlint /usr/local/bin/actionlint
-
       - name: Lint workflows
-        run: actionlint .github/workflows/*.yml
+        # Use the maintained image instead of constructing a release-asset
+        # URL. That URL is not stable across actionlint release packaging.
+        run: >
+          docker run --rm
+          --volume "$GITHUB_WORKSPACE:/repo:ro"
+          --workdir /repo
+          rhysd/actionlint:1.7.7
+          -color .github/workflows/*.yml
