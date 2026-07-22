@@ -13,6 +13,8 @@
 [![Coverage](https://codecov.io/gh/rhalbersma/tabula/branch/main/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/rhalbersma/tabula/badge)](https://securityscorecards.dev/viewer/?uri=github.com/rhalbersma/tabula)
 
+tabula is a header-only C++23 library for representing board-game grids, squares, and board embeddings. It aims to provide portable, compile-time building blocks for board representations and common chess, draughts, and Stratego layouts without requiring experimental language features.
+
 ## Using tabula
 
 tabula isn't published to a package registry, so the default way to add it is `FetchContent`, which needs no separate install step:
