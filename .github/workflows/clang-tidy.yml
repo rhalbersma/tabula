@@ -27,9 +27,18 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
+      # The runner image writes APT::Acquire::Retries, but apt reads this
+      # setting from the Acquire group, so the image's value never takes
+      # effect. Set the key apt actually consults: without it a transient
+      # 5xx from a mirror or PPA fails the install on the first attempt.
+      - name: Make apt retry transient download failures
+        run: echo 'Acquire::Retries "5";' | sudo tee /etc/apt/apt.conf.d/99-retries > /dev/null
+
+      # llvm.sh resolves a pinned stable version correctly, so unlike the
+      # Clang workflows this one has no reason to name the suite itself.
       - name: Install Clang 22 and clang-tidy 22
         run: |
-          wget https://apt.llvm.org/llvm.sh
+          wget --tries=3 --waitretry=5 --retry-on-http-error=429,500,502,503,504 https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh 22
           sudo apt-get install -y clang-tidy-22
