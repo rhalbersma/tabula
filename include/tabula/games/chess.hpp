@@ -1,9 +1,10 @@
-#pragma once
-
 //          Copyright Rein Halbersma 2019-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef TABULA_GAMES_CHESS_HPP
+#define TABULA_GAMES_CHESS_HPP
 
 #include <tabula/board.hpp>     // basic_board
 #include <tabula/grids.hpp>     // rectangle
@@ -43,3 +44,5 @@ using grand          = basic_chess<10, 10, basic_lake<>, pad_boxed(2, 1)>;
 
 }       // namespace chess
 }       // namespace tabula
+
+#endif // TABULA_GAMES_CHESS_HPP

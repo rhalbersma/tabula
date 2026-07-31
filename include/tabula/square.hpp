@@ -1,9 +1,10 @@
-#pragma once
-
 //          Copyright Rein Halbersma 2019-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef TABULA_SQUARE_HPP
+#define TABULA_SQUARE_HPP
 
 #include <tabula/padding.hpp>   // padding
 #include <tabula/vector.hpp>    // basic_vector
@@ -96,3 +97,5 @@ template<auto Grid>
 }
 
 }       // namespace tabula
+
+#endif // TABULA_SQUARE_HPP

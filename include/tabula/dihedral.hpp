@@ -1,9 +1,10 @@
-#pragma once
-
 //          Copyright Rein Halbersma 2019-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef TABULA_DIHEDRAL_HPP
+#define TABULA_DIHEDRAL_HPP
 
 #include <tabula/functional.hpp>        // operator*, idem, flip, flop, swap
 #include <tabula/tuple.hpp>             // all_of
@@ -85,3 +86,5 @@ inline constexpr auto c2a = std::tuple
 }
 
 }       // tabula::group
+
+#endif // TABULA_DIHEDRAL_HPP

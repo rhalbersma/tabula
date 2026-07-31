@@ -1,9 +1,10 @@
-#pragma once
-
 //          Copyright Rein Halbersma 2019-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef TABULA_GAMES_STRATEGO_HPP
+#define TABULA_GAMES_STRATEGO_HPP
 
 #include <tabula/board.hpp>     // basic_board
 #include <tabula/grids.hpp>     // rectangle
@@ -42,3 +43,5 @@ using quick_arena = basic_stratego<8, 8, basic_lake<
 
 }       // namespace stratego
 }       // namespace tabula
+
+#endif // TABULA_GAMES_STRATEGO_HPP

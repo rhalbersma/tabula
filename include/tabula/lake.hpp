@@ -1,9 +1,10 @@
-#pragma once
-
 //          Copyright Rein Halbersma 2019-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef TABULA_LAKE_HPP
+#define TABULA_LAKE_HPP
 
 #include <charconv>     // from_chars
 #include <cstddef>      // size_t
@@ -49,3 +50,5 @@ inline namespace square_literals {
 }       // namespace square_literals
 }       // namespace literals
 }       // namespace tabula
+
+#endif // TABULA_LAKE_HPP
