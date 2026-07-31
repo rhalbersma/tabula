@@ -22,7 +22,7 @@ This repository enforces its quality bar through CI rather than through review d
 - **The documented consumption methods work.** The [Consumption workflow](.github/workflows/consumption.yml) builds a consumer using `find_package`, `add_subdirectory`, and `FetchContent`.
 - **CodeQL analysis is clean.** The [CodeQL workflow](.github/workflows/codeql.yml) runs the C/C++ `security-extended` query suite.
 
-The scheduled Toolchain Canary re-runs the compiler workflows weekly, and Scorecard runs on pushes and its own schedule; neither is a pull-request job. Match the surrounding code's style by eye, including the Boost Software License header comment at the top of every source and workflow file.
+The scheduled Toolchain Canary re-runs the compiler workflows weekly, and Scorecard runs on pushes and its own schedule; neither is a pull-request job. Match the surrounding code's style by eye, including the Boost Software License header comment at the top of every source and workflow file. Public headers use include guards rather than `#pragma once`, named for the header's path under `include/` in upper case with separators replaced by underscores - `include/tabula/games/chess.hpp` gets `TABULA_GAMES_CHESS_HPP` - opened after the license comment and closed with `#endif // TABULA_GAMES_CHESS_HPP`.
 
 ## Test suite requirements
 

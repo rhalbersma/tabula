@@ -1,9 +1,10 @@
-#pragma once
-
 //          Copyright Rein Halbersma 2019-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef TABULA_FORMAT_HPP
+#define TABULA_FORMAT_HPP
 
 #include <tabula/board.hpp>     // basic_board
 #include <tabula/padding.hpp>   // padding
@@ -35,3 +36,5 @@ struct std::formatter<tabula::basic_board<Grid, Lake, Padding>>
                 return ctx.out();
         }
 };
+
+#endif // TABULA_FORMAT_HPP
