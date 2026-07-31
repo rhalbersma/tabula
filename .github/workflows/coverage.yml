@@ -46,7 +46,8 @@ jobs:
       # The runner image writes APT::Acquire::Retries, but apt reads this
       # setting from the Acquire group, so the image's value never takes
       # effect. Set the key apt actually consults: without it a transient
-      # 5xx from a mirror or PPA fails the install on the first attempt.
+      # 5xx from a mirror or PPA fails the install on the first attempt,
+      # which is how one Launchpad brownout reddened three required legs.
       - name: Make apt retry transient download failures
         run: echo 'Acquire::Retries "5";' | sudo tee /etc/apt/apt.conf.d/99-retries > /dev/null
 
@@ -62,6 +63,8 @@ jobs:
         run: |
           gcc-15 --version
           g++-15 --version
+          gcov-15 --version
+          gcovr --version
           cmake --version
 
       # Export the two env vars vcpkg's "x-gha" binary source needs to talk

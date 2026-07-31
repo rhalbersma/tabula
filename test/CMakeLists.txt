@@ -3,9 +3,6 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
-# strict -std=c++23 rather than the default gnu++23 dialect
-set(CMAKE_CXX_EXTENSIONS OFF)
-
 add_library(tabula_test_options INTERFACE)
 option(TABULA_WARNINGS_AS_ERRORS "Treat warnings as errors in tabula tests" ${PROJECT_IS_TOP_LEVEL})
 
@@ -60,12 +57,6 @@ set(cxx_compile_options_warnings
     >
 )
 
-set(cxx_compile_options_mbig_obj
-    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<PLATFORM_ID:Windows>>:
-        -Wa,-mbig-obj
-    >
-)
-
 target_compile_definitions(
     tabula_test_options INTERFACE
     ${cxx_compile_definitions}
@@ -73,7 +64,6 @@ target_compile_definitions(
 target_compile_options(
     tabula_test_options INTERFACE
     ${cxx_compile_options_warnings}
-    ${cxx_compile_options_mbig_obj}
     $<$<AND:$<BOOL:${TABULA_WARNINGS_AS_ERRORS}>,$<CXX_COMPILER_ID:MSVC>>:/WX>
     $<$<AND:$<BOOL:${TABULA_WARNINGS_AS_ERRORS}>,$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>>:-Werror>
 )
