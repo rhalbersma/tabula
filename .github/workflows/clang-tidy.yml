@@ -30,7 +30,8 @@ jobs:
       # The runner image writes APT::Acquire::Retries, but apt reads this
       # setting from the Acquire group, so the image's value never takes
       # effect. Set the key apt actually consults: without it a transient
-      # 5xx from a mirror or PPA fails the install on the first attempt.
+      # 5xx from a mirror or PPA fails the install on the first attempt,
+      # which is how one Launchpad brownout reddened three required legs.
       - name: Make apt retry transient download failures
         run: echo 'Acquire::Retries "5";' | sudo tee /etc/apt/apt.conf.d/99-retries > /dev/null
 
@@ -72,10 +73,16 @@ jobs:
           VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
         run: vcpkg install --triplet x64-linux
 
+      # Debug, not Release: CMake's Release adds -DNDEBUG, which rewrites
+      # every assert(...) to ((void)0) before it reaches the AST. That both
+      # disables bugprone-assert-side-effect outright and strips the
+      # assertions clang-analyzer-* uses to prune infeasible paths, so
+      # analyzing a Release build sees less code and reports more false
+      # positives. Matches codeql.yml.
       - name: Configure
         run: >
           cmake -S . -B build
-          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_BUILD_TYPE=Debug
           -DCMAKE_C_COMPILER=clang-22
           -DCMAKE_CXX_COMPILER=clang++-22
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
