@@ -18,6 +18,15 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  # The Codecov CLI only *queues* an upload: it exits successfully as soon
+  # as the report is handed over, and never learns whether Codecov managed
+  # to process it. A report dropped on Codecov's side therefore leaves main
+  # without coverage while every CI leg stays green, and the branch badge
+  # silently degrades to a grey "unknown". The daily run re-uploads main's
+  # head so that state self-heals within a day instead of persisting until
+  # the next push.
+  schedule:
+    - cron: '30 3 * * *'
   workflow_dispatch:
 
 jobs:
@@ -33,6 +42,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      # The runner image writes APT::Acquire::Retries, but apt reads this
+      # setting from the Acquire group, so the image's value never takes
+      # effect. Set the key apt actually consults: without it a transient
+      # 5xx from a mirror or PPA fails the install on the first attempt.
+      - name: Make apt retry transient download failures
+        run: echo 'Acquire::Retries "5";' | sudo tee /etc/apt/apt.conf.d/99-retries > /dev/null
 
       - name: Install GCC 15 and gcovr
         run: |
@@ -149,7 +165,13 @@ jobs:
           plugins: noop
           disable_search: true
           use_oidc: true
-          fail_ci_if_error: false
+          # Report a rejected or failed upload rather than leaving a step
+          # that passed with no coverage behind it. This can't catch a
+          # report that is accepted and then dropped during processing -
+          # hence the daily schedule above - but it does cover everything up
+          # to the hand-off. The job is continue-on-error, so this surfaces
+          # the failure without blocking anything.
+          fail_ci_if_error: true
 
       - name: Upload coverage report
         if: always()

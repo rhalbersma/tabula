@@ -27,6 +27,13 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
+      # The runner image writes APT::Acquire::Retries, but apt reads this
+      # setting from the Acquire group, so the image's value never takes
+      # effect. Set the key apt actually consults: without it a transient
+      # 5xx from a mirror or PPA fails the install on the first attempt.
+      - name: Make apt retry transient download failures
+        run: echo 'Acquire::Retries "5";' | sudo tee /etc/apt/apt.conf.d/99-retries > /dev/null
+
       - name: Install GCC 15
         run: |
           sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
