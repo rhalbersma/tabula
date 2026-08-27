@@ -11,7 +11,11 @@
 #include <format>               // formatter, format_to
 #include <ranges>               // iota, reverse
 
+// A basic_board renders as its embedded squares, rank by rank from the top.
+// Specializing std::formatter on a program-defined type is the only mechanism
+// the standard offers for that, and [namespace.std]/2 expressly permits it.
 template<auto Grid, class Lake, tabula::padding Padding>
+// NOLINTNEXTLINE(bugprone-std-namespace-modification): permitted by [namespace.std]/2, see above
 struct std::formatter<tabula::basic_board<Grid, Lake, Padding>>
 {
         constexpr auto parse(auto& ctx)
