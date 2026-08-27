@@ -7,6 +7,7 @@ name: CodeQL
 
 permissions:
   contents: read
+  security-events: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -22,78 +23,5 @@ on:
   workflow_dispatch:
 
 jobs:
-  analyze:
-    name: Analyze (C++)
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-      security-events: write
-
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
-      # The runner image writes APT::Acquire::Retries, but apt reads this
-      # setting from the Acquire group, so the image's value never takes
-      # effect. Set the key apt actually consults: without it a transient
-      # 5xx from a mirror or PPA fails the install on the first attempt,
-      # which is how one Launchpad brownout reddened three required legs.
-      - name: Make apt retry transient download failures
-        run: echo 'Acquire::Retries "5";' | sudo tee /etc/apt/apt.conf.d/99-retries > /dev/null
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
-        with:
-          languages: c-cpp
-          queries: security-extended
-
-      # format.hpp's basic_board formatter needs libstdc++'s <format>, which
-      # the runner image's default GCC 13 doesn't fully provide. Matches
-      # gcc.yml/sanitizers.yml's own fix for the same underlying problem.
-      - name: Install a <format>-capable GCC
-        run: |
-          # Retried for the reason given in gcc.yml: the ppa: shorthand goes
-          # through Launchpad's web API, which Acquire::Retries does not cover.
-          for i in 1 2 3; do
-            if sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; then break; fi
-            if [ "$i" -eq 3 ]; then exit 1; fi
-            sleep $((i * 5))
-          done
-          sudo apt-get update
-          sudo apt-get install -y g++-15
-
-      # Export the two env vars vcpkg's "x-gha" binary source needs to talk
-      # to the GitHub Actions cache service, so built packages are reused
-      # across runs instead of recompiled from scratch every time.
-      - name: Export GitHub Actions cache environment variables
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
-        with:
-          script: |
-            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
-            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
-
-      - name: Install Boost.Test
-        env:
-          VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-        run: vcpkg install --triplet x64-linux
-
-      # Debug, not Release: CMake's Release adds -DNDEBUG, which rewrites
-      # every assert(...) to ((void)0) before it reaches the AST. CodeQL's
-      # C/C++ extractor runs alongside the compiler front-end, so the
-      # optimization level buys it nothing while NDEBUG shrinks the code it
-      # can see. Matches sanitizers.yml/coverage.yml, and clang-tidy.yml,
-      # which analyze with assertions live for the same reason.
-      - name: Configure
-        run: >
-          cmake -S . -B build
-          -DCMAKE_BUILD_TYPE=Debug
-          -DCMAKE_C_COMPILER=gcc-15
-          -DCMAKE_CXX_COMPILER=g++-15
-          -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
-
-      - name: Build
-        run: cmake --build build -v
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
-        with:
-          category: "/language:c-cpp"
+  codeql:
+    uses: rhalbersma/cpp-ci/.github/workflows/codeql.yml@cb677f685fe5c4d039883f6dbe6ee5ef6938481a # v0.2.1

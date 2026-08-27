@@ -3,14 +3,14 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
 
-# Mirrors the --fail-under-line 100 gate enforced locally by the Coverage
-# workflow (see .github/workflows/coverage.yml), aspiring to the same bar
-# xstd already meets. tabula's existing tests are nowhere near it yet
-# (~52% lines / ~25% branches), so both status checks are informational:
-# they report the real number on every PR without turning red and blocking
-# on a gap that needs deliberate new tests to close, matching
-# coverage.yml's own continue-on-error treatment. Drop `informational: true`
-# once coverage catches up.
+# Aspires to the same 100% bar xstd already meets. tabula's existing tests
+# are nowhere near it yet (52.6% lines / 24.6% branches), so both status
+# checks are informational: they report the real number on every PR without
+# turning red and blocking on a gap that needs deliberate new tests to
+# close. The Coverage workflow takes the same line from the other side,
+# passing fail_under_line: 0 and fail_under_branch: 0 to the shared
+# workflow. Raise those and drop `informational: true` together, once
+# coverage catches up.
 coverage:
   status:
     project:

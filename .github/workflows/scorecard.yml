@@ -7,6 +7,9 @@ name: Scorecard
 
 permissions:
   contents: read
+  security-events: write
+  id-token: write
+  actions: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -21,39 +24,5 @@ on:
   workflow_dispatch:
 
 jobs:
-  analysis:
-    name: Scorecard analysis
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-      security-events: write
-      id-token: write
-      actions: read
-
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          persist-credentials: false
-
-      - name: Run analysis
-        uses: ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc # v2.4.4
-        with:
-          results_file: results.sarif
-          results_format: sarif
-          publish_results: true
-
-      # Publishing results (above) pushes the score to the public dataset
-      # that api.securityscorecards.dev's README badge reads from. Uploading
-      # to code scanning (below) additionally surfaces the same findings in
-      # this repo's own Security tab.
-      - name: Upload SARIF results as an artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-        with:
-          name: SARIF file
-          path: results.sarif
-          retention-days: 5
-
-      - name: Upload SARIF results to code scanning
-        uses: github/codeql-action/upload-sarif@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
-        with:
-          sarif_file: results.sarif
+  scorecard:
+    uses: rhalbersma/cpp-ci/.github/workflows/scorecard.yml@cb677f685fe5c4d039883f6dbe6ee5ef6938481a # v0.2.1
