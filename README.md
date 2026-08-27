@@ -11,7 +11,7 @@
 [![Clang-CL](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/clang-cl.yml)
 [![MSVC](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml/badge.svg)](https://github.com/rhalbersma/tabula/actions/workflows/msvc.yml)
 [![Coverage](https://codecov.io/gh/rhalbersma/tabula/branch/main/graph/badge.svg)](https://codecov.io/gh/rhalbersma/tabula)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/rhalbersma/tabula/badge)](https://securityscorecards.dev/viewer/?uri=github.com/rhalbersma/tabula)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/rhalbersma/tabula/badge)](https://scorecard.dev/viewer/?uri=github.com/rhalbersma/tabula)
 
 tabula is a header-only C++23 library for representing board-game grids, squares, and board embeddings. It aims to provide portable, compile-time building blocks for board representations and common chess, draughts, and Stratego layouts without requiring experimental language features.
 

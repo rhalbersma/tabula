@@ -18,100 +18,20 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
+  # canary.yml calls this weekly, so the stub stays callable itself.
   workflow_call:
 
 jobs:
-  build:
-    name: Clang ${{ matrix.label }} libc++
-    runs-on: ubuntu-24.04
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          # llvm_suffix selects the apt.llvm.org branch: a versioned suite
-          # for stable and qualification, the unversioned one for development.
-          - label: "22"
-            version: 22
-            llvm_suffix: "-22"
-          - label: "23"
-            version: 23
-            llvm_suffix: "-23"
-          - label: 24-SVN
-            version: 24
-            llvm_suffix: ""
-
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
-      # The runner image writes APT::Acquire::Retries, but apt reads this
-      # setting from the Acquire group, so the image's value never takes
-      # effect. Set the key apt actually consults: without it a transient
-      # 5xx from a mirror or PPA fails the install on the first attempt,
-      # which is how one Launchpad brownout reddened three required legs.
-      - name: Make apt retry transient download failures
-        run: echo 'Acquire::Retries "5";' | sudo tee /etc/apt/apt.conf.d/99-retries > /dev/null
-
-      # See the matching step in clang.yml for why the suite is named
-      # directly instead of letting llvm.sh derive it.
-      - name: Install Clang and libc++ ${{ matrix.version }}
-        run: |
-          wget -qO- --tries=3 --waitretry=5 --retry-on-http-error=429,500,502,503,504 https://apt.llvm.org/llvm-snapshot.gpg.key \
-            | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc > /dev/null
-          codename=$(lsb_release -cs)
-          sudo add-apt-repository -y "deb https://apt.llvm.org/${codename}/ llvm-toolchain-${codename}${{ matrix.llvm_suffix }} main"
-          sudo apt-get update
-          sudo apt-get install -y \
-            clang-${{ matrix.version }} \
-            lldb-${{ matrix.version }} \
-            lld-${{ matrix.version }} \
-            clangd-${{ matrix.version }} \
-            libc++-${{ matrix.version }}-dev \
-            libc++abi-${{ matrix.version }}-dev
-
-      - name: Report toolchain versions
-        run: |
-          clang-${{ matrix.version }} --version
-          clang++-${{ matrix.version }} --version
-          dpkg-query -W -f='${Package} ${Version}\n' \
-            libc++-${{ matrix.version }}-dev libc++abi-${{ matrix.version }}-dev
-          cmake --version
-
-      - name: Export GitHub Actions cache environment variables
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
-        with:
-          script: |
-            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
-            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
-
-      # The overlay triplet rebuilds Boost.Test with the same Clang and
-      # libc++ version used for tabula, preventing mixed-standard-library
-      # linkage.
-      - name: Install Boost.Test
-        env:
-          VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-          VCPKG_CLANG_VERSION: ${{ matrix.version }}
-        run: >
-          vcpkg install
-          --triplet x64-linux-libcxx
-          --overlay-triplets "$GITHUB_WORKSPACE/.github/vcpkg/triplets"
-
-      - name: Configure
-        env:
-          # The overlay triplet is evaluated again by the vcpkg CMake
-          # integration, so retain the compiler selection after install.
-          VCPKG_CLANG_VERSION: ${{ matrix.version }}
-        run: >
-          cmake -S . -B build
-          -DCMAKE_BUILD_TYPE=Release
-          -DCMAKE_C_COMPILER=clang-${{ matrix.version }}
-          -DCMAKE_CXX_COMPILER=clang++-${{ matrix.version }}
-          -DCMAKE_CXX_FLAGS=-stdlib=libc++
-          -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake
-          -DVCPKG_TARGET_TRIPLET=x64-linux-libcxx
-          -DVCPKG_OVERLAY_TRIPLETS=$GITHUB_WORKSPACE/.github/vcpkg/triplets
-
-      - name: Build
-        run: cmake --build build -v
-
-      - name: Test
-        run: ctest --test-dir build --output-on-failure
+  # No inputs: this library builds on every rung of the ladder, which is what
+  # the shared workflow defaults to.
+  clang_libcxx:
+    uses: rhalbersma/cpp-ci/.github/workflows/clang-libc++.yml@cb677f685fe5c4d039883f6dbe6ee5ef6938481a # v0.2.1
+    with:
+      # Every rung on a pull request, not just the floor and the ceiling. The
+      # shared default reduces a pull request to the two ends in Debug, which
+      # suits a repository whose middle rung a push covers soon after. This
+      # one says in its README that every leg is required, including the
+      # development one, and it ran all three rungs per pull request before
+      # these stubs -- so reducing would quietly stop testing the middle rung
+      # on the very event the required check is meant to gate.
+      reduce_on_pr: false

@@ -18,204 +18,29 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
+  # canary.yml calls this weekly, so the stub stays callable itself.
   workflow_call:
 
 jobs:
-  build:
-    name: MSVC ${{ matrix.vs }}
-    runs-on: ${{ matrix.os }}
-    # example/print_embedding.cpp fails to compile on every MSVC toolset
-    # tested here: MSVC reports ambiguous partial specialization matching
-    # for a class-type NTTP template (basic_compass<chequer{...}> vs.
-    # basic_compass<rectangle{...}>) that Clang/GCC/clang-cl all accept.
-    # This is the same bug class rhalbersma reported against VS2019 16.4 in
-    # 2019 (a minimal <auto N> repro, same "more than one partial
-    # specialization matches" error):
-    # https://developercommunity.visualstudio.com/t/VS-2019-164:-Ambiguous-partial-speciali/865810
-    # That ticket is closed "Fixed In: 18.7.0", per Microsoft's own tracker -
-    # not independently verified: as of 2026-07-19, Compiler Explorer's
-    # msvc-latest reports _MSC_VER 1951 (the 18.6 line, same toolset family
-    # as this runner's 14.51.36231), so no publicly reachable build yet
-    # reflects 18.7.0 to confirm the fix actually lands as claimed. As of
-    # 2026-07-18, the windows-2025-vs2026 runner image ships VS 2026
-    # Enterprise 18.5.4; actions/runner-images#14130 tracks bumping it to
-    # 18.6.x (for unrelated mp-units compiler bugs), which is still short of
-    # 18.7.0 - so this leg is expected to keep failing until a *later*,
-    # currently untracked image bump clears 18.7.0 (assuming the fix holds
-    # once that ships).
-    #
-    # No VS2022 leg: VS2022 is the 17.x line, which is in maintenance and
-    # will never receive the 18.7.0 fix (that's an 18.x-line fix) - unlike
-    # 2026/2026-Preview, it has no path to ever passing, so it's not worth
-    # carrying in the matrix.
-    #
-    # Deliberately NOT continue-on-error: this workflow isn't a required
-    # PR status check, so a red badge here is informative rather than
-    # blocking - it should visibly flip green the moment the runner image
-    # clears 18.7.0, instead of being silently masked in the meantime.
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - vs: 2026
-            os: windows-2025
-            generator: "Visual Studio 18 2026"
-            toolset: "host=x64"
-            preview_channel: false
-          - vs: 2026-Preview
-            os: windows-2025
-            generator: "Visual Studio 18 2026"
-            preview_channel: true
-
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
-      # The preview toolset's payload (~10 min of the ~15-20 min this leg
-      # otherwise takes) is re-downloaded from Microsoft's CDN on every run,
-      # because --nocache (below) tells the VS Installer to skip its local
-      # package-download cache entirely. That cache is keyed by package
-      # version, so it's safe to keep around across jobs as long as we know
-      # when to invalidate it: fetch just the channel manifest's ETag (a few
-      # KB, not the multi-hundred-MB payload) and use it as the cache key.
-      # Unchanged manifest -> cache hit -> setup.exe below finds the payload
-      # already on disk and mostly just registers it; changed manifest ->
-      # cache miss -> one full download, cached for the next run.
-      - name: Resolve preview channel manifest version
-        if: matrix.preview_channel
-        id: preview-channel
-        shell: pwsh
-        run: |
-          $resp = Invoke-WebRequest -Uri 'https://aka.ms/vs/18/pre/channel' -Method Head -UseBasicParsing
-          $version = $resp.Headers['ETag']
-          if (-not $version) { $version = $resp.Headers['Last-Modified'] }
-          Write-Host "Channel manifest version: $version"
-          echo "version=$version" >> $env:GITHUB_OUTPUT
-
-      - name: Cache VS Installer package downloads
-        if: matrix.preview_channel
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: C:\ProgramData\Microsoft\VisualStudio\Packages
-          key: vs-preview-packages-${{ runner.os }}-${{ steps.preview-channel.outputs.version }}
-          restore-keys: |
-            vs-preview-packages-${{ runner.os }}-
-
-      # This leg is required like any other: the windows-2025 runner image
-      # ships VS 2026 Stable preinstalled, and the Preview MSVC toolset is
-      # an optional component
-      # on the Stable channel (see the "MSVC Build Tools Preview: How to Opt
-      # In" C++ team blog posts), so it can be added to the existing
-      # instance with the VS Installer's own "modify" command. Two hard-won
-      # gotchas live here:
-      #   1. setup.exe is a GUI-subsystem executable: PowerShell's call
-      #      operator (&) does NOT wait for it, silently leaving a stale
-      #      $LASTEXITCODE and letting the job kill the install as an orphan
-      #      process at teardown. Start-Process -Wait is required (GitHub's
-      #      own runner-images build scripts do the same, treating exit
-      #      codes 0 and 3010 as success).
-      #   2. CMake's "-T version=" only accepts numeric toolset versions,
-      #      not "Preview", so the installed preview version is discovered
-      #      afterwards and passed to Configure via $GITHUB_ENV.
-      - name: Install MSVC Preview toolset
-        if: matrix.preview_channel
-        shell: pwsh
-        run: |
-          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          $instance = & $vswhere -products * -format json | ConvertFrom-Json | Select-Object -First 1
-          if (-not $instance) {
-            Write-Host "No VS instance found by vswhere to add the Preview toolset to"
-            exit 1
-          }
-          $installPath = $instance.installationPath
-
-          $setup = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\setup.exe"
-          $proc = Start-Process -FilePath $setup -Wait -PassThru -ArgumentList (
-            'modify', '--quiet', '--norestart',
-            '--installPath', "`"$installPath`"",
-            '--add', 'Microsoft.VisualStudio.Component.VC.Preview.Tools.x86.x64'
-          )
-          # 3010 = success, reboot required
-          $ok = $proc.ExitCode -eq 0 -or $proc.ExitCode -eq 3010
-
-          $verify = & $vswhere -products * -requires Microsoft.VisualStudio.Component.VC.Preview.Tools.x86.x64 -format json | ConvertFrom-Json
-          if (-not $ok -or -not $verify) {
-            Write-Host "Preview toolset not present after setup.exe modify (exit code $($proc.ExitCode))."
-            Write-Host "Toolsets present under VC\Tools\MSVC:"
-            Get-ChildItem "$installPath\VC\Tools\MSVC" -Directory -ErrorAction SilentlyContinue | ForEach-Object { Write-Host "  $($_.Name)" }
-            $log = Get-ChildItem "$env:TEMP\dd_*.log" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-            if ($log) {
-              Write-Host "--- $($log.FullName) (last 150 lines) ---"
-              Get-Content $log.FullName -Tail 150 | ForEach-Object { Write-Host $_ }
-            } else {
-              Write-Host "No dd_*.log found under $env:TEMP"
-            }
-            exit 1
-          }
-
-          # CMake can't be told "version=Preview"; find the preview
-          # toolset's actual version number (the highest one installed).
-          $default = (Get-Content "$installPath\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt").Trim()
-          $newest = Get-ChildItem "$installPath\VC\Tools\MSVC" -Directory |
-            Sort-Object { [version]$_.Name } -Descending |
-            Select-Object -First 1 -ExpandProperty Name
-          Write-Host "Default toolset: $default; newest (preview) toolset: $newest"
-          echo "VC_PREVIEW_TOOLSET=$newest" >> $env:GITHUB_ENV
-
-      - name: Report toolchain versions
-        shell: pwsh
-        run: |
-          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          $instance = & $vswhere -products * -format json | ConvertFrom-Json | Select-Object -First 1
-          if (-not $instance) { throw "No Visual Studio instance found by vswhere" }
-          $installPath = $instance.installationPath
-          Write-Host "Visual Studio: $($instance.displayName) $($instance.installationVersion)"
-          $toolset = if ($env:VC_PREVIEW_TOOLSET) { $env:VC_PREVIEW_TOOLSET } else { (Get-Content "$installPath\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt").Trim() }
-          Write-Host "MSVC toolset: $toolset"
-          & "$installPath\VC\Tools\MSVC\$toolset\bin\Hostx64\x64\cl.exe" /Bv
-          cmake --version
-
-      # Export the two env vars vcpkg's "x-gha" binary source needs to talk
-      # to the GitHub Actions cache service, so built packages are reused
-      # across runs instead of recompiled from scratch every time.
-      - name: Export GitHub Actions cache environment variables
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
-        with:
-          script: |
-            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
-            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
-
-      # MSVC guarantees binary compatibility across toolset versions since
-      # VS 2015, so vcpkg's Boost (built with the default/stable toolset)
-      # links fine against code compiled with the preview toolset too - no
-      # need to rebuild it from source for the preview leg.
-      - name: Install Boost.Test
-        shell: pwsh
-        env:
-          VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
-        run: vcpkg install --triplet x64-windows
-
-      - name: Configure
-        if: "!matrix.preview_channel"
-        shell: pwsh
-        run: >
-          cmake -S . -B build
-          -G "${{ matrix.generator }}" -A x64
-          -T ${{ matrix.toolset }}
-          "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
-
-      - name: Configure (preview toolset)
-        if: matrix.preview_channel
-        shell: pwsh
-        run: >
-          cmake -S . -B build
-          -G "${{ matrix.generator }}" -A x64
-          -T "version=$env:VC_PREVIEW_TOOLSET,host=x64"
-          "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
-
-      - name: Build
-        shell: pwsh
-        run: cmake --build build --config Release -v
-
-      - name: Test
-        shell: pwsh
-        run: ctest --test-dir build -C Release --output-on-failure
+  # Two rungs, not three. The shared ladder's stable rung for this family is
+  # VS 2022, and this repository deliberately does not carry it: 2022 is the
+  # 17.x line, in maintenance, so the 18.7.0 fix below is one it will never
+  # receive. 2026 and 2026-Preview have a path to passing; 2022 has none, and
+  # a leg that cannot ever go green is not worth a runner. The README says
+  # the same thing with a dash in the MSVC Stable column.
+  #
+  # The toolset input is left at its default, which is the MSVC one.
+  #
+  # Expected red, and documented as such in the README: cl rejects
+  # basic_compass<chequer{...}> on an ambiguous partial specialization it
+  # reports fixed in VS 18.7.0, which the runner image does not yet carry
+  # (actions/runner-images#14130). Deliberately not a required check, so the
+  # failure stays visible without blocking a merge. Sharing the workflow does
+  # not change that -- it is the same compiler on the same image.
+  msvc:
+    uses: rhalbersma/cpp-ci/.github/workflows/visual-studio.yml@cb677f685fe5c4d039883f6dbe6ee5ef6938481a # v0.2.1
+    with:
+      tiers: qualification,development
+      # Every rung on a pull request; see gcc.yml. This repository
+      # requires every leg, and reducing would skip the middle one.
+      reduce_on_pr: false
