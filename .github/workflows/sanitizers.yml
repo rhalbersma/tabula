@@ -25,4 +25,4 @@ jobs:
   # and turns leak detection on -- the local ASan leg ran with
   # detect_leaks=0.
   sanitizers:
-    uses: rhalbersma/cpp-ci/.github/workflows/sanitizers.yml@cb677f685fe5c4d039883f6dbe6ee5ef6938481a # v0.2.1
+    uses: rhalbersma/cpp-ci/.github/workflows/sanitizers.yml@761f20d7d737d4e0c5a942eb2f1becf8e8edea75 # v0.3.1

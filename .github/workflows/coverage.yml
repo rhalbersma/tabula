@@ -28,7 +28,7 @@ on:
 
 jobs:
   coverage:
-    uses: rhalbersma/cpp-ci/.github/workflows/coverage.yml@cb677f685fe5c4d039883f6dbe6ee5ef6938481a # v0.2.1
+    uses: rhalbersma/cpp-ci/.github/workflows/coverage.yml@761f20d7d737d4e0c5a942eb2f1becf8e8edea75 # v0.3.1
     with:
       # example/ as well as the shared default: unlike xstd, this repository
       # ships a tree of examples, which are demonstrations rather than
