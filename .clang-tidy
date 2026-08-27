@@ -7,6 +7,16 @@
 # Static analysis for the public headers, run by the Clang-Tidy workflow
 # over the generated header self-sufficiency translation units (the
 # Boost.Test sources are excluded: test macros drown the signal in noise).
+#
+# bugprone-std-namespace-modification is off because format.hpp specializes
+# std::formatter for basic_board. Specializing a standard library template on
+# a program-defined type is expressly permitted -- [namespace.std]/2 allows
+# exactly this, and it is the only mechanism the standard offers for making a
+# type formattable -- so the check fires on the sanctioned idiom rather than
+# on a real modification of namespace std. It has been firing since at least
+# 2026-08-25; the Clang-Tidy job reported it and passed anyway, because the
+# report was piped through tee without pipefail, so run-clang-tidy's exit
+# code never reached the runner.
 Checks: >
   bugprone-*,
   clang-analyzer-*,
@@ -15,6 +25,7 @@ Checks: >
   performance-*,
   portability-*,
   readability-*,
+  -bugprone-std-namespace-modification,
   -misc-include-cleaner,
   -misc-non-private-member-variables-in-classes,
   -modernize-use-trailing-return-type,
