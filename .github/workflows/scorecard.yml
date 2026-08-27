@@ -5,11 +5,15 @@
 
 name: Scorecard
 
+# Read-only at workflow level. The write grants the analysis needs are on the
+# job below rather than here: the OpenSSF webapp that ingests published results
+# verifies a workflow file first, and for a job that calls a reusable workflow
+# the path in the OIDC certificate names the shared workflow, not this stub --
+# so this placement is least privilege rather than a requirement. cpp-ci moved
+# its own grants off the workflow level in v0.3.1, which is what unblocked
+# publishing; this keeps the caller's side in the same shape, as xstd's is.
 permissions:
   contents: read
-  security-events: write
-  id-token: write
-  actions: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,4 +29,9 @@ on:
 
 jobs:
   scorecard:
-    uses: rhalbersma/cpp-ci/.github/workflows/scorecard.yml@cb677f685fe5c4d039883f6dbe6ee5ef6938481a # v0.2.1
+    permissions:
+      contents: read
+      security-events: write
+      id-token: write
+      actions: read
+    uses: rhalbersma/cpp-ci/.github/workflows/scorecard.yml@761f20d7d737d4e0c5a942eb2f1becf8e8edea75 # v0.3.1
