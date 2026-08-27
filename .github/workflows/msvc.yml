@@ -22,7 +22,14 @@ on:
   workflow_call:
 
 jobs:
-  # No inputs: the shared workflow defaults to the MSVC toolset.
+  # Two rungs, not three. The shared ladder's stable rung for this family is
+  # VS 2022, and this repository deliberately does not carry it: 2022 is the
+  # 17.x line, in maintenance, so the 18.7.0 fix below is one it will never
+  # receive. 2026 and 2026-Preview have a path to passing; 2022 has none, and
+  # a leg that cannot ever go green is not worth a runner. The README says
+  # the same thing with a dash in the MSVC Stable column.
+  #
+  # The toolset input is left at its default, which is the MSVC one.
   #
   # Expected red, and documented as such in the README: cl rejects
   # basic_compass<chequer{...}> on an ambiguous partial specialization it
@@ -32,3 +39,5 @@ jobs:
   # not change that -- it is the same compiler on the same image.
   msvc:
     uses: rhalbersma/cpp-ci/.github/workflows/visual-studio.yml@cb677f685fe5c4d039883f6dbe6ee5ef6938481a # v0.2.1
+    with:
+      tiers: qualification,development
