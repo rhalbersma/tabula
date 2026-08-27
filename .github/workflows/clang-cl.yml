@@ -31,3 +31,6 @@ jobs:
       toolset: ClangCL,host=x64
       preview_toolset_prefix: "ClangCL,"
       cache_prefix: clang-cl
+      # Every rung on a pull request; see gcc.yml. This repository
+      # requires every leg, and reducing would skip the middle one.
+      reduce_on_pr: false

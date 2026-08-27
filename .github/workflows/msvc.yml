@@ -41,3 +41,6 @@ jobs:
     uses: rhalbersma/cpp-ci/.github/workflows/visual-studio.yml@cb677f685fe5c4d039883f6dbe6ee5ef6938481a # v0.2.1
     with:
       tiers: qualification,development
+      # Every rung on a pull request; see gcc.yml. This repository
+      # requires every leg, and reducing would skip the middle one.
+      reduce_on_pr: false

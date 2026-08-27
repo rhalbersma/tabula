@@ -26,3 +26,12 @@ jobs:
   # the shared workflow defaults to.
   clang:
     uses: rhalbersma/cpp-ci/.github/workflows/clang.yml@cb677f685fe5c4d039883f6dbe6ee5ef6938481a # v0.2.1
+    with:
+      # Every rung on a pull request, not just the floor and the ceiling. The
+      # shared default reduces a pull request to the two ends in Debug, which
+      # suits a repository whose middle rung a push covers soon after. This
+      # one says in its README that every leg is required, including the
+      # development one, and it ran all three rungs per pull request before
+      # these stubs -- so reducing would quietly stop testing the middle rung
+      # on the very event the required check is meant to gate.
+      reduce_on_pr: false
