@@ -7,6 +7,18 @@
 # Static analysis for the public headers, run by the Clang-Tidy workflow
 # over the generated header self-sufficiency translation units (the
 # Boost.Test sources are excluded: test macros drown the signal in noise).
+# bugprone-signed-bitwise is off because its four sites are all the same
+# thing: chequer's parity, an int documented as 0 or 1, toggled with ^.
+# The check guards against sign extension in bit manipulation, which is
+# not what parity arithmetic is doing.
+#
+# The tempting rewrite -- (a + b) % 2, matching how the rest of chequer
+# already computes parity -- is equivalent to ^ only for non-negative
+# operands, and one site XORs with (p.left + p.bottom) % 2 where padding
+# members are plain int with nothing forbidding a negative. Rewriting the
+# arithmetic would therefore change behaviour on inputs the current code
+# may or may not intend to accept, which is not something a lint fix
+# should decide.
 Checks: >
   bugprone-*,
   clang-analyzer-*,
@@ -22,7 +34,8 @@ Checks: >
   -readability-identifier-length,
   -readability-magic-numbers,
   -readability-named-parameter,
-  -readability-simplify-boolean-expr
+  -readability-simplify-boolean-expr,
+  -bugprone-signed-bitwise
 WarningsAsErrors: '*'
 HeaderFilterRegex: 'include/tabula/.*'
 FormatStyle: none

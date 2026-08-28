@@ -41,7 +41,7 @@ inline namespace square_literals {
 [[nodiscard]] constexpr auto operator""_sq(const char* str, std::size_t n) noexcept
         -> square_
 {
-        auto file = str[0];
+        auto const file = str[0];
         auto rank = 0;
         std::from_chars(str + 1, str + n, rank);
         return { file - 'a',  rank - 1 };

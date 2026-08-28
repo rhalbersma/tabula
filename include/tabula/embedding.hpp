@@ -60,7 +60,7 @@ public:
                 return v.template pad<Padding>();
         }
 
-        static constexpr auto valid_size = []() {
+        static constexpr auto valid_size = [] {
                 constexpr auto first = first_valid();
                 constexpr auto last = last_valid();
                 return first && last ? *last - *first + 1 : 0;
