@@ -38,6 +38,6 @@ jobs:
   # failure stays visible without blocking a merge. Sharing the workflow does
   # not change that -- it is the same compiler on the same image.
   msvc:
-    uses: rhalbersma/cpp-ci/.github/workflows/visual-studio.yml@761f20d7d737d4e0c5a942eb2f1becf8e8edea75 # v0.3.1
+    uses: rhalbersma/cpp-ci/.github/workflows/visual-studio.yml@d42a31ce27a752910b7b76cc6e3368735c8a1115 # v0.4.1
     with:
       tiers: qualification,development
