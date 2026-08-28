@@ -52,7 +52,7 @@ struct basic_board
                 return Grid.is_valid(square) && !Lake()(square);
         }
 
-        static constexpr auto embedding_table = []() {
+        static constexpr auto embedding_table = [] {
                 auto table = std::array<std::optional<int>, Grid.size()>{};
                 for (auto index : std::views::iota(0, Grid.size())) {
                         auto const [ file, rank ] = Grid.coordinates(index);
@@ -112,7 +112,7 @@ public:
                 return *embedding_table[static_cast<std::size_t>(square.index())];
         }
 
-        static constexpr auto strides = []() {
+        static constexpr auto strides = [] {
                 using compass = basic_compass<Grid>;
                 std::array<int, std::size(compass::directions)> table;
                 for (auto index = 0UZ; auto direction : compass::directions) {
