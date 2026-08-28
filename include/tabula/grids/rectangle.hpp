@@ -73,7 +73,7 @@ struct rectangle
                 return
                 {
                         .width  = width  + p.left + p.right,
-                        .height = height + p.top  + p.bottom
+                        .height = height + p.top  + p.bottom,
                 };
         }
 };
@@ -92,8 +92,9 @@ struct basic_compass<Grid>
                 {  0, -1 },     // S
                 { -1, -1 },     // SW
                 { -1,  0 },     // W
-                { -1,  1 }      // NW
-        }};
+                { -1,  1 },     // NW
+        },
+        };
 };
 
 }       // namespace tabula

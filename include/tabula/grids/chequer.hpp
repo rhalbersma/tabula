@@ -78,7 +78,7 @@ struct chequer
                 {
                         .width  = width  + p.left + p.right + ((width + p.left + p.right + 1) % 2),
                         .height = height + p.top  + p.bottom,
-                        .parity = parity ^ ((p.left + p.bottom) % 2)
+                        .parity = parity ^ ((p.left + p.bottom) % 2),
                 };
         }
 };
@@ -97,8 +97,9 @@ struct basic_compass<Grid>
                 {  0, -2 },     // S
                 { -1, -1 },     // SW
                 { -2,  0 },     // W
-                { -1,  1 }      // NW
-        }};
+                { -1,  1 },     // NW
+        },
+        };
 };
 
 }       // namespace tabula
