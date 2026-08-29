@@ -1,0 +1,42 @@
+#          Copyright Rein Halbersma 2019-2026.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
+
+name: MSVC-Analyze
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  # MSVC's /analyze, in the role clang-tidy.yml fills for Clang. The same two
+  # rungs msvc.yml runs, and dropped for the same reason: VS 2022 is the 17.x
+  # line and will never receive the fix below, so that leg has no path to
+  # green.
+  #
+  # Expected red on both, and for the same cause msvc.yml documents: cl
+  # rejects basic_compass<chequer{...}> on an ambiguous partial specialization
+  # it reports fixed in VS 18.7.0, which the runner image does not yet carry
+  # (actions/runner-images#14130). /analyze is a compiler flag rather than a
+  # separate binary, so these legs compile the whole tree and stop exactly
+  # where msvc.yml's do -- before the analyser says anything about the code.
+  #
+  # So this is not a working analysis leg today; it is one that starts working
+  # the day the image refreshes, with nothing needed here. Deliberately not a
+  # required check until then, as msvc.yml is not. rhalbersma/cpp-ci#26 is
+  # about giving a leg in exactly this state a name other than "red".
+  msvc_analyze:
+    uses: rhalbersma/cpp-ci/.github/workflows/msvc-analyze.yml@e2886b13f6fcd1eceb231652f816b016de41be1d # v0.8.1
+    with:
+      tiers: qualification,development
