@@ -66,6 +66,9 @@ target_compile_options(
     ${cxx_compile_options_warnings}
     $<$<AND:$<BOOL:${TABULA_WARNINGS_AS_ERRORS}>,$<CXX_COMPILER_ID:MSVC>>:/WX>
     $<$<AND:$<BOOL:${TABULA_WARNINGS_AS_ERRORS}>,$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>>:-Werror>
+    # Pre-empts MinGW's 32-byte aligned stores to a 16-byte aligned stack, which
+    # bite the moment AVX is enabled (rhalbersma/bit_set#54, GCC PR target/49001).
+    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<PLATFORM_ID:Windows>>:-mprefer-vector-width=128>
 )
 # Each public header is compiled as its own translation unit (linked against
 # the same warning flags as the unit tests), proving it is self-sufficient.
