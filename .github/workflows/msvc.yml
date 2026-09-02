@@ -13,10 +13,10 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # No push or pull_request: these legs cannot pass until the runner image
+  # carries the VS 18.7.0 fix, and a red check on every PR is one nobody
+  # reads. canary.yml still runs them weekly, so the day they go green is
+  # still observed -- see rhalbersma/tabula#22.
   workflow_dispatch:
   # canary.yml calls this weekly, so the stub stays callable itself.
   workflow_call:

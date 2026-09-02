@@ -13,10 +13,10 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # No push or pull_request, for the reason msvc.yml gives: /analyze stops at
+  # the same compile error, so these legs cannot pass until that one can.
+  # msvc.yml's weekly canary leg is the detector for both -- they fail at the
+  # identical point, so its going green is the signal to restore this too.
   workflow_dispatch:
 
 jobs:
