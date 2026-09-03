@@ -19,7 +19,7 @@ class basic_embedding
 {
         [[nodiscard]] static constexpr auto is_valid(auto square) noexcept
         {
-                return Grid.is_valid(square) && !Lake()(square);
+                return Grid.is_valid(square) and not Lake()(square);
         }
 
         [[nodiscard]] static constexpr auto first_valid() noexcept
@@ -63,7 +63,7 @@ public:
         static constexpr auto valid_size = [] {
                 constexpr auto first = first_valid();
                 constexpr auto last = last_valid();
-                return first && last ? *last - *first + 1 : 0;
+                return first and last ? *last - *first + 1 : 0;
         }();
 };
 

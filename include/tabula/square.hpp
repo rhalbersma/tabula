@@ -21,14 +21,16 @@ struct basic_square
 
         [[nodiscard]] friend constexpr auto operator==(basic_square const&, basic_square const&) noexcept -> bool = default;
 
-        [[nodiscard]] constexpr auto& operator+=(basic_vector<Grid> v) noexcept
+        [[nodiscard]] constexpr auto operator+=(basic_vector<Grid> v) noexcept
+                -> basic_square&
         {
                 this->file += v.file;
                 this->rank += v.rank;
                 return *this;
         }
 
-        [[nodiscard]] constexpr auto& operator-=(basic_vector<Grid> v) noexcept
+        [[nodiscard]] constexpr auto operator-=(basic_vector<Grid> v) noexcept
+                -> basic_square&
         {
                 this->file -= v.file;
                 this->rank -= v.rank;
