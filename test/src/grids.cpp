@@ -5,11 +5,9 @@
 
 #include <tabula/dihedral.hpp>          // d8, is_realized
 #include <tabula/grids.hpp>             // chequer, rectangle
-#include <tabula/functional.hpp>        // operator*, flip, flop, swap
 #include <tabula/square.hpp>            // basic_square
 #include <boost/mp11/algorithm.hpp>     // mp_iota_c
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
-#include <concepts>                     // same_as
 #include <ranges>                       // iota
 #include <tuple>                        // get, tuple, tuple_cat, tuple_size_v
 #include <utility>                      // pair
