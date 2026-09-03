@@ -3,7 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include <tabula/grids.hpp>             // chequer, rectangle 
+#include <tabula/compass.hpp>           // basic_compass
+#include <tabula/grids.hpp>             // chequer, rectangle
 #include <boost/mp11/algorithm.hpp>     // mp_iota_c
 #include <boost/test/unit_test.hpp>     // BOOST_AUTO_TEST_SUITE, BOOST_AUTO_TEST_SUITE_END, BOOST_AUTO_TEST_CASE_TEMPLATE, BOOST_CHECK, BOOST_CHECK_EQUAL
 #include <algorithm>                    // equal
@@ -87,7 +88,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
         using compass = basic_compass<grid>;
-        for (auto d : compass::directions) {
+        for (auto const d : compass::directions) {
                 auto const r = d.reverse();
                 BOOST_CHECK((d != r));
                 BOOST_CHECK_EQUAL(d.is_left() ,  r.is_right());
