@@ -18,7 +18,7 @@ concept rectangular = requires
 };
 
 template<auto Grid>
-concept chequered = rectangular<Grid> && requires
+concept chequered = rectangular<Grid> and requires
 {
         { Grid.parity } -> std::convertible_to<bool>;
 };
