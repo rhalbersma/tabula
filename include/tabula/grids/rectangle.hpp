@@ -31,8 +31,8 @@ struct rectangle
         {
                 auto const [ file, rank ] = coordinates;
                 return
-                        0 <= file && file < width &&
-                        0 <= rank && rank < height
+                        0 <= file and file < width and
+                        0 <= rank and rank < height
                 ;        
         }
 
