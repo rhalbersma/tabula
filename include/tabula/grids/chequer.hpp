@@ -7,7 +7,6 @@
 #define TABULA_GRIDS_CHEQUER_HPP
 
 #include <tabula/compass.hpp>   // basic_compass
-#include <tabula/concepts.hpp>  //
 #include <tabula/padding.hpp>   // padding
 #include <tabula/vector.hpp>    // basic_vector
 #include <array>                // array

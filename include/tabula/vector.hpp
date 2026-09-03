@@ -20,21 +20,24 @@ struct basic_vector
 
         [[nodiscard]] friend constexpr auto operator==(basic_vector const&, basic_vector const&) noexcept -> bool = default;
 
-        [[nodiscard]] constexpr auto& operator+=(basic_vector other) noexcept
+        [[nodiscard]] constexpr auto operator+=(basic_vector other) noexcept
+                -> basic_vector&
         {
                 this->file += other.file;
                 this->rank += other.rank;
                 return *this;
         }
 
-        [[nodiscard]] constexpr auto& operator-=(basic_vector other) noexcept
+        [[nodiscard]] constexpr auto operator-=(basic_vector other) noexcept
+                -> basic_vector&
         {
                 this->file -= other.file;
                 this->rank -= other.rank;
                 return *this;
         }
 
-        [[nodiscard]] constexpr auto& operator*=(int n) noexcept
+        [[nodiscard]] constexpr auto operator*=(int n) noexcept
+                -> basic_vector&
         {
                 file *= n;
                 rank *= n;

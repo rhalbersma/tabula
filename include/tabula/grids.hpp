@@ -6,7 +6,7 @@
 #ifndef TABULA_GRIDS_HPP
 #define TABULA_GRIDS_HPP
 
-#include <tabula/grids/chequer.hpp>     // chequer
-#include <tabula/grids/rectangle.hpp>   // rectangle
+#include <tabula/grids/chequer.hpp>     // IWYU pragma: export; chequer
+#include <tabula/grids/rectangle.hpp>   // IWYU pragma: export; rectangle
 
 #endif // TABULA_GRIDS_HPP

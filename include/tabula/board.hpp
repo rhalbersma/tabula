@@ -20,7 +20,6 @@
 #include <cstddef>                      // size_t
 #include <optional>                     // optional
 #include <ranges>                       // views
-#include <tuple>                        // get
 
 namespace tabula {
 
