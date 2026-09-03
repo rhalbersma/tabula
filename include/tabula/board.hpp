@@ -20,7 +20,6 @@
 #include <cstddef>                      // size_t
 #include <optional>                     // optional
 #include <ranges>                       // views
-#include <tuple>                        // get
 
 namespace tabula {
 
@@ -49,7 +48,7 @@ struct basic_board
 
         [[nodiscard]] static constexpr auto is_valid(basic_square<Grid> square) noexcept
         {
-                return Grid.is_valid(square) && !Lake()(square);
+                return Grid.is_valid(square) and not Lake()(square);
         }
 
         static constexpr auto embedding_table = [] {
