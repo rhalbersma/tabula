@@ -214,7 +214,7 @@ using Indices = boost::mp11::mp_iota_c<std::tuple_size_v<decltype(grids)>>;
 BOOST_AUTO_TEST_CASE_TEMPLATE(IndicesAreInvertible, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
-        for (auto index : std::views::iota(0, grid.size())) {
+        for (auto const index : std::views::iota(0, grid.size())) {
                 BOOST_CHECK_EQUAL(grid.index(grid.coordinates(index)), index);
         }
 }
@@ -222,8 +222,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(IndicesAreInvertible, Index, Indices)
 BOOST_AUTO_TEST_CASE_TEMPLATE(CoordinatesOfValidSquaresAreInvertible, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
-        for (auto file : std::views::iota(0, grid.width)) {
-                for (auto rank : std::views::iota(0, grid.height)) {
+        for (auto const file : std::views::iota(0, grid.width)) {
+                for (auto const rank : std::views::iota(0, grid.height)) {
                         if (auto const coordinates = std::pair{ file, rank }; basic_square<grid>{file, rank}.is_valid()) {
                                 BOOST_CHECK(grid.coordinates(grid.index(coordinates)) == coordinates);
                         }

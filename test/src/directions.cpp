@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(IsReverse, Index, Indices)
 {
         constexpr auto grid = std::get<Index::value>(grids);
         using compass = basic_compass<grid>;
-        for (auto d : compass::directions) {
+        for (auto const d : compass::directions) {
                 auto const r = d.reverse();
                 BOOST_CHECK((d != r));
                 BOOST_CHECK_EQUAL(d.is_left() ,  r.is_right());
