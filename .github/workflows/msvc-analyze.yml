@@ -37,6 +37,6 @@ jobs:
   # required check until then, as msvc.yml is not. rhalbersma/cpp-ci#26 is
   # about giving a leg in exactly this state a name other than "red".
   msvc_analyze:
-    uses: rhalbersma/cpp-ci/.github/workflows/msvc-analyze.yml@480aa17d38efd5c1641b861e9e1a0c6df053a451 # v0.10.3
+    uses: rhalbersma/cpp-ci/.github/workflows/msvc-analyze.yml@d2d660725227972f5ac9bdd65efda9d485fb30b7 # v0.15.0
     with:
       tiers: qualification,development
