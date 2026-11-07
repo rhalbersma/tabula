@@ -30,7 +30,6 @@ Checks: >
   -misc-non-private-member-variables-in-classes,
   -readability-avoid-nested-conditional-operator,
   -readability-identifier-length,
-  -readability-magic-numbers,
   -readability-named-parameter,
   -readability-simplify-boolean-expr,
   -bugprone-signed-bitwise
@@ -38,6 +37,9 @@ WarningsAsErrors: '*'
 HeaderFilterRegex: 'include/tabula/.*'
 FormatStyle: none
 CheckOptions:
+  # A game's board is defined by the template arguments of its alias, as basic_chess<8, 8> is the 8x8 board, and a
+  # name for each dimension would only restate it.
+  readability-magic-numbers.IgnoreTypeAliases: true
   # Prefer alternative tokens for logical operators.
   readability-operators-representation.BinaryOperators: 'not;and;or'
   # No Boost library ships IWYU pragmas, so nothing there is attributable to a header a consumer names.
