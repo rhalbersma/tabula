@@ -6,9 +6,9 @@
 #ifndef TABULA_TUPLE_HPP
 #define TABULA_TUPLE_HPP
 
-#include <functional>   // less
-#include <tuple>        // apply, tuple, tuple_cat
-#include <type_traits>  // bool_constant, conditional_t, integral_constant
+#include <functional>  // less
+#include <tuple>       // apply, tuple, tuple_cat
+#include <type_traits> // bool_constant, conditional_t, integral_constant
 
 namespace tabula {
 
@@ -25,21 +25,24 @@ constexpr auto for_each(auto tup, auto fun) noexcept
 {
         return std::apply([&](auto... args) {
                 return (fun(args), ...);
-        }, tup);
+        },
+                          tup);
 }
 
 [[nodiscard]] constexpr auto transform(auto tup, auto fun) noexcept
 {
         return std::apply([=](auto... args) {
                 return std::tuple{fun(args)...};
-        }, tup);
+        },
+                          tup);
 }
 
 [[nodiscard]] constexpr auto accumulate(auto tup) noexcept
 {
         return std::apply([](auto... args) {
                 return (... + args);
-        }, tup);
+        },
+                          tup);
 }
 
 [[nodiscard]] constexpr auto all_of(auto tup, auto pred) noexcept
@@ -47,7 +50,8 @@ constexpr auto for_each(auto tup, auto fun) noexcept
 {
         return std::apply([=](auto... args) {
                 return (... && pred(args));
-        }, tup);
+        },
+                          tup);
 }
 
 [[nodiscard]] constexpr auto any_of(auto tup, auto pred) noexcept
@@ -55,7 +59,8 @@ constexpr auto for_each(auto tup, auto fun) noexcept
 {
         return std::apply([=](auto... args) {
                 return (... || pred(args));
-        }, tup);
+        },
+                          tup);
 }
 
 [[nodiscard]] constexpr auto any_of_all(auto tup, auto pred) noexcept
@@ -63,7 +68,8 @@ constexpr auto for_each(auto tup, auto fun) noexcept
 {
         return std::apply([=](auto... args) {
                 return (... | pred(args));
-        }, tup);
+        },
+                          tup);
 }
 
 [[nodiscard]] constexpr auto remove_if(auto tup, auto pred) noexcept
@@ -73,10 +79,10 @@ constexpr auto for_each(auto tup, auto fun) noexcept
                         std::conditional_t<
                                 pred(args),
                                 std::tuple<>,
-                                std::tuple<decltype(args)>
-                        >{}...
+                                std::tuple<decltype(args)>>{}...
                 );
-        }, tup);
+        },
+                          tup);
 }
 
 template<class Compare = std::less<>>
@@ -84,19 +90,20 @@ template<class Compare = std::less<>>
         -> int
 {
         return std::apply([=](auto head, auto... tail) {
-                auto min = head;
+                auto min     = head;
                 auto element = 0;
-                for_each(std::tuple{tail...}, [&, cmp, index = 1] (auto arg) mutable {
+                for_each(std::tuple{tail...}, [&, cmp, index = 1](auto arg) mutable {
                         if (cmp(arg, min)) {
-                                min = arg;
+                                min     = arg;
                                 element = index;
                         }
                         ++index;
                 });
                 return element;
-        }, tup);
+        },
+                          tup);
 }
 
-}       // namespace tabula
+} // namespace tabula
 
 #endif // TABULA_TUPLE_HPP

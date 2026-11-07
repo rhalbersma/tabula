@@ -6,10 +6,10 @@
 #ifndef TABULA_FORMAT_HPP
 #define TABULA_FORMAT_HPP
 
-#include <tabula/board.hpp>     // basic_board
-#include <tabula/padding.hpp>   // padding
-#include <format>               // formatter, format_to
-#include <ranges>               // iota, reverse
+#include <tabula/board.hpp>   // basic_board
+#include <tabula/padding.hpp> // padding
+#include <format>             // formatter, format_to
+#include <ranges>             // iota, reverse
 
 // A basic_board renders as its embedded squares, rank by rank from the top.
 // Specializing std::formatter on a program-defined type is the only mechanism

@@ -6,20 +6,20 @@
 #ifndef TABULA_BOARD_HPP
 #define TABULA_BOARD_HPP
 
-#include <tabula/compass.hpp>           // basic_compass
-#include <tabula/concepts.hpp>          // chequered
-#include <tabula/dihedral.hpp>          // d8
-#include <tabula/embedding.hpp>         // basic_embedding
-#include <tabula/functional.hpp>        //
-#include <tabula/padding.hpp>           // padding
-#include <tabula/square.hpp>            // basic_square
-#include <tabula/tuple.hpp>             // min_element, transform
-#include <tabula/vector.hpp>            // basic_vector
-#include <array>                        // array
-#include <cassert>                      // assert
-#include <cstddef>                      // size_t
-#include <optional>                     // optional
-#include <ranges>                       // views
+#include <tabula/compass.hpp>    // basic_compass
+#include <tabula/concepts.hpp>   // chequered
+#include <tabula/dihedral.hpp>   // d8
+#include <tabula/embedding.hpp>  // basic_embedding
+#include <tabula/functional.hpp> //
+#include <tabula/padding.hpp>    // padding
+#include <tabula/square.hpp>     // basic_square
+#include <tabula/tuple.hpp>      // min_element, transform
+#include <tabula/vector.hpp>     // basic_vector
+#include <array>                 // array
+#include <cassert>               // assert
+#include <cstddef>               // size_t
+#include <optional>              // optional
+#include <ranges>                // views
 
 namespace tabula {
 
@@ -27,12 +27,12 @@ template<auto Grid, class Lake, padding Padding>
 struct basic_board
 {
         static constexpr auto min = min_element(
-                transform(group::d8, [](auto orientation) {                        
+                transform(group::d8, [](auto orientation) {
                         return basic_embedding<orientation(Grid), Lake, Padding>::valid_size;
                 })
-        );        
+        );
         static constexpr auto orientation = std::get<0>(group::d8);
-        using embedding = basic_embedding<orientation(Grid), Lake, Padding>;
+        using embedding                   = basic_embedding<orientation(Grid), Lake, Padding>;
 
         static constexpr auto padded_grid = embedding::grid.pad(Padding);
 
@@ -54,7 +54,7 @@ struct basic_board
         static constexpr auto embedding_table = [] {
                 auto table = std::array<std::optional<int>, Grid.size()>{};
                 for (auto index : std::views::iota(0, Grid.size())) {
-                        auto const [ file, rank ] = Grid.coordinates(index);
+                        auto const [file, rank] = Grid.coordinates(index);
                         if (auto const square = basic_square<Grid>(file, rank); is_valid(square)) {
                                 table[static_cast<std::size_t>(index)] = pad(square).index();
                         }
@@ -92,7 +92,7 @@ public:
         static constexpr auto square(int file, int rank) noexcept
                 -> basic_square<Grid>
         {
-                return { file, rank };
+                return {file, rank};
         }
 
         static constexpr auto sequential0(basic_square<Grid> square) noexcept
@@ -121,6 +121,6 @@ public:
         }();
 };
 
-}   // namespace tabula
+} // namespace tabula
 
 #endif // TABULA_BOARD_HPP
