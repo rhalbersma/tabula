@@ -6,14 +6,14 @@
 #ifndef TABULA_GRIDS_CHEQUER_HPP
 #define TABULA_GRIDS_CHEQUER_HPP
 
-#include <tabula/compass.hpp>   // basic_compass
-#include <tabula/padding.hpp>   // padding
-#include <tabula/vector.hpp>    // basic_vector
-#include <array>                // array
-#include <concepts>             // same_as
-#include <cstdint>              // uint8_t
-#include <type_traits>          // remove_cvref_t
-#include <utility>              // pair
+#include <tabula/compass.hpp> // basic_compass
+#include <tabula/padding.hpp> // padding
+#include <tabula/vector.hpp>  // basic_vector
+#include <array>              // array
+#include <concepts>           // same_as
+#include <cstdint>            // uint8_t
+#include <type_traits>        // remove_cvref_t
+#include <utility>            // pair
 
 namespace tabula {
 
@@ -21,7 +21,7 @@ struct chequer
 {
         int width;
         int height;
-        int parity;     // 0 or 1: complement of the square color the origin belongs to
+        int parity; // 0 or 1: complement of the square color the origin belongs to
 
         [[nodiscard]] friend constexpr auto operator==(chequer const&, chequer const&) noexcept -> bool = default;
 
@@ -32,17 +32,15 @@ struct chequer
 
         [[nodiscard]] constexpr auto is_valid(auto coordinates) const noexcept
         {
-                auto const [ file, rank ] = coordinates;
-                return
-                        0 <= file and file < width and
-                        0 <= rank and rank < height and
-                        (file + rank) % 2 != parity
-                ;
+                auto const [file, rank] = coordinates;
+                return 0 <= file and file < width and
+                       0 <= rank and rank < height and
+                       (file + rank) % 2 != parity;
         }
 
         [[nodiscard]] constexpr auto index(auto coordinates) const noexcept
         {
-                auto const [ file, rank ] = coordinates;
+                auto const [file, rank] = coordinates;
                 return (file + rank * width) / 2;
         }
 
@@ -51,34 +49,33 @@ struct chequer
         {
                 index *= 2;
                 index += (width % 2 != 0) ? (1 ^ parity) : (1 ^ parity ^ ((index / width) % 2));
-                return { index % width, index / width };
+                return {index % width, index / width};
         }
 
-        [[nodiscard]] constexpr auto flip() const noexcept 
+        [[nodiscard]] constexpr auto flip() const noexcept
                 -> chequer
-        { 
-                return { .width = width, .height = height, .parity = parity ^ ((height - 1) % 2) };
+        {
+                return {.width = width, .height = height, .parity = parity ^ ((height - 1) % 2)};
         }
 
         [[nodiscard]] constexpr auto flop() const noexcept
                 -> chequer
         {
-                return { .width = width, .height = height, .parity = parity ^ ((width - 1) % 2) };
+                return {.width = width, .height = height, .parity = parity ^ ((width - 1) % 2)};
         }
 
-        [[nodiscard]] constexpr auto swap() const noexcept 
+        [[nodiscard]] constexpr auto swap() const noexcept
                 -> chequer
-        { 
-                return { .width = height, .height = width, .parity = parity };
+        {
+                return {.width = height, .height = width, .parity = parity};
         }
 
-        [[nodiscard]] constexpr auto pad(padding p) const noexcept 
+        [[nodiscard]] constexpr auto pad(padding p) const noexcept
                 -> chequer
-        { 
-                return
-                {
-                        .width  = width  + p.left + p.right + ((width + p.left + p.right + 1) % 2),
-                        .height = height + p.top  + p.bottom,
+        {
+                return {
+                        .width  = width + p.left + p.right + ((width + p.left + p.right + 1) % 2),
+                        .height = height + p.top + p.bottom,
                         .parity = parity ^ ((p.left + p.bottom) % 2),
                 };
         }
@@ -88,23 +85,35 @@ struct chequer
 template<auto Grid>
         requires std::same_as<std::remove_cvref_t<decltype(Grid)>, chequer>
 struct basic_compass<Grid>
-{       
+{
         static constexpr auto grid = Grid;
-        enum : std::uint8_t { N, NE, E, SE, S, SW, W, NW };
-        static constexpr auto directions = std::array<basic_vector<Grid>, 8>
-        {{
-                {  0,  2 },     // N
-                {  1,  1 },     // NE
-                {  2,  0 },     // E
-                {  1, -1 },     // SE
-                {  0, -2 },     // S
-                { -1, -1 },     // SW
-                { -2,  0 },     // W
-                { -1,  1 },     // NW
-        },
+
+        enum : std::uint8_t
+        {
+                N,
+                NE,
+                E,
+                SE,
+                S,
+                SW,
+                W,
+                NW,
+        };
+
+        static constexpr auto directions = std::array<basic_vector<Grid>, 8>{
+                {
+                        {0, 2},   // N
+                        {1, 1},   // NE
+                        {2, 0},   // E
+                        {1, -1},  // SE
+                        {0, -2},  // S
+                        {-1, -1}, // SW
+                        {-2, 0},  // W
+                        {-1, 1},  // NW
+                },
         };
 };
 
-}       // namespace tabula
+} // namespace tabula
 
 #endif // TABULA_GRIDS_CHEQUER_HPP

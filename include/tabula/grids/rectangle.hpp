@@ -6,14 +6,14 @@
 #ifndef TABULA_GRIDS_RECTANGLE_HPP
 #define TABULA_GRIDS_RECTANGLE_HPP
 
-#include <tabula/compass.hpp>   // basic_compass
-#include <tabula/padding.hpp>   // padding
-#include <tabula/vector.hpp>    // basic_vector
-#include <array>                // array
-#include <concepts>             // same_as
-#include <cstdint>              // uint8_t
-#include <type_traits>          // remove_cvref_t
-#include <utility>              // pair
+#include <tabula/compass.hpp> // basic_compass
+#include <tabula/padding.hpp> // padding
+#include <tabula/vector.hpp>  // basic_vector
+#include <array>              // array
+#include <concepts>           // same_as
+#include <cstdint>            // uint8_t
+#include <type_traits>        // remove_cvref_t
+#include <utility>            // pair
 
 namespace tabula {
 
@@ -23,7 +23,7 @@ struct rectangle
         int height;
 
         [[nodiscard]] friend constexpr auto operator==(rectangle const&, rectangle const&) noexcept -> bool = default;
-        
+
         [[nodiscard]] constexpr auto size() const noexcept
         {
                 return width * height;
@@ -31,50 +31,47 @@ struct rectangle
 
         [[nodiscard]] constexpr auto is_valid(auto coordinates) const noexcept
         {
-                auto const [ file, rank ] = coordinates;
-                return
-                        0 <= file and file < width and
-                        0 <= rank and rank < height
-                ;        
+                auto const [file, rank] = coordinates;
+                return 0 <= file and file < width and
+                       0 <= rank and rank < height;
         }
 
         [[nodiscard]] constexpr auto index(auto coordinates) const noexcept
         {
-                auto const [ file, rank ] = coordinates;
+                auto const [file, rank] = coordinates;
                 return file + rank * width;
         }
 
         [[nodiscard]] constexpr auto coordinates(int index) const noexcept
                 -> std::pair<int, int>
         {
-                return { index % width, index / width };
-        }       
-
-        [[nodiscard]] constexpr auto flip() const noexcept 
-                -> rectangle
-        { 
-                return { .width = width, .height = height };
+                return {index % width, index / width};
         }
 
-        [[nodiscard]] constexpr auto flop() const noexcept 
+        [[nodiscard]] constexpr auto flip() const noexcept
                 -> rectangle
-        { 
-                return { .width = width, .height = height };
+        {
+                return {.width = width, .height = height};
         }
 
-        [[nodiscard]] constexpr auto swap() const noexcept 
+        [[nodiscard]] constexpr auto flop() const noexcept
                 -> rectangle
-        { 
-                return { .width = height, .height = width };
+        {
+                return {.width = width, .height = height};
+        }
+
+        [[nodiscard]] constexpr auto swap() const noexcept
+                -> rectangle
+        {
+                return {.width = height, .height = width};
         }
 
         [[nodiscard]] constexpr auto pad(padding p) const noexcept
                 -> rectangle
         {
-                return
-                {
-                        .width  = width  + p.left + p.right,
-                        .height = height + p.top  + p.bottom,
+                return {
+                        .width  = width + p.left + p.right,
+                        .height = height + p.top + p.bottom,
                 };
         }
 };
@@ -85,21 +82,33 @@ template<auto Grid>
 struct basic_compass<Grid>
 {
         static constexpr auto grid = Grid;
-        enum : std::uint8_t { N, NE, E, SE, S, SW, W, NW };
-        static constexpr auto directions = std::array<basic_vector<Grid>, 8>
-        {{
-                {  0,  1 },     // N
-                {  1,  1 },     // NE
-                {  1,  0 },     // E
-                {  1, -1 },     // SE
-                {  0, -1 },     // S
-                { -1, -1 },     // SW
-                { -1,  0 },     // W
-                { -1,  1 },     // NW
-        },
+
+        enum : std::uint8_t
+        {
+                N,
+                NE,
+                E,
+                SE,
+                S,
+                SW,
+                W,
+                NW,
+        };
+
+        static constexpr auto directions = std::array<basic_vector<Grid>, 8>{
+                {
+                        {0, 1},   // N
+                        {1, 1},   // NE
+                        {1, 0},   // E
+                        {1, -1},  // SE
+                        {0, -1},  // S
+                        {-1, -1}, // SW
+                        {-1, 0},  // W
+                        {-1, 1},  // NW
+                },
         };
 };
 
-}       // namespace tabula
+} // namespace tabula
 
 #endif // TABULA_GRIDS_RECTANGLE_HPP

@@ -8,9 +8,9 @@
 
 namespace tabula {
 
-template<auto Grid> 
+template<auto Grid>
 struct basic_compass;
 
-}       // namespace tabula
+} // namespace tabula
 
 #endif // TABULA_COMPASS_HPP

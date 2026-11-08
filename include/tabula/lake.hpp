@@ -6,9 +6,9 @@
 #ifndef TABULA_LAKE_HPP
 #define TABULA_LAKE_HPP
 
-#include <charconv>     // from_chars
-#include <cstddef>      // size_t
-#include <utility>      // get, pair
+#include <charconv> // from_chars
+#include <cstddef>  // size_t
+#include <utility>  // get, pair
 
 namespace tabula {
 
@@ -26,13 +26,13 @@ struct basic_lake
 [[nodiscard]] constexpr auto algebraic(char file, int rank) noexcept
         -> square_
 {
-        return { file - 'a',  rank - 1 };
+        return {file - 'a', rank - 1};
 }
 
 [[nodiscard]] constexpr auto algebraic(int file, int rank) noexcept
         -> square_
 {
-        return { file - 1,  rank - 1 };
+        return {file - 1, rank - 1};
 }
 
 inline namespace literals {
@@ -42,13 +42,13 @@ inline namespace square_literals {
         -> square_
 {
         auto const file = str[0];
-        auto rank = 0;
+        auto rank       = 0;
         std::from_chars(str + 1, str + n, rank);
-        return { file - 'a',  rank - 1 };
+        return {file - 'a', rank - 1};
 }
 
-}       // namespace square_literals
-}       // namespace literals
-}       // namespace tabula
+} // namespace square_literals
+} // namespace literals
+} // namespace tabula
 
 #endif // TABULA_LAKE_HPP

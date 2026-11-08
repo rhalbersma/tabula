@@ -6,23 +6,21 @@
 #ifndef TABULA_CONCEPTS_HPP
 #define TABULA_CONCEPTS_HPP
 
-#include <concepts>     // convertible_to
+#include <concepts> // convertible_to
 
 namespace tabula {
 
 template<auto Grid>
-concept rectangular = requires
-{
-        { Grid.width  } -> std::convertible_to<int>;
+concept rectangular = requires {
+        { Grid.width } -> std::convertible_to<int>;
         { Grid.height } -> std::convertible_to<int>;
 };
 
 template<auto Grid>
-concept chequered = rectangular<Grid> and requires
-{
+concept chequered = rectangular<Grid> and requires {
         { Grid.parity } -> std::convertible_to<bool>;
 };
 
-}       // namespace tabula
+} // namespace tabula
 
 #endif // TABULA_CONCEPTS_HPP

@@ -6,7 +6,7 @@
 #ifndef TABULA_VECTOR_HPP
 #define TABULA_VECTOR_HPP
 
-#include <tabula/padding.hpp>   // padding
+#include <tabula/padding.hpp> // padding
 
 namespace tabula {
 
@@ -16,7 +16,7 @@ struct basic_vector
         int file;
         int rank;
 
-        static constexpr auto grid = Grid;  
+        static constexpr auto grid = Grid;
 
         [[nodiscard]] friend constexpr auto operator==(basic_vector const&, basic_vector const&) noexcept -> bool = default;
 
@@ -47,32 +47,32 @@ struct basic_vector
         [[nodiscard]] constexpr auto reverse() const noexcept
                 -> basic_vector
         {
-                return { -file, -rank };
+                return {-file, -rank};
         }
 
         [[nodiscard]] constexpr auto flip() const noexcept
                 -> basic_vector<Grid.flip()>
         {
-                return { file, -rank };
+                return {file, -rank};
         }
 
         [[nodiscard]] constexpr auto flop() const noexcept
                 -> basic_vector<Grid.flop()>
         {
-                return { -file, rank };
+                return {-file, rank};
         }
 
         [[nodiscard]] constexpr auto swap() const noexcept
                 -> basic_vector<Grid.swap()>
         {
-                return { rank, file };
+                return {rank, file};
         }
 
         template<padding Padding>
         [[nodiscard]] constexpr auto pad() const noexcept
                 -> basic_vector<Grid.pad(Padding)>
         {
-                return { file, rank };
+                return {file, rank};
         }
 
         [[nodiscard]] constexpr auto is_cardinal() const noexcept
@@ -114,27 +114,35 @@ struct basic_vector
 template<auto Grid>
 [[nodiscard]] constexpr auto operator+(basic_vector<Grid> lhs, basic_vector<Grid> rhs) noexcept
 {
-        auto nrv = lhs; nrv += rhs; return nrv;
+        auto nrv = lhs;
+        nrv += rhs;
+        return nrv;
 }
 
 template<auto Grid>
 [[nodiscard]] constexpr auto operator-(basic_vector<Grid> lhs, basic_vector<Grid> rhs) noexcept
 {
-        auto nrv = lhs; nrv -= rhs; return nrv;
+        auto nrv = lhs;
+        nrv -= rhs;
+        return nrv;
 }
 
 template<auto Grid>
 [[nodiscard]] constexpr auto operator*(basic_vector<Grid> v, int n) noexcept
 {
-        auto nrv = v; nrv *= n; return nrv;
+        auto nrv = v;
+        nrv *= n;
+        return nrv;
 }
 
 template<auto Grid>
 [[nodiscard]] constexpr auto operator*(int n, basic_vector<Grid> v) noexcept
 {
-        auto nrv = v; nrv *= n; return nrv;
+        auto nrv = v;
+        nrv *= n;
+        return nrv;
 }
 
-}       // namespace tabula
+} // namespace tabula
 
 #endif // TABULA_VECTOR_HPP

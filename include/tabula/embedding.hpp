@@ -6,11 +6,11 @@
 #ifndef TABULA_EMBEDDING_HPP
 #define TABULA_EMBEDDING_HPP
 
-#include <tabula/padding.hpp>   // padding
-#include <tabula/square.hpp>    // basic_square
-#include <tabula/vector.hpp>    // basic_vector
-#include <optional>             // nullopt, optional
-#include <ranges>               // iota, reverse
+#include <tabula/padding.hpp> // padding
+#include <tabula/square.hpp>  // basic_square
+#include <tabula/vector.hpp>  // basic_vector
+#include <optional>           // nullopt, optional
+#include <ranges>             // iota, reverse
 
 namespace tabula {
 
@@ -26,8 +26,8 @@ class basic_embedding
                 -> std::optional<int>
         {
                 for (auto index : std::views::iota(0, Grid.size())) {
-                        auto const [ file, rank ] = Grid.coordinates(index);
-                        if (auto const square = basic_square<Grid>{file, rank}; is_valid(square) ) {
+                        auto const [file, rank] = Grid.coordinates(index);
+                        if (auto const square = basic_square<Grid>{file, rank}; is_valid(square)) {
                                 return pad(square).index();
                         }
                 }
@@ -38,7 +38,7 @@ class basic_embedding
                 -> std::optional<int>
         {
                 for (auto index : std::views::iota(0, Grid.size()) | std::views::reverse) {
-                        auto const [ file, rank ] = Grid.coordinates(index);
+                        auto const [file, rank] = Grid.coordinates(index);
                         if (auto const square = basic_square<Grid>{file, rank}; is_valid(square)) {
                                 return pad(square).index();
                         }
@@ -48,7 +48,7 @@ class basic_embedding
 
 public:
         static constexpr auto grid = Grid;
-        using lake_type = Lake;
+        using lake_type            = Lake;
 
         [[nodiscard]] static constexpr auto pad(basic_square<Grid> s) noexcept
         {
@@ -62,11 +62,11 @@ public:
 
         static constexpr auto valid_size = [] {
                 constexpr auto first = first_valid();
-                constexpr auto last = last_valid();
+                constexpr auto last  = last_valid();
                 return first and last ? *last - *first + 1 : 0;
         }();
 };
 
-}   // namespace tabula
+} // namespace tabula
 
 #endif // TABULA_EMBEDDING_HPP
