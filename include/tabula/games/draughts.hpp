@@ -14,7 +14,8 @@
 namespace tabula {
 
 template<int Width, int Height, int Parity = 1, class Lake = basic_lake<>, padding Padding = pad_right(1)>
-using basic_draughts = basic_board<chequer{.width = Width, .height = Height, .parity = Parity}, Lake, Padding>;
+// NOLINTNEXTLINE(modernize-use-designated-initializers): MSVC 19.44 and 19.51 reject one in a dependent argument
+using basic_draughts = basic_board<chequer{Width, Height, Parity}, Lake, Padding>;
 
 namespace draughts {
 

@@ -14,7 +14,8 @@
 namespace tabula {
 
 template<int Width, int Height, class Lake = basic_lake<>, padding Padding = padding{}>
-using basic_chess = basic_board<rectangle{.width = Width, .height = Height}, Lake, Padding>;
+// NOLINTNEXTLINE(modernize-use-designated-initializers): MSVC 19.44 and 19.51 reject one in a dependent argument
+using basic_chess = basic_board<rectangle{Width, Height}, Lake, Padding>;
 
 namespace chess {
 
