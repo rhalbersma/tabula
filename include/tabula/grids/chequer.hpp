@@ -97,7 +97,7 @@ struct basic_compass<Grid>
                 S,
                 SW,
                 W,
-                NW
+                NW,
         };
 
         static constexpr auto directions = std::array<basic_vector<Grid>, 8>{
