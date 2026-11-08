@@ -13,8 +13,8 @@
 
 namespace tabula {
 
-// Positional, since MSVC 19.44 and 19.51 reject a designated initializer in a dependent template argument.
 template<int Width, int Height, int Parity = 1, class Lake = basic_lake<>, padding Padding = pad_right(1)>
+// NOLINTNEXTLINE(modernize-use-designated-initializers): MSVC 19.44 and 19.51 reject one in a dependent argument
 using basic_draughts = basic_board<chequer{Width, Height, Parity}, Lake, Padding>;
 
 namespace draughts {
