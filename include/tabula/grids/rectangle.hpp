@@ -10,7 +10,9 @@
 #include <tabula/padding.hpp> // padding
 #include <tabula/vector.hpp>  // basic_vector
 #include <array>              // array
+#include <concepts>           // same_as
 #include <cstdint>            // uint8_t
+#include <type_traits>        // remove_cvref_t
 #include <utility>            // pair
 
 namespace tabula {
@@ -74,7 +76,9 @@ struct rectangle
         }
 };
 
-template<rectangle Grid>
+// Constrained on the argument's type, since MSVC 19.44 and 19.51 match both grids' specializations to either grid.
+template<auto Grid>
+        requires std::same_as<std::remove_cvref_t<decltype(Grid)>, rectangle>
 struct basic_compass<Grid>
 {
         static constexpr auto grid = Grid;
